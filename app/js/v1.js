@@ -7,6 +7,8 @@ var fragmentShader = require('./../shaders/base.fs');
 var triangulate = require('delaunay-triangulate');
 var OrbitControls = require('three-orbit-controls')(THREE)
 
+var Blob = require('./blob');
+var SimplexNoise = require('simplex-noise');
 var Main = function() {
 	this.element = document.getElementById('main');
 
@@ -18,7 +20,7 @@ var Main = function() {
 	this.camera = new THREE.OrthographicCamera( );
 	this.controls = new OrbitControls(this.camera);
 
-	
+	this.blobScene = new THREE.Scene();
 
 	this.time = 0;
 	this.timeInc = 0.01;
@@ -27,11 +29,22 @@ var Main = function() {
 	this.pointRes = 4096 * 2;
 	this.circleRadius = 200;
 
+	this.rim = new Blob( this, 300, 30, 0.0, 0.0, [ [ 0.5, 0.5, 0.5, 0], [ 0.5, 0.5, 0.5, 1] ] );
+	this.blob = new Blob( this, 10, 100, 3, .45, [ [ 0, 1, 0, 1], [ 0, 1, 0, 0] ] );
+	this.blob.mesh.position.z = -1;
+	this.blob2 = new Blob( this, 200, 100, 3, .2, [ [ 1, 0, 0, 1], [ 1, 0, 0, 0] ] );
+	this.blob2.mesh.position.z = -2;
+
 	this.points = [];
 	for( var i = 0 ; i < this.circleRes ; i++ ){
 		this.points.push( [ Math.cos( Math.PI * 2 * i / this.circleRes ) * this.circleRadius, Math.sin( Math.PI * 2 * i / this.circleRes ) * this.circleRadius ] );
 	}
 
+	var size = 1000;
+	var divisions = 10;
+	var gridHelper = new THREE.GridHelper( size, divisions );
+	gridHelper.rotation.x = Math.PI / 2
+	this.blobScene.add( gridHelper );
 
 	while( this.points.length < this.circleRes + this.pointRes ){
 		var position = [ Math.random() * this.circleRadius * 2 - this.circleRadius, Math.random() * this.circleRadius * 2 - this.circleRadius ];
@@ -98,7 +111,13 @@ Main.prototype.step = function( time ) {
 	window.requestAnimationFrame( this.step.bind( this ) );
 	
 	this.time += this.timeInc;
-	this.renderer.render( this.scene, this.camera );
+	// this.renderer.render( this.scene, this.camera );
+
+	this.rim.step(this.time)
+	this.blob.step(this.time)
+	this.blob2.step(this.time)
+
+	this.renderer.render( this.blobScene, this.camera );
 
 	this.mesh.material.uniforms.time.value = this.time;
 

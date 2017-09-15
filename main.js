@@ -54,7 +54,7 @@ app.get('/', function(req, res){
 
 app.get('/:pageId', function(req, res){
 	var page = req.params.pageId;
-	res.render( page, { page : page } );
+	res.render( page );
 });
 
 
