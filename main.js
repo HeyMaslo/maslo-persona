@@ -49,7 +49,7 @@ app.use(express.static(__dirname + '/app'));
 // └────────────────────────────────────────────────────────────────────┘
 
 app.get('/', function(req, res){
-	res.render( 'main' );
+	res.render( 'v2' );
 });
 
 app.get('/:pageId', function(req, res){
