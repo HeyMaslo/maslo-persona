@@ -1,9 +1,6 @@
 window.THREE = require('three');
 window.TweenMax = require('gsap');
 
-var vertexShader = require('./../shaders/base.vs');
-var fragmentShader = require('./../shaders/base.fs');
-
 var OrbitControls = require('three-orbit-controls')(THREE)
 
 var chroma = require('chroma-js');
