@@ -33,11 +33,7 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          "docs/index.html": "app/views/main.pug",
-          "docs/about.html": "app/views/about.pug",
-          "docs/philosophy.html": "app/views/philosophy.pug",
-          "docs/contact.html": "app/views/contact.pug",
-          "docs/moreinfo.html": "app/views/moreinfo.pug"
+          "docs/index.html": "app/views/main.pug"
         }
       }
     },
