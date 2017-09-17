@@ -69,8 +69,8 @@ input.getPortName(0);
 input.openPort(0);
 
 input.on('message', function(deltaTime, message) {
-	console.log('a')
-	if( socket ) socket.send( '' + message );
+	// console.log(message)
+	if( socket ) socket.send( message.toString() );
 });
 
 var socket;
