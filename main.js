@@ -59,11 +59,14 @@ wss.on('connection', function connection(ws) {
 });
 
 
-var input = new midi.input();
-input.openPort(0);
-input.on('message', function(deltaTime, message) {
-	if( socket ) socket.send( message.toString() );
-});
+// var m = new midi.input();
+
+// if( m.getPortCount() ){ 
+// 	m.openPort(0);
+// 	m.on('message', function(deltaTime, message) { if( socket ) socket.send( message.toString() ); });
+// } else m = null;
+
+
 
 
 
