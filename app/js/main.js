@@ -5,12 +5,12 @@ window.chroma = require('chroma-js');
 
 var OrbitControls = require('three-orbit-controls')(THREE)
 
-var chroma = require('chroma-js');
 var SimplexNoise = require('simplex-noise');
 
 var Ring = require('./ring');
-
 var Audio = require('./audio');
+var Persona = require('./persona');
+
 
 var Main = function() {
 	this.selected = 0;
@@ -22,12 +22,6 @@ var Main = function() {
 	this.colorHSL = chroma.hsl(settings.hue, settings.saturation, settings.lightness);
 
 	this.scaleGroup = 300;
-	// this.colorHSL = chroma.rgb(32,157,209);
-	// console.log(this.colorHSL.hsl())
-	
-	
-	
-	// console.log( chroma.hsl(360, 1, 0.5).hex() )
 
 	this.time = 0;
 
@@ -42,8 +36,10 @@ var Main = function() {
 	this.camera = new THREE.OrthographicCamera();
 	this.camControl = new OrbitControls(this.camera);
 
-	this.socket = new WebSocket('ws://localhost:8080');
-	this.socket.addEventListener('message', this.message.bind( this ) );
+	if( window.location.href.indexOf('localhost') > 0 ){
+		this.socket = new WebSocket('ws://localhost:8080');
+		this.socket.addEventListener('message', this.message.bind( this ) );
+	}
 	
 	this.simplex = new SimplexNoise( Math.random );
 
@@ -90,7 +86,7 @@ Main.prototype.setState = function(state){
 
 Main.prototype.init = function(){
 	setTimeout( this.setState.bind(this,'idle'), 3300 );
-	this.audio.play(1);
+	this.audio.play('open');
 	var startScale = 0.8;
 	var endScale = 1;
 	for( var i = 0 ; i < this.rings.length ; i++ ){

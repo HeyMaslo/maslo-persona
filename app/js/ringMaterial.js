@@ -4,9 +4,6 @@ var fs = require('./../shaders/ringFragment.glsl');
 var RingMaterial = function( parent ){
 	this.parent = parent;
 	var texture = new THREE.TextureLoader().load( 'img/noise.png' );
-	// texture.wrapS = THREE.MirroredRepeatWrapping;
-	// texture.wrapT = THREE.MirroredRepeatWrapping;
-	
 
 	this.matData = new THREE.ShaderMaterial( {
 		uniforms: {

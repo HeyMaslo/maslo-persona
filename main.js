@@ -52,35 +52,22 @@ app.get('/', function(req, res){
 	res.render( 'main' );
 });
 
-app.get('/:pageId', function(req, res){
-	var page = req.params.pageId;
-	res.render( page );
+var socket;
+var wss = new WebSocket.Server({ port: 8080 }); 
+wss.on('connection', function connection(ws) {
+ 	socket = ws;
 });
 
 
-
-var wss = new WebSocket.Server({ port: 8080 }); 
-
 var input = new midi.input();
-input.getPortCount();
-
-input.getPortName(0);
-
 input.openPort(0);
-
 input.on('message', function(deltaTime, message) {
-	// console.log(message)
 	if( socket ) socket.send( message.toString() );
 });
 
-var socket;
 
-wss.on('connection', function connection(ws) {
-	ws.on('message', function incoming(message) {
-		console.log('received: %s', message);
-	});
- 	socket = ws;
-});
+
+
 
 // ┌────────────────────────────────────────────────────────────────────┐
 // | Init!!
