@@ -1,17 +1,13 @@
 var AudioPlayer = function(){
-	this.track = {
-		'open' : new Audio('audio/open.mp3')
-	}
+	var audioTracks = ['hey','joy','no','no2','open','pinch','shake','surprise','swipe','tap','tilt','upset','upset2','yes']
+	for( var i = 0 ; i < audioTracks.length ; i++ ) this[audioTracks[i]] = new Audio( 'audio/' + audioTracks[ i ] + '.mp3' );
 }
-
 AudioPlayer.prototype.play = function( track ) {
-	console.log(track)
 	if( this.currentTrack ){
-		this.track[this.currentTrack].pause();
-		this.track[this.currentTrack].currentTime = 0;
+		this[this.currentTrack].pause();
+		this[this.currentTrack].currentTime = 0;
 	}
-	if( this.currentTrack) console.log(this.track[this.currentTrack])
-	this.track[track].play();
+	this[track].play();
 	this.currentTrack = track;
 };
 module.exports = AudioPlayer;
