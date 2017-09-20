@@ -4,7 +4,7 @@ window.TweenMax = require('gsap');
 window.chroma = require('chroma-js');
 
 // Node modules
-// var OrbitControls = require('three-orbit-controls')(THREE)
+var OrbitControls = require('three-orbit-controls')(THREE)
 
 // Custom modules
 var Debug = require('./debug');
@@ -22,12 +22,12 @@ var Main = function() {
 
 	this.scene = new THREE.Scene();
 	this.camera = new THREE.OrthographicCamera();
-	// this.camControl = new OrbitControls(this.camera);
+	this.camControl = new OrbitControls(this.camera);
 
 	this.debug = new Debug( this );
 	this.persona = new Persona( this );
 
-	setTimeout( this.setState.bind(this,'init'), 200 );
+	setTimeout( this.setState.bind(this,'init'), 1000 );
 	
 	this.resize();
 	this.step();

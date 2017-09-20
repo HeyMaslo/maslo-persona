@@ -70,10 +70,9 @@ RingGeometry.prototype.step = function( time ){
 		// get previous position
 		if( this.parent.id == 0 ) this.points.push(pps);
 		else this.points.push( this.oldPoints[i].sub( vector.clone().multiplyScalar(n) ) );
-
-		// cummulative noise
+		
+		// cummulative noise2D
 		this.points[i] = pps.clone().add( this.points[i].clone().sub( pps.clone() ).multiplyScalar(this.parent.weightIn) );
-
 
 		this.geoData.attributes.color.setXYZ( ( i + 1 ), colGL[0], colGL[1], colGL[2] );
 
