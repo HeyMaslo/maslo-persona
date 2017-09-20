@@ -19,6 +19,7 @@ module.exports = function(grunt) {
           cwd: "app",
           src: [
             "img/**/*",
+            "audio/**/*"
           ],
           dest: "docs"
         }]
