@@ -1,10 +1,10 @@
 // Global libraries
 window.THREE = require('three');
-window.TweenMax = require('gsap');
-window.chroma = require('chroma-js');
+window.Gsap = require('gsap');
+window.ee = require('event-emitter');
 
 // Node modules
-var OrbitControls = require('three-orbit-controls')(THREE)
+// var OrbitControls = require('three-orbit-controls')(THREE)
 
 // Custom modules
 var Debug = require('./debug');
@@ -20,31 +20,31 @@ var Main = function() {
 	this.renderer = new THREE.WebGLRenderer( { alpha : true, antialias : true } );
 	this.element.appendChild( this.renderer.domElement );
 
+	// this.emitter = ee();
+	
+
 	this.scene = new THREE.Scene();
 	this.camera = new THREE.OrthographicCamera();
-	this.camControl = new OrbitControls(this.camera);
+	// this.camControl = new OrbitControls(this.camera);
 
 	this.debug = new Debug( this );
 	this.persona = new Persona( this );
 
-	setTimeout( this.setState.bind(this,'init'), 1000 );
+	this.persona.emitter.on('stateChange', function (args) {
+		for( var i = 0 ; i < this.controls.length ; i++ ){
+			this.controls[i].classList.remove('active');
+			if( this.controls[i].getAttribute('data-reaction') == args ) this.controls[i].classList.add('active');
+		}
+	}.bind(this));
+
+	setTimeout( this.persona.setState.bind(this.persona, 'init'), 1000 );
 	
 	this.resize();
 	this.step();
 }
 
 Main.prototype.controlClicked = function(e){
-	var reaction = e.target.getAttribute('data-reaction');
-	this.setState(reaction)
-}
-
-Main.prototype.setState = function(state){
-	this.state = state;
-	if( this.persona[state] ) this.persona[state]()
-	for( var i = 0 ; i < this.controls.length ; i++ ){
-		this.controls[i].classList.remove('active');
-		if( this.controls[i].getAttribute('data-reaction') == state ) this.controls[i].classList.add('active');
-	}
+	this.persona.setState( e.target.getAttribute('data-reaction') );
 }
 
 Main.prototype.resize = function( e ) {

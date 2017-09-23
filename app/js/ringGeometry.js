@@ -6,7 +6,7 @@ var RingGeometry = function( parent ){
 
 	// positions
 	var positions = [];
-	for( var i = 0 ; i < this.parent.parent.ringRes * 3 + 1 ; i++ ) positions.push( 0, 0, this.parent.id );
+	for( var i = 0 ; i < this.parent.parent.ringRes * 3 + 1 ; i++ ) positions.push( 0, 0, this.parent.id * 10 );
 	this.geoData.addAttribute( 'position', new THREE.BufferAttribute( new Float32Array( positions ), 3 ) );
 
 	// indices

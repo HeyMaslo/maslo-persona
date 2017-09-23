@@ -14,7 +14,8 @@ var RingMaterial = function( parent ){
 		vertexShader: vs,
 		fragmentShader: fs,
 		transparent : true,
-		premultipliedAlpha : false
+		// premultipliedAlpha : true
+
 	} );
 
 }

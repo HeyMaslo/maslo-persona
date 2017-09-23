@@ -18,19 +18,26 @@ var Ring = function( parent, id ){
 	this.color;
 	this.scale = new THREE.Vector3(1,1,1);
 	this.position = new THREE.Vector3(0,0,0);
+	this.easingFactor = 0;
 
 	this.ringGeometry = new RingGeometry( this );
 	this.ringMaterial = new RingMaterial( this );
 
 	this.mesh = new THREE.Mesh( this.ringGeometry.geoData, this.ringMaterial.matData );
-	this.parent.group.add( this.mesh );
+
+	this.translationGroup = new THREE.Object3D();
+	this.rotationGroup = new THREE.Object3D();
+
+	this.rotationGroup.add( this.translationGroup );
+	this.translationGroup.add( this.mesh );
+	this.parent.group.add( this.rotationGroup );
 }
 
 Ring.prototype.step = function( time ){
 	this.ringGeometry.step( time );
-	this.mesh.rotation.z = this.theta * Math.PI * 2;
-	this.mesh.scale.set(this.scale.x,this.scale.y,this.scale.z)
-	this.mesh.position.set(this.position.x,this.position.y,this.position.z)
+	this.rotationGroup.rotation.z = this.theta * Math.PI * 2;
+	this.rotationGroup.scale.set(this.scale.x,this.scale.y,this.scale.z)
+	this.translationGroup.position.set(this.position.x,this.position.y,this.position.z)
 	this.ringMaterial.matData.uniforms.opacity.value = this.opacity;
 }
 

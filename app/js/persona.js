@@ -1,5 +1,6 @@
-// var settings = require('./settings');
 var SimplexNoise = require('simplex-noise');
+var chroma = require('chroma-js');
+
 var Ring = require('./ring');
 var Trail = require('./trail');
 var Audio = require('./audio');
@@ -8,6 +9,8 @@ var States = require('./states');
 var Persona = function( parent, settings ){
 	this.parent = parent;
 	this.settings = settings || {};
+
+	this.emitter = ee();
 
 	this.ringCount = this.settings.ringCount || 8;
 	this.trailsCount = this.settings.trailsCount || 8;
@@ -20,8 +23,9 @@ var Persona = function( parent, settings ){
 	this.radius = this.settings.radius || 300;
 
 	this.time = 0;
+	this.rotationSpeed = 0;
 	this.simplex = new SimplexNoise( Math.random );
-	
+
 	this.audio = new Audio();
 
 	this.group = new THREE.Object3D();
@@ -33,13 +37,19 @@ var Persona = function( parent, settings ){
 	
 	
 	this.trails = [];
-	for( var i = 0 ; i < this.trailsCount ; i++ ) this.trails.push( new Trail( this, i ) );
+	for( var i = 0 ; i < this.ringCount ; i++ ) this.trails.push( new Trail( this, i ) );
 
 	this.computeColors();
 }
 
 Persona.prototype = States.prototype;
 
+Persona.prototype.setState = function(state){
+	if( this.state == state ) return; 
+	this.emitter.emit( 'stateChange', state );
+	this.state = state;
+	if( this[state] ) this[state]()
+}
 
 Persona.prototype.computeColors = function(){
 	this.colorHSL = chroma.hsl(this.hsl.x, this.hsl.y, this.hsl.z);
@@ -51,18 +61,15 @@ Persona.prototype.computeColors = function(){
 }
 
 Persona.prototype.step = function( time ){
-	// if( this.state == 'idle' ){
-	// 	var val = Math.cos( this.time * Math.PI * 2 ) * 0.135;
-	// 	this.saturation = val + 0.865;
-	// }
-	// for( var i = 1 ; i < this.ringCount ; i++ ) this.rings[i].opacity = 0;
-
-
 	this.group.rotation.z = this.rotation * Math.PI * 2;
 	this.group.scale.set( this.radius * this.scale.x, this.radius * this.scale.y, 1 );
 	this.time += this.timeInc;
 
 	this.computeColors();
+
+	this.updateStates( time );
+
+	this.audio.step();
 	for( var i = 0 ; i < this.rings.length ; i++ ) this.rings[i].step( this.time );
 	for( var i = 0 ; i < this.trails.length ; i++ ) this.trails[i].step( this.time );
 }
