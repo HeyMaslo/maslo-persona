@@ -36,8 +36,8 @@ var Persona = function( parent, settings ){
 	for( var i = 0 ; i < this.ringCount ; i++ ) this.rings.push( new Ring( this, i ) );
 	
 	
-	this.trails = [];
-	for( var i = 0 ; i < this.ringCount ; i++ ) this.trails.push( new Trail( this, i ) );
+	// this.trails = [];
+	// for( var i = 0 ; i < this.ringCount ; i++ ) this.trails.push( new Trail( this, i ) );
 
 	this.computeColors();
 }
@@ -71,7 +71,7 @@ Persona.prototype.step = function( time ){
 
 	this.audio.step();
 	for( var i = 0 ; i < this.rings.length ; i++ ) this.rings[i].step( this.time );
-	for( var i = 0 ; i < this.trails.length ; i++ ) this.trails[i].step( this.time );
+	// for( var i = 0 ; i < this.trails.length ; i++ ) this.trails[i].step( this.time );
 }
 
 module.exports = Persona;

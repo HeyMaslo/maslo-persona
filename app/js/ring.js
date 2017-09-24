@@ -8,6 +8,7 @@ var Ring = function( parent, id ){
 	
 	this.osc = 0.05;
 	this.intensity = 1;
+	this.frequency = 0.2;
 	this.gaussIt = 0;
 	this.weightIn = 0;
 	this.shadowSpread = 0.01;

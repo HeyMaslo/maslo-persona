@@ -59,18 +59,14 @@ wss.on('connection', function connection(ws) {
 });
 
 
-// var m = new midi.input();
-
-// if( m.getPortCount() ){ 
-// 	m.openPort(0);
-// 	m.on('message', function(deltaTime, message) { if( socket ) socket.send( message.toString() ); });
-// } else m = null;
-
-
-
-
-
-
+for( var i = 0 ; i < process.argv.length ; i++ ){
+	console.log(process.argv[i])
+	if( process.argv[i] == 'midi' ){
+		var m = new midi.input();
+		m.openPort(0);
+		m.on('message', function(deltaTime, message) { if( socket ) socket.send( message.toString() ); });
+	}
+}
 
 // ┌────────────────────────────────────────────────────────────────────┐
 // | Init!!

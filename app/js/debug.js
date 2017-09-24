@@ -23,7 +23,7 @@ Debug.prototype.message = function(e){
 	if( program == 176 ){
 		if( channel == 1 ) this.parent.persona.rings[this.selected].osc = value/127;
 		if( channel == 2 ) this.parent.persona.rings[this.selected].intensity = value/127 * 3;
-		if( channel == 3 ) this.parent.persona.rings[this.selected].shadowSpread = value/127/10;
+		if( channel == 3 ) this.parent.persona.rings[this.selected].frequency = value/127;
 		if( channel == 4 ) this.parent.persona.rings[this.selected].mesh.scale.set( value/127 * 2, value/127 * 2, 1 );
 		if( channel == 5 ) this.parent.persona.rings[this.selected].gaussIt = value/127;
 		if( channel == 6 ) this.parent.persona.rings[this.selected].weightIn = value/127;
@@ -34,7 +34,7 @@ Debug.prototype.message = function(e){
 	if( program == 177 ){
 		if( channel == 1 ) for( var i = 0 ; i < this.parent.persona.rings.length ; i++ ) this.parent.persona.rings[i].osc = value/127;
 		if( channel == 2 ) for( var i = 0 ; i < this.parent.persona.rings.length ; i++ ) this.parent.persona.rings[i].intensity = value/127 * 3;
-		if( channel == 3 ) for( var i = 0 ; i < this.parent.persona.rings.length ; i++ ) this.parent.persona.rings[i].shadowSpread = value/127/10;
+		if( channel == 3 ) for( var i = 0 ; i < this.parent.persona.rings.length ; i++ ) this.parent.persona.rings[i].frequency = value/127;
 		if( channel == 4 ) for( var i = 0 ; i < this.parent.persona.rings.length ; i++ ) this.parent.persona.rings[i].mesh.scale.set( value/127 * 2, value/127 * 2, 1 );
 		if( channel == 5 ) for( var i = 0 ; i < this.parent.persona.rings.length ; i++ ) this.parent.persona.rings[i].gaussIt = value/127;
 		if( channel == 6 ) for( var i = 0 ; i < this.parent.persona.rings.length ; i++ ) this.parent.persona.rings[i].weightIn = value/127;
@@ -45,7 +45,7 @@ Debug.prototype.message = function(e){
 	if( program == 178 ){
 		if( channel == 1 ) this.parent.persona.timeInc = value/127/4;
 		if( channel == 2 ) this.parent.persona.rotation = value/127;
-		if( channel == 3 ) this.parent.persona.scale = value/127;
+		if( channel == 3 ) this.parent.persona.scale.set( value/127 * 2, value/127 * 2, 1 );
 		if( channel == 5 ) this.parent.persona.hsl.x = Math.round( value/127 * 360 );
 		if( channel == 6 ) this.parent.persona.hsl.y = value/127;
 		if( channel == 7 ) this.parent.persona.hsl.z = value/127;
@@ -73,6 +73,7 @@ Debug.prototype.step = function(){
 		debugText += 'Ring :' + i + '<br/>';
 		debugText += '-> Oscillation : ' + this.parent.persona.rings[i].osc.toFixed(2) + '<br/>';
 		debugText += '-> Intensity : ' + this.parent.persona.rings[i].intensity.toFixed(2) + '<br/>';
+		debugText += '-> Frequency : ' + this.parent.persona.rings[i].frequency.toFixed(2) + '<br/>';
 		debugText += '-> Shadow : ' + this.parent.persona.rings[i].shadowSpread.toFixed(2) + '<br/>';
 		debugText += '-> Scale x : ' + this.parent.persona.rings[i].scale.x.toFixed(2) + ' y : ' + this.parent.persona.rings[i].scale.y.toFixed(2) + '<br/>';
 		debugText += '-> GaussIt : ' + this.parent.persona.rings[i].gaussIt.toFixed(2) + '<br/>';
@@ -89,6 +90,7 @@ Debug.prototype.step = function(){
 		debugText += 'Ring : ' + i + '<br/>';
 		debugText += '-> Oscillation : ' + this.parent.persona.rings[i].osc.toFixed(2) + '<br/>';
 		debugText += '-> Intensity : ' + this.parent.persona.rings[i].intensity.toFixed(2) + '<br/>';
+		debugText += '-> Frequency : ' + this.parent.persona.rings[i].frequency.toFixed(2) + '<br/>';
 		debugText += '-> Shadow : ' + this.parent.persona.rings[i].shadowSpread.toFixed(2) + '<br/>';
 		debugText += '-> Scale x : ' + this.parent.persona.rings[i].scale.x.toFixed(2) + ' y : ' + this.parent.persona.rings[i].scale.y.toFixed(2) + '<br/>';
 		debugText += '-> GaussIt : ' + this.parent.persona.rings[i].gaussIt.toFixed(2) + '<br/>';
