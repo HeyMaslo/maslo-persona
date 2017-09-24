@@ -57,6 +57,9 @@ RingGeometry.prototype.step = function( time ){
 
 		var dim1 = ( vector.x + this.parent.id / 10 ) / ( 1 / this.parent.intensity );
 		var dim2 = ( vector.y + time ) / ( 1 / this.parent.frequency );
+
+		var dim3 = time;
+
 		var n = ( this.parent.parent.simplex.noise2D( dim1, dim2 ) + 1 ) / 2 * this.parent.osc;
 		
 		// gaussian

@@ -2,9 +2,9 @@ var SimplexNoise = require('simplex-noise');
 var chroma = require('chroma-js');
 
 var Ring = require('./ring');
-var Trail = require('./trail');
 var Audio = require('./audio');
 var States = require('./states');
+var ee = require('event-emitter');
 
 var Persona = function( parent, settings ){
 	this.parent = parent;
@@ -13,7 +13,6 @@ var Persona = function( parent, settings ){
 	this.emitter = ee();
 
 	this.ringCount = this.settings.ringCount || 8;
-	this.trailsCount = this.settings.trailsCount || 8;
 	this.ringRes = this.settings.ringRes || 256;
 	this.position = this.settings.position || new THREE.Vector3(0,0,0);
 	this.rotation = this.settings.rotation || 0;
@@ -34,10 +33,6 @@ var Persona = function( parent, settings ){
 	
 	this.rings = [];
 	for( var i = 0 ; i < this.ringCount ; i++ ) this.rings.push( new Ring( this, i ) );
-	
-	
-	// this.trails = [];
-	// for( var i = 0 ; i < this.ringCount ; i++ ) this.trails.push( new Trail( this, i ) );
 
 	this.computeColors();
 }
@@ -71,7 +66,6 @@ Persona.prototype.step = function( time ){
 
 	this.audio.step();
 	for( var i = 0 ; i < this.rings.length ; i++ ) this.rings[i].step( this.time );
-	// for( var i = 0 ; i < this.trails.length ; i++ ) this.trails[i].step( this.time );
 }
 
 module.exports = Persona;

@@ -1,30 +1,8 @@
+var Gsap = require('gsap');
+
 var States = function(){}
 
-States.prototype.reset = function(){
-	for( var i = 0 ; i < this.rings.length ; i++ ){
-		this.rings[i].osc = 0.05;
-		this.rings[i].intensity = 1;
-		this.rings[i].gaussIt = 0;
-		this.rings[i].weightIn = 0;
-		this.rings[i].shadowSpread = 0.01;
-		this.rings[i].shadowIntensity = 0.15;
-		this.rings[i].theta = Math.random();
-		this.rings[i].gaussAmplitude = 0.3;
-		this.rings[i].opacity = 1;
-		this.rings[i].color;
-		this.rings[i].scale = new THREE.Vector3( 1, 1, 1 );
-		this.rings[i].position = new THREE.Vector3( 0, 0, 0 );
-	}
-
-	this.position = new THREE.Vector3( 0, 0, 0 );
-	this.rotation = 0;
-	this.scale = new THREE.Vector3( 1, 1, 1 );
-	this.hsl = new THREE.Vector3( 198, 0.73, 0.47 );
-	this.timeInc = 0.01;
-}
-
 States.prototype.init = function(){
-	this.reset();
 	this.audio.play('open');
 	for( var i = 0 ; i < this.rings.length ; i++ ){
 		this.rings[i].theta = 3 * this.rings[i].seed.z;
@@ -62,7 +40,6 @@ States.prototype.joy = function(){
 	for( var i = 0 ; i < this.rings.length ; i++ ){
 		var ring = this.rings[i];
 		var theta = ( Math.sign(this.rings[i].seed.z) > 0 ) ? ( 4 + i * 0.01 ) : ( -4 + i * 0.01 );
-		console.log(theta)
 		var tl = new TimelineMax();
 		tl.fromTo( this.rings[i].position , expandTimeOn, { x : this.rings[i].position.x, y : this.rings[i].position.y }, { x : expandSpread, y : expandSpread, ease : Power2.easeOut } )
 		.to( this.rings[i].position , expandTimeOff, { x : 0, y : 0, delay : returnDelay + ( ( this.rings.length - i ) / this.rings.length ) / 2, ease : Power2.easeOut } );
@@ -106,7 +83,7 @@ States.prototype.surprise = function(){
 	
 	this.audio.play('surprise');
 	for( var i = 0 ; i < this.rings.length ; i++ ){
-		var tl0 = new TimelineMax( { onComplete : function(){ console.log('end');this.setState('idle') }.bind(this) } );
+		var tl0 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
 		tl0.to( this.rings[i] , 2, {
 			gaussIt : 0,
 			weightIn : 0.3,
@@ -171,17 +148,77 @@ States.prototype.upset = function(){
 
 States.prototype.yes = function(){
 	this.audio.play('yes');
-	// for( var i = 0 ; i < this.rings.length ; i++ ){
-	// 	this.rings[i].scale.x = 0.8 + (-i)*0.03;
-	// 	this.rings[i].scale.y = 0.8 + (-i)*0.03;
-	// 	this.rings[i].theta = 0;
-	// }
-	// this.hsl.y = 0.2;
-	// this.timeInc = 0.001;
+	for( var i = 0 ; i < this.rings.length ; i++ ){
+		var tl0 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
+		tl0.to( this.rings[i].scale, 0.2, { x : 1.1, y: 1.1, ease : Power3.easeOut } )
+		.to( this.rings[i].scale, 1.2, { x : 1, y:1, delay : 1.57, ease : Elastic.easeOut.config(1, 0.4) } )
+
+		var tl5 = new TimelineMax( );
+		tl5.to( this.rings[i].position, 0.2, { x : 0.05 * Math.cos( Math.random() * 2 * Math.PI), y: 0.05 * Math.sin( Math.random() * 2 * Math.PI), ease : Power3.easeOut } )
+		.to( this.rings[i].position, 1.2, { x : 0, y:0, delay : 1.57, ease : Elastic.easeOut.config(1, 0.4) } )
+
+		var tl1 = new TimelineMax(  );
+		tl1.to( this.rings[i], 0.1, { 
+			gaussIt : 0.1,
+			weightIn : 0.5,
+			intensity : 1,
+			osc : .1,
+			theta : Math.random() * this.rings[i].seed.z,
+			ease : Power3.easeOut
+		} )
+		.to( this.rings[i], 1.2, { 
+			gaussIt : 0.98,
+			weightIn : 1,
+			intensity : 0.21,
+			osc : 0.06,
+			theta : i * 0.01,
+			ease : Power3.easeOut,
+			delay : 1.55,
+		} )
+	}
+
+	var tl3 = new TimelineMax( { onComplete : function(){ this.rotation = 0 }.bind(this) } );
+	tl3.to( this , 2.4, { rotation : -1, ease : Power3.easeOut  } )
+	tl3.to( this , 0.8, { rotation : 0, ease : Power3.easeOut  } )
+
+	var tl4 = new TimelineMax();
+	tl4.to( this , 0.2, { timeInc : 0.1, ease : Power3.easeOut  } )
+	.to( this , 1, { timeInc : 0.01, delay : 3, ease : Power3.easeOut  } );
+}
+
+States.prototype.no = function(){
+	this.audio.play('no');
+
+	for( var i = 0 ; i < this.rings.length ; i++ ){
+		var tl1 = new TimelineMax(  );
+		tl1.to( this.rings[i], 2, { 
+			gaussIt : 0.1,
+			weightIn : 0.8,
+			shadowSpread : 0.03,
+			theta : Math.random() * this.rings[i].seed.z,
+			ease : Power3.easeOut
+		} )
+		.to( this.rings[i], 2, { 
+			gaussIt : 0.98,
+			weightIn : 1,
+			shadowSpread : 0.01,
+			theta : i * 0.01,
+			ease : Power3.easeOut,
+			delay : 1
+		} )
+	}
+
+	var tl2 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
+	tl2.to( this.hsl , 2, { z : .2, ease : Power3.easeOut  } )
+	.to( this.hsl , 2, { z : 0.47, delay : 1, ease : Power3.easeOut  } )
+
+	var tl4 = new TimelineMax();
+	tl4.to( this , 0.5, { timeInc : 0, ease : Power3.easeOut  } )
+	.to( this , 2, { timeInc : 0.01, delay : 1.5, ease : Power3.easeOut  } );
+	
 }
 
 States.prototype.pinchIn = function(){
-	this.reset();
 	this.audio.play('pinch');
 	var time = 2.7
 	Gsap.TweenMax.to( this , time, { timeInc : 0.05, ease : Power3.easeOut  } );
@@ -202,51 +239,51 @@ States.prototype.pinchIn = function(){
 }
 
 States.prototype.pinchOut = function(){
-	this.reset();
 	this.audio.play('pinch');
-	var time = 2.7
-	Gsap.TweenMax.to( this , time, { timeInc : 0.05, ease : Power3.easeOut  } );
-	Gsap.TweenMax.to( this.scale , time, { x : 0.8, y : 0.8, ease : Power3.easeOut  } );
+	// var time = 2.7
+	// Gsap.TweenMax.to( this , time, { timeInc : 0.05, ease : Power3.easeOut  } );
+	// Gsap.TweenMax.to( this.scale , time, { x : 0.8, y : 0.8, ease : Power3.easeOut  } );
 
-	Gsap.TweenMax.to( this.scale , 1.2, { x : 1, y : 1, ease : Elastic.easeOut.config(1, 0.3), delay : time  } );
-	Gsap.TweenMax.to( this , 0.6, { timeInc : 0.005, ease : Power3.easeOut, delay : time  } );
+	// Gsap.TweenMax.to( this.scale , 1.2, { x : 1, y : 1, ease : Elastic.easeOut.config(1, 0.3), delay : time  } );
+	// Gsap.TweenMax.to( this , 0.6, { timeInc : 0.005, ease : Power3.easeOut, delay : time  } );
 
-	for( var i = 0 ; i < this.rings.length ; i++ ){
-		Gsap.TweenMax.to( this.rings[i] , time, { osc : 0.09, ease : Power3.easeOut  } );
-		Gsap.TweenMax.to( this.rings[i] , time, { intensity : 3, ease : Power3.easeOut  } );
-
-		Gsap.TweenMax.to( this.rings[i] , 0.2, { intensity : 1, ease : Power3.easeOut, delay : time  } );
-		Gsap.TweenMax.to( this.rings[i] , 0.2, { osc : 0.05, ease : Power3.easeOut, delay : time  } );
-	}
-	// this.hsl.y = 0.2;
-	// this.timeInc = 0.001;
-}
-
-States.prototype.no = function(){
-	this.audio.play('no');
 	// for( var i = 0 ; i < this.rings.length ; i++ ){
-	// 	this.rings[i].scale.x = 0.8 + (-i)*0.03;
-	// 	this.rings[i].scale.y = 0.8 + (-i)*0.03;
-	// 	this.rings[i].theta = 0;
+	// 	Gsap.TweenMax.to( this.rings[i] , time, { osc : 0.09, ease : Power3.easeOut  } );
+	// 	Gsap.TweenMax.to( this.rings[i] , time, { intensity : 3, ease : Power3.easeOut  } );
+
+	// 	Gsap.TweenMax.to( this.rings[i] , 0.2, { intensity : 1, ease : Power3.easeOut, delay : time  } );
+	// 	Gsap.TweenMax.to( this.rings[i] , 0.2, { osc : 0.05, ease : Power3.easeOut, delay : time  } );
 	// }
-	// this.hsl.y = 0.2;
-	// this.timeInc = 0.001;
 }
+
+
 
 States.prototype.hey = function(){
-	this.reset();
 	this.audio.play('hey');
 	
 	for( var i = 0 ; i < this.rings.length ; i++ ){
-		this.rings[i].theta = Math.random();
-		this.rings[i].osc = 0.34;
-		this.rings[i].intensity = 0.45;
-		this.rings[i].gaussIt = 0.83;
-		this.rings[i].weightIn = 0.03;
-		// Gsap.TweenMax.to( this.rings[i] , 2, { intensity : 0.2, ease : Power3.easeOut, delay : 1  } );
+		var tl1 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
+		tl1.to( this.rings[i], 0.7, { 
+			gaussIt : 0.83,
+			weightIn : 0.03,
+			intensity : 0.45,
+			osc : .34,
+			theta : Math.random() / 2,
+			ease : Power3.easeOut
+		} )
+		.to( this.rings[i], 0.6, { 
+			gaussIt : 0.98,
+			weightIn : 1,
+			intensity : 0.21,
+			osc : 0.06,
+			theta : i * 0.01,
+			ease : Power3.easeOut,
+			delay : 0.3,
+		} )
 	}
-	Gsap.TweenMax.to( this , 1, { timeInc : 0.1, ease : Power3.easeOut  } );
-	Gsap.TweenMax.to( this , 1, { timeInc : 0.002, ease : Power3.easeOut, delay : 1  } );
+	var tl4 = new TimelineMax(  );
+	tl4.to( this , 1, { timeInc : 0.1, ease : Power3.easeOut  } )
+	.to( this , 1, { timeInc : 0.01, delay : 1.5, ease : Power3.easeOut  } );
 }
 
 States.prototype.updateStates = function( time ){

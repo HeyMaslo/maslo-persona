@@ -1,10 +1,5 @@
 // Global libraries
 window.THREE = require('three');
-window.Gsap = require('gsap');
-window.ee = require('event-emitter');
-
-// Node modules
-// var OrbitControls = require('three-orbit-controls')(THREE)
 
 // Custom modules
 var Debug = require('./debug');
@@ -19,9 +14,6 @@ var Main = function() {
 	// Three scene
 	this.renderer = new THREE.WebGLRenderer( { alpha : true, antialias : true } );
 	this.element.appendChild( this.renderer.domElement );
-
-	// this.emitter = ee();
-	
 
 	this.scene = new THREE.Scene();
 	this.camera = new THREE.OrthographicCamera();
