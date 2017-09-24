@@ -85,12 +85,7 @@ States.prototype.joy = function(){
 		})
 
 		var tl4 = new TimelineMax();
-		tl4.fromTo( this.rings[i] , 1, {
-			gaussIt : this.rings[i].gaussIt,
-			weightIn : this.rings[i].weightIn,
-			intensity : this.rings[i].intensity,
-			osc : this.rings[i].osc
-		}, {
+		tl4.to( this.rings[i] , 1, {
 			gaussIt : 0.5,
 			weightIn : 0.2,
 			intensity : 0.6,
@@ -112,11 +107,7 @@ States.prototype.surprise = function(){
 	this.audio.play('surprise');
 	for( var i = 0 ; i < this.rings.length ; i++ ){
 		var tl0 = new TimelineMax( { onComplete : function(){ console.log('end');this.setState('idle') }.bind(this) } );
-		tl0.fromTo( this.rings[i] , 2, {
-			gaussIt : this.rings[i].gaussIt,
-			weightIn : this.rings[i].weightIn,
-			osc : this.rings[i].osc
-		}, {
+		tl0.to( this.rings[i] , 2, {
 			gaussIt : 0,
 			weightIn : 0.3,
 			osc : 0.2,
@@ -130,7 +121,7 @@ States.prototype.surprise = function(){
 		} )
 
 		var tl2 = new TimelineMax();
-		tl2.fromTo( this.rings[i].scale , 0.3, { x : this.rings[i].scale.x, y : this.rings[i].scale.y }, { x : 1.1 + (this.rings.length-i)/500, y : 1.1+ (this.rings.length-i)/500, delay : ( ( i ) / this.rings.length ) / 2 / 2, ease : Back.easeOut.config(1.7) } )
+		tl2.to( this.rings[i].scale , 0.3, { x : 1.1 + (this.rings.length-i)/500, y : 1.1+ (this.rings.length-i)/500, delay : ( ( i ) / this.rings.length ) / 2 / 2, ease : Back.easeOut.config(1.7) } )
 		.to( this.rings[i].scale , 0.3, { x : 1, y : 1, delay : 1.6 + ( ( this.rings.length - i ) / this.rings.length ) / 2 / 2, ease : Back.easeOut.config(1.7) } );
 	}
 	
@@ -140,16 +131,41 @@ States.prototype.surprise = function(){
 }
 
 States.prototype.upset = function(){
-	this.reset();
 	this.audio.play('upset');
+	var timeIn = 1.5;
+	var timeOut = 1;
+	var delayInOut = 1;
 
 	for( var i = 0 ; i < this.rings.length ; i++ ){
-		Gsap.TweenMax.fromTo( this.rings[i].scale , 3, { x : this.rings[i].scale.x, y: this.rings[i].scale.y }, {  x : 0.8 + (-i)*0.03 , y: 0.8 + (-i)*0.03, ease : Elastic.easeOut.config(1, 0.3), delay : (1-( i / this.rings.length )) / 2  } );
-		Gsap.TweenMax.fromTo( this.rings[i] , 3, { theta : this.rings[i].theta }, {  theta : 0, ease : Elastic.easeOut.config(1, 0.3)  } );
-	}
 
-	Gsap.TweenMax.to( this.hsl , 1, { y : 0.2, ease : Power3.easeOut  } );
-	Gsap.TweenMax.to( this , 1, { timeInc : 0.002, ease : Power3.easeOut  } );
+		var tl0 = new TimelineMax();
+		tl0.to( this.rings[i].scale , timeIn, {  x : 0.8 + (-i)*0.03 , y: 0.8 + (-i)*0.03, ease : Elastic.easeOut.config(1, 0.3), delay : (1-( i / this.rings.length )) / 2  } )
+		.to( this.rings[i].scale , timeOut, { x : 1, y : 1, delay : delayInOut, ease : Power4.easeOut  } )
+
+		var tl1 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
+		tl1.to( this.rings[i] , timeIn, {
+			gaussIt : 0.2,
+			theta : 0,
+			ease : Elastic.easeOut.config(1, 0.3)
+		} )
+		.to( this.rings[i] , timeOut, {
+			gaussIt : 0.98,
+			theta : i * 0.01,
+			delay : delayInOut,
+			ease : Elastic.easeOut.config(1, 0.3)
+		})
+	}
+	var tl2 = new TimelineMax();
+	tl2.to( this.hsl , timeIn, { y : 0.2, ease : Power3.easeOut  } )
+	.to( this.hsl , timeOut, { y : 0.73, delay : delayInOut, ease : Power3.easeOut  } )
+
+	var tl3 = new TimelineMax( { onComplete : function(){ this.rotation = 0 }.bind(this) } );
+	tl3.to( this , timeIn, { rotation : 1.5 + Math.random(), ease : Power3.easeOut  } )
+	.to( this , timeOut, { rotation : 3, delay: delayInOut, ease : Power3.easeOut  } )
+
+	var tl4 = new TimelineMax();
+	tl4.to( this , timeIn, { timeInc : 0.002, ease : Power3.easeOut  } )
+	.to( this , timeOut, { timeInc : 0.01, ease : Power3.easeOut  } );
 	
 }
 
