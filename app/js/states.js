@@ -30,6 +30,7 @@ States.prototype.idle = function(){
 }
 
 States.prototype.joy = function(){
+	console.log('hey')
 	this.audio.play('joy');
 	var expandTimeOn = 1;
 	var expandTimeOff = 1;

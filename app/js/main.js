@@ -2,7 +2,7 @@
 window.THREE = require('three');
 
 // Custom modules
-var Debug = require('./debug');
+// var Debug = require('./debug');
 var Persona = require('./persona');
 
 var Main = function() {
@@ -17,9 +17,8 @@ var Main = function() {
 
 	this.scene = new THREE.Scene();
 	this.camera = new THREE.OrthographicCamera();
-	// this.camControl = new OrbitControls(this.camera);
 
-	this.debug = new Debug( this );
+	// this.debug = new Debug( this );
 	this.persona = new Persona( this );
 
 	this.persona.emitter.on('stateChange', function (args) {
@@ -28,8 +27,6 @@ var Main = function() {
 			if( this.controls[i].getAttribute('data-reaction') == args ) this.controls[i].classList.add('active');
 		}
 	}.bind(this));
-
-	setTimeout( this.persona.setState.bind(this.persona, 'init'), 1000 );
 	
 	this.resize();
 	this.step();
@@ -52,7 +49,7 @@ Main.prototype.resize = function( e ) {
 Main.prototype.step = function( time ) {
 	window.requestAnimationFrame( this.step.bind( this ) );
 
-	this.debug && this.debug.step(time);
+	// this.debug && this.debug.step(time);
 	this.persona && this.persona.step(time);
 
 	this.renderer.render( this.scene, this.camera );

@@ -1,5 +1,7 @@
-var vs = require('./../shaders/ringVertex.glsl');
-var fs = require('./../shaders/ringFragment.glsl');
+var THREE = require('three');
+
+var vs = require('../shaders/ringVertex.glsl');
+var fs = require('../shaders/ringFragment.glsl');
 
 var RingMaterial = function( parent ){
 	this.parent = parent;

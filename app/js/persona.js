@@ -35,6 +35,8 @@ var Persona = function( parent, settings ){
 	for( var i = 0 ; i < this.ringCount ; i++ ) this.rings.push( new Ring( this, i ) );
 
 	this.computeColors();
+
+	setTimeout( this.setState.bind(this, 'init'), 1000 );
 }
 
 Persona.prototype = States.prototype;
@@ -64,7 +66,6 @@ Persona.prototype.step = function( time ){
 
 	this.updateStates( time );
 
-	this.audio.step();
 	for( var i = 0 ; i < this.rings.length ; i++ ) this.rings[i].step( this.time );
 }
 
