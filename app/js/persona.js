@@ -17,7 +17,7 @@ var Persona = function( parent, settings ){
 	this.position = this.settings.position || new THREE.Vector3(0,0,0);
 	this.rotation = this.settings.rotation || 0;
 	this.scale = this.settings.scale || new THREE.Vector3(1,1,1);
-	this.hsl = this.settings.hsl || new THREE.Vector3(198,1,0.47);
+	this.hsl = this.settings.hsl || new THREE.Vector3(198,1,0.6);
 	this.timeInc = this.settings.timeInc || 0.005;
 	this.radius = this.settings.radius || 300;
 

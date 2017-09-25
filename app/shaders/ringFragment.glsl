@@ -41,8 +41,8 @@ void main() {
 	vec4 nt = texture2D( tx, ( vUv + vec2( 1.2, 1.2 ) ) * 0.2 );
 	vec4 color = vColor;
 	
-	if( vMat == 0.0 ) color.rgb +=  nt1.r * 0.02;
-	color.a = vColor.a * opacity;
+	if( vMat == 0.0 ) color.rgb +=  nt1.r * 0.01;
+	// color.a = vColor.a * opacity;
 
 	if( vMat == 1.0 ) color.a *= 0.5 + nt.r * 0.5;
 
