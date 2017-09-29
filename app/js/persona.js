@@ -55,6 +55,30 @@ Persona.prototype.computeColors = function(){
 	this.rings[2].color = this.rings[1].color.darken(0.3);
 	
 	for( var i = 3 ; i < this.ringCount ; i++ ) this.rings[i].color = this.colorHSL.darken( i - 3.5 );
+
+	if( this.parent.colorScheme == 1 ){
+		this.rings[3].color = chroma.hsv(58, 0.48, 1);
+		this.rings[4].color = chroma.hsv(43, 0.61, 1);
+		this.rings[5].color = chroma.hsv(350, 0.64, 0.98);
+		this.rings[6].color = chroma.hsv(289, 0.45, 0.38);
+		this.rings[7].color = chroma.hsv(277, 0.46, 0.32);
+	}
+
+	if( this.parent.colorScheme == 2 ){
+		this.rings[3].color = chroma.hsv(3,  	0.76, 	0.94);
+		this.rings[4].color = chroma.hsv(352,	0.80, 	0.79);
+		this.rings[5].color = chroma.hsv(337, 	0.98, 	0.51);
+		this.rings[6].color = chroma.hsv(325, 	1, 		0.33);
+		this.rings[7].color = chroma.hsv(302, 	0.62, 	0.18);
+	}
+
+	if( this.parent.colorScheme == 3 ){
+		this.rings[3].color = chroma.hsv(165,  	0.98, 	1.00);
+		this.rings[4].color = chroma.hsv(179,	0.95, 	0.91);
+		this.rings[5].color = chroma.hsv(192, 	1.00, 	1.00);
+		this.rings[6].color = chroma.hsv(205, 	0.95, 	0.91);
+		this.rings[7].color = chroma.hsv(218, 	0.95, 	1.00);
+	}
 }
 
 Persona.prototype.step = function( time ){

@@ -1,5 +1,5 @@
 var AudioPlayer = function(){
-	var audioTracks = ['hey','joy','no','open','pinch','shake','surprise','swipe','tap','tilt','upset','yes']
+	var audioTracks = ['hey','joy','no','open','pinch','shake','surprise','swipe','tap','upset','yes']
 	for( var i = 0 ; i < audioTracks.length ; i++ ) this[audioTracks[i]] = new Audio( 'audio/' + audioTracks[ i ] + '.mp3' );
 }
 AudioPlayer.prototype.play = function( track ) {

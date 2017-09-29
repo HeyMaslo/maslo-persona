@@ -51,6 +51,9 @@ RingGeometry.prototype.step = function( time ){
 	if( this.parent.id > 0 ) this.oldPoints = this.parent.parent.rings[ this.parent.id - 1 ].ringGeometry.points;
 
 	var colGL = this.parent.color.gl();
+	var colGLDark = this.parent.color.darken(0.5).gl();
+
+	this.geoData.attributes.color.setXYZ( 0, colGLDark[0], colGLDark[1], colGLDark[2] );
 
 	for( var i = 0 ; i < this.parent.parent.ringRes ; i++ ){
 		var vector = new THREE.Vector2( Math.cos( Math.PI * 2 * i / this.parent.parent.ringRes ), Math.sin( Math.PI * 2 * i / this.parent.parent.ringRes ) );

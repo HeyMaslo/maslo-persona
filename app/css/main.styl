@@ -48,16 +48,31 @@ body
 	z-index 2
 	top 10px
 	left 10px
-	a	
-		text-decoration none
-		padding 5px
-		margin-left 5px
-		color #666666
-		display inline-block
-		border solid 1px #666666
-		&.active
-			background #666666
-			color #ffffff
-		&:hover
-			background #666666
-			color #ffffff
+	.block.actions
+		a	
+			text-decoration none
+			padding 5px
+			margin-right 5px
+			color #666666
+			display inline-block
+			border solid 1px #666666
+			&.active
+				background #666666
+				color #ffffff
+			&:hover
+				background #666666
+				color #ffffff
+		&.color
+			margin-top 10px
+	.block.pinch
+		input
+			position relative
+			top 5px
+			margin-left 10px
+			width 333px
+	.block.tilt
+		#tiltBox
+			width 100px
+			height 100px
+			border-radius 50px
+			border solid 1px #666666
