@@ -48,8 +48,12 @@ app.use(express.static(__dirname + '/app'));
 // | Routes
 // └────────────────────────────────────────────────────────────────────┘
 
+console.log(process.argv)
 app.get('/', function(req, res){
-	res.render( 'main' );
+	var midi = '';
+	for( var i = 0 ; i < process.argv.length ; i++ ) if( process.argv[i] == 'midi' ) midi = 'midi';
+
+	res.render( 'main', { midi: midi } );
 });
 
 var socket;

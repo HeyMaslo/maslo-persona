@@ -5,9 +5,9 @@ html
     meta(http-equiv='Content-Type',content='text/html; charset=utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
-    title Maslo 1-a
+    title Maslo 1-c
     link(rel='stylesheet', id='mainStylesheet' href='css/main.css')
-  body
+  body(class=midi)
     #debug
         #b1
         #b2
@@ -23,14 +23,8 @@ html
             a.controlBut(href='javascript:void(0)', data-reaction='no') No
             a.controlBut(href='javascript:void(0)', data-reaction='hey') Hey Maslo
             a.controlBut(href='javascript:void(0)', data-reaction='shake') Shake
-        .block.actions.color
-            a.colorBut(href='javascript:void(0)', color-scheme='0') Default
-            a.colorBut(href='javascript:void(0)', color-scheme='1') Color 1
-            a.colorBut(href='javascript:void(0)', color-scheme='2') Color 2
-            a.colorBut(href='javascript:void(0)', color-scheme='3') Color 3
-        .block.pinch
-            p Pinch <input type='range' min='0.5' max='1.5' value='1' width='300' step='0.001' id='slider'>
-        .block.pinch * Click to simulate tap
-        .block.pinch * Drag to simulate swipe
+            a.controlBut(href='javascript:void(0)', data-reaction='listening') Listening
+            a.controlBut(href='javascript:void(0)', data-reaction='question') Question
+    a#debugBut(href='javascript:void(0)') Debugger
     #main
     script(src='js/main.js')

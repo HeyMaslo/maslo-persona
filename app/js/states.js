@@ -286,6 +286,93 @@ States.prototype.tap = function(){
 	}
 }
 
+
+States.prototype.listening = function(){
+
+	for( var i = 0 ; i < this.rings.length ; i++ ){
+		var ring = this.rings[i];
+		var theta = -Math.PI/12 - i * 0.001 ;
+
+		var tl3 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
+		tl3.to( this.rings[i] , 1, {
+			theta : theta,
+			gaussIt : 0.8,
+			weightIn : 0.6,
+			intensity : 0.3,
+			osc : 0.14,
+			ease: Power4.easeOut,
+			delay : ( ( this.rings.length - i ) / this.rings.length ) / 2
+		} )
+		.to( this.rings[i] , 0.4, {
+			gaussIt : 0.98,
+			weightIn : 1,
+			intensity : 0.21,
+			osc : 0.06,
+			theta : i * 0.01,
+			delay : 4 + ( ( this.rings.length - i ) / this.rings.length ) / 20
+		})
+
+	}
+
+	var tl4 = new TimelineMax(  );
+	tl4.to( this , 1, { timeInc : 0.05, ease : Power3.easeOut  } )
+	.to( this , 0.4, { timeInc : 0.01, delay : 4, ease : Power3.easeOut  } );
+}
+
+
+States.prototype.question = function(){
+	this.audio.play('question');
+
+
+	var timeIn = 0.6;
+	var delay = 0.8;
+	var timeOut = 0.8;
+
+	for( var i = 0 ; i < this.rings.length ; i++ ){
+		var tl0 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
+		tl0.to( this.rings[i].scale, timeIn, { x : 1 + (i-this.rings.length) * 0.01, y: 1 + (i-this.rings.length) * 0.01, ease : Power3.easeOut } )
+		.to( this.rings[i].scale, timeOut, { x : 1, y:1, delay : delay,  ease : Elastic.easeOut.config(1, 0.4) } )
+
+		var tl5 = new TimelineMax( );
+		tl5.to( this.rings[i].position, timeIn, { x : 0 * Math.cos( Math.random() * 2 * Math.PI), y: 0.1 * Math.sin( Math.random() * 2 * Math.PI), ease : Power3.easeOut } )
+		.to( this.rings[i].position, timeOut, { x : 0, y:0, delay : delay,  ease : Elastic.easeOut.config(1, 0.4) } )
+
+
+		var tl1 = new TimelineMax(  );
+		tl1.to( this.rings[i], timeIn, { 
+			gaussIt : 0.1,
+			weightIn : 0.5,
+			intensity : 1,
+			osc : .1,
+			ease : Power3.easeOut
+		} )
+		.to( this.rings[i], timeOut, { 
+			gaussIt : 0.98,
+			weightIn : 1,
+			intensity : 0.21,
+			osc : 0.06,
+			ease : Power3.easeOut,
+			delay : delay
+		} )
+
+
+		var tl2 = new TimelineMax(  );
+		tl2.to( this.rings[i], timeIn, { 
+			theta : Math.random() ,
+			ease : Power3.easeOut
+		} )
+		.to( this.rings[i], timeOut, { 
+			theta : i * 0.01,
+			delay : delay,
+			ease : Power3.easeOut
+		} )
+	}
+
+	var tl4 = new TimelineMax();
+	tl4.to( this , timeIn, { timeInc : 0.1, ease : Power3.easeOut  } )
+	.to( this , timeOut, { timeInc : 0.01, delay : delay, ease : Power3.easeOut  } );
+}
+
 States.prototype.updateStates = function( time ){
 	// var n = this.simplex.noise2D( 0.5, time / 10000 );
 	// this.rotationSpeed += n /1000000;

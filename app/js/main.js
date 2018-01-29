@@ -5,31 +5,26 @@ var remap = require('remap');
 var Gsap = require('gsap');
 
 // Custom modules
-// var Debug = require('./debug');
+var Debug = require('./debug');
 var Persona = require('./persona');
 
 var Main = function() {
 	this.element = document.getElementById('main');
-
+	this.debugBut = document.getElementById('debugBut');
+	this.debugEl = document.getElementById('debug');
 	this.mouseIsDown = false;
 	this.startAngle = 0;
 	this.angleSpeed = 0;
-	this.pinching = false;
+	this.debugActive = false;
 
+	window.addEventListener('resize', this.resize.bind( this ) );
 	this.element.addEventListener('mousedown', this.onMouseDown.bind(this));
 	this.element.addEventListener('mouseup', this.onMouseUp.bind(this));
 	this.element.addEventListener('mousemove', this.onMouseMove.bind(this));
+	this.debugBut.addEventListener('mousedown', this.debugToggle.bind(this));
 
 	this.controls = document.getElementsByClassName('controlBut');
 	for( var i = 0 ; i < this.controls.length ; i++ ) this.controls[i].addEventListener( 'click', this.controlClicked.bind(this) );
-
-	this.colorButs = document.getElementsByClassName('colorBut');
-	for( var i = 0 ; i < this.colorButs.length ; i++ ) this.colorButs[i].addEventListener( 'click', this.changeColor.bind(this) );	
-
-	this.slider = document.getElementById('slider');
-
-	this.slider.addEventListener('input', this.onSLiderInput.bind(this) );
-	this.slider.addEventListener('change', this.onSLiderChange.bind(this) );
 
 	// Three scene
 	this.renderer = new THREE.WebGLRenderer( { alpha : true, antialias : true } );
@@ -38,7 +33,7 @@ var Main = function() {
 	this.scene = new THREE.Scene();
 	this.camera = new THREE.OrthographicCamera();
 
-	// this.debug = new Debug( this );
+	this.debug = new Debug( this );
 	this.persona = new Persona( this );
 
 	this.persona.emitter.on('stateChange', function (args) {
@@ -47,27 +42,39 @@ var Main = function() {
 			if( this.controls[i].getAttribute('data-reaction') == args ) this.controls[i].classList.add('active');
 		}
 	}.bind(this));
-	
+
+
+	var geometry = new THREE.PlaneBufferGeometry( 1, 1 );
+	var material = new THREE.ShaderMaterial( {
+		vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }',
+		fragmentShader: 'varying vec2 vUv; void main() { float intensity = smoothstep( 0.0, 0.3, vUv.x * vUv.y ); gl_FragColor = vec4( 0.215686274509804 * (1.0-intensity) + 0.6352941176 * (intensity), 0.733333333333333 * (1.0-intensity) + 0.43921568627451 * (intensity), 1.0 * (1.0-intensity) + 1.0 * (intensity), 1.0 ); }'
+	} );
+	material.transparent = true;
+	material.blending = THREE.MultiplyBlending;
+	this.plane = new THREE.Mesh( geometry, material );
+	this.plane.position.z = -10;
+	this.scene.add( this.plane );
+
+	var geometry = new THREE.PlaneBufferGeometry( 1, 1 );
+	var material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+	this.background = new THREE.Mesh( geometry, material );
+	this.background.position.z = -100;
+	this.scene.add( this.background );
+
 	this.resize();
 	this.step();
+}
+
+Main.prototype.debugToggle = function(){
+	this.debugActive = !this.debugActive;
+	if( this.debugActive ) this.debugEl.classList.add('active');
+	else this.debugEl.classList.remove('active');
 }
 
 Main.prototype.changeColor = function( e ){
 	this.colorScheme = e.target.getAttribute('color-scheme');
 	for( var i = 0 ; i < this.colorButs.length ; i++ ) this.colorButs[i].classList.remove('active')
 	e.target.classList.add('active');
-}
-
-Main.prototype.onSLiderInput = function(e){
-	this.pinching = true;
-	if( this.pinchBackAnimation) this.pinchBackAnimation.kill();
-}
-
-Main.prototype.onSLiderChange = function(e){
-	this.pinching = false;
-	this.persona.audio.play('pinch');
-	
-	this.pinchBackAnimation = Gsap.TweenMax.to( this.persona.scale , 1.9, {  x : 1 , y: 1, ease : Elastic.easeOut.config(1, 0.4) } );
 }
 
 Main.prototype.onMouseDown = function(e){
@@ -103,6 +110,8 @@ Main.prototype.resize = function( e ) {
 	this.renderer.domElement.setAttribute( 'style', 'width:' + width + 'px; height:' + height + 'px;' );
 	var camView = { left :  width / -2, right : width / 2, top : height / 2, bottom : height / -2 };
 	for ( var prop in camView) this.camera[ prop ] = camView[ prop ];
+	this.background.scale.set( this.element.offsetWidth, this.element.offsetHeight, 1 );
+	this.plane.scale.set( this.element.offsetWidth, this.element.offsetHeight, 1 );
 	this.camera.position.z = 1000;
 	this.camera.updateProjectionMatrix( );
 }
@@ -113,10 +122,7 @@ Main.prototype.step = function( time ) {
 	this.angleSpeed -= this.angleSpeed * 0.05;
 	this.persona.rotation += this.angleSpeed;
 
-	if( this.pinching ) this.persona.scale.x = this.persona.scale.y += (parseFloat(this.slider.value) - this.persona.scale.y)*0.3;
-	else this.slider.value = this.persona.scale.x;
-
-	// this.debug && this.debug.step(time);
+	this.debug && this.debug.step(time);
 	this.persona && this.persona.step(time);
 
 	this.renderer.render( this.scene, this.camera );
