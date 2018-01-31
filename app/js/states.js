@@ -324,9 +324,9 @@ States.prototype.question = function(){
 	this.audio.play('question');
 
 
-	var timeIn = 0.6;
-	var delay = 0.8;
-	var timeOut = 0.8;
+	var timeIn = 0.4;
+	var delay = 0.4;
+	var timeOut = 0.6;
 
 	for( var i = 0 ; i < this.rings.length ; i++ ){
 		var tl0 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
