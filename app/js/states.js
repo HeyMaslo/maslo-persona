@@ -293,8 +293,8 @@ States.prototype.listening = function(){
 		var ring = this.rings[i];
 		var theta = -Math.PI/12 - i * 0.001 ;
 
-		var tl3 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
-		tl3.to( this.rings[i] , 1, {
+		var tl = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
+		tl.to( this.rings[i] , 1, {
 			theta : theta,
 			gaussIt : 0.8,
 			weightIn : 0.6,
@@ -314,8 +314,8 @@ States.prototype.listening = function(){
 
 	}
 
-	var tl4 = new TimelineMax(  );
-	tl4.to( this , 1, { timeInc : 0.05, ease : Power3.easeOut  } )
+	var tl2 = new TimelineMax(  );
+	tl2.to( this , 1, { timeInc : 0.05, ease : Power3.easeOut  } )
 	.to( this , 0.4, { timeInc : 0.01, delay : 4, ease : Power3.easeOut  } );
 }
 
@@ -329,17 +329,17 @@ States.prototype.question = function(){
 	var timeOut = 0.6;
 
 	for( var i = 0 ; i < this.rings.length ; i++ ){
-		var tl0 = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
-		tl0.to( this.rings[i].scale, timeIn, { x : 1 + (i-this.rings.length) * 0.01, y: 1 + (i-this.rings.length) * 0.01, ease : Power3.easeOut } )
+		var tl = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
+		tl.to( this.rings[i].scale, timeIn, { x : 1 + (i-this.rings.length) * 0.01, y: 1 + (i-this.rings.length) * 0.01, ease : Power3.easeOut } )
 		.to( this.rings[i].scale, timeOut, { x : 1, y:1, delay : delay,  ease : Elastic.easeOut.config(1, 0.4) } )
 
-		var tl5 = new TimelineMax( );
-		tl5.to( this.rings[i].position, timeIn, { x : 0 * Math.cos( Math.random() * 2 * Math.PI), y: 0.1 * Math.sin( Math.random() * 2 * Math.PI), ease : Power3.easeOut } )
+		var tl2 = new TimelineMax( );
+		tl2.to( this.rings[i].position, timeIn, { x : 0 * Math.cos( Math.random() * 2 * Math.PI), y: 0.1 * Math.sin( Math.random() * 2 * Math.PI), ease : Power3.easeOut } )
 		.to( this.rings[i].position, timeOut, { x : 0, y:0, delay : delay,  ease : Elastic.easeOut.config(1, 0.4) } )
 
 
-		var tl1 = new TimelineMax(  );
-		tl1.to( this.rings[i], timeIn, { 
+		var tl3 = new TimelineMax(  );
+		tl3.to( this.rings[i], timeIn, { 
 			gaussIt : 0.1,
 			weightIn : 0.5,
 			intensity : 1,
@@ -356,8 +356,8 @@ States.prototype.question = function(){
 		} )
 
 
-		var tl2 = new TimelineMax(  );
-		tl2.to( this.rings[i], timeIn, { 
+		var tl4 = new TimelineMax(  );
+		tl4.to( this.rings[i], timeIn, { 
 			theta : Math.random() ,
 			ease : Power3.easeOut
 		} )
@@ -368,8 +368,8 @@ States.prototype.question = function(){
 		} )
 	}
 
-	var tl4 = new TimelineMax();
-	tl4.to( this , timeIn, { timeInc : 0.1, ease : Power3.easeOut  } )
+	var tl5 = new TimelineMax();
+	tl5.to( this , timeIn, { timeInc : 0.1, ease : Power3.easeOut  } )
 	.to( this , timeOut, { timeInc : 0.01, delay : delay, ease : Power3.easeOut  } );
 }
 
