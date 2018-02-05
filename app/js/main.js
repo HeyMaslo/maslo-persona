@@ -9,6 +9,8 @@ var Debug = require('./debug');
 var Persona = require('./persona');
 
 var Main = function() {
+	window.main = this;
+	console.log(this)
 	this.element = document.getElementById('main');
 	this.debugBut = document.getElementById('debugBut');
 	this.debugEl = document.getElementById('debug');
@@ -21,7 +23,7 @@ var Main = function() {
 	this.element.addEventListener('mousedown', this.onMouseDown.bind(this));
 	this.element.addEventListener('mouseup', this.onMouseUp.bind(this));
 	this.element.addEventListener('mousemove', this.onMouseMove.bind(this));
-	this.debugBut.addEventListener('mousedown', this.debugToggle.bind(this));
+	if( this.debugBut ) this.debugBut.addEventListener('mousedown', this.debugToggle.bind(this));
 
 	this.controls = document.getElementsByClassName('controlBut');
 	for( var i = 0 ; i < this.controls.length ; i++ ) this.controls[i].addEventListener( 'click', this.controlClicked.bind(this) );

@@ -27,8 +27,10 @@ var Persona = function( parent, settings ){
 
 	this.audio = new Audio();
 
+	this.globalContainer = new THREE.Object3D();
 	this.group = new THREE.Object3D();
-	this.parent.scene.add(this.group);
+	this.globalContainer.add(this.group);
+	this.parent.scene.add(this.globalContainer);
 	this.group.scale.set( this.radius, this.radius, 1 );
 	
 	this.rings = [];

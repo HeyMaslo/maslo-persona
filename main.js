@@ -48,13 +48,16 @@ app.use(express.static(__dirname + '/app'));
 // | Routes
 // └────────────────────────────────────────────────────────────────────┘
 
-console.log(process.argv)
 app.get('/', function(req, res){
 	var midi = '';
 	for( var i = 0 ; i < process.argv.length ; i++ ) if( process.argv[i] == 'midi' ) midi = 'midi';
 
 	res.render( 'main', { midi: midi } );
 });
+
+app.get('/page', function(req, res){
+	res.render( 'page' );
+})
 
 var socket;
 var wss = new WebSocket.Server({ port: 8080 }); 

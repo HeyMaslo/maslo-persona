@@ -65,7 +65,7 @@ Debug.prototype.step = function(){
 	debugText += '-> Hue : ' + this.parent.persona.hsl.x.toFixed(2) + '<br/>';
 	debugText += '-> Saturation : ' + this.parent.persona.hsl.y.toFixed(2) + '<br/>';
 	debugText += '-> Lightness : ' + this.parent.persona.hsl.z.toFixed(2) + '<br/>';
-	this.debug1.innerHTML = debugText
+	if( this.debug1 ) this.debug1.innerHTML = debugText
 
 	var debugText = 'Rings:<br/>';
 	debugText += '-----------------<br/>';
@@ -82,7 +82,7 @@ Debug.prototype.step = function(){
 		debugText += '-> Opacity : ' + this.parent.persona.rings[i].opacity.toFixed(2) + '<br/>';
 		debugText += '<br/>';
 	}
-	this.debug2.innerHTML = debugText
+	if( this.debug2 ) this.debug2.innerHTML = debugText
 
 	var debugText = '<br/>';
 	debugText += '-----------------<br/>';
@@ -99,7 +99,7 @@ Debug.prototype.step = function(){
 		debugText += '-> Opacity : ' + this.parent.persona.rings[i].opacity.toFixed(2) + '<br/>';
 		debugText += '<br/>';
 	}
-	this.debug3.innerHTML = debugText
+	if( this.debug3 ) this.debug3.innerHTML = debugText
 }
 
 module.exports = Debug;

@@ -34,7 +34,8 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          "docs/index.html": "app/views/main.pug"
+          "docs/index.html": "app/views/main.pug",
+          "docs/page.html": "app/views/page.pug"
         }
       }
     },
@@ -47,7 +48,8 @@ module.exports = function(grunt) {
           ]
         },
         files: {
-          'docs/css/main.css': 'app/css/main.styl'
+          'docs/css/main.css': 'app/css/main.styl',
+          'docs/css/page.css': 'app/css/page.styl'
         }
       }
     }
