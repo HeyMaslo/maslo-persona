@@ -34,6 +34,7 @@ var Main = function() {
 	
 	if( this.listeningBut ) this.listeningBut.addEventListener('mousedown', this.questionMouseDown.bind( this ) );
 	if( this.listeningBut ) this.listeningBut.addEventListener('mouseup', this.questionMouseUp.bind( this ) );
+	if( this.listeningBut ) this.listeningBut.addEventListener('mouseleave', this.questionMouseUp.bind( this ) );
 
 	// Three scene
 	this.renderer = new THREE.WebGLRenderer( { alpha : true, antialias : true } );
@@ -74,7 +75,8 @@ var Main = function() {
 	this.step();
 }
 
-Main.prototype.questionMouseDown = function(){
+Main.prototype.questionMouseDown = function(e){
+	e.preventDefault();
 	this.persona.setState( 'listenStart' );
 }
 

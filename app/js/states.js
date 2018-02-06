@@ -322,16 +322,12 @@ States.prototype.listen = function(){
 States.prototype.listenStart = function(){
 	this.listeningStarted = true;
 	this.listenTls = [];
+	
 	for( var i = 0 ; i < this.rings.length ; i++ ){
 		var ring = this.rings[i];
 		var theta = -Math.PI/12 - i * 0.001 ;
 
-		this.listenTls[i] = new TimelineMax( { 
-			onComplete : function(){
-				this.setState('idle');
-				this.listeningStarted = false;
-			}.bind(this)
-		} );
+		this.listenTls[i] = new TimelineMax();
 		this.listenTls[i].to( this.rings[i] , 1, {
 			theta : theta,
 			gaussIt : 0.8,
@@ -343,7 +339,11 @@ States.prototype.listenStart = function(){
 		} );
 	}
 
-	this.listenTl2 = new TimelineMax(  );
+	this.listenTl2 = new TimelineMax({ 
+		onComplete : function(){
+			this.listeningStarted = false;
+		}.bind(this)
+	});
 	this.listenTl2.to( this , 1, { timeInc : 0.05, ease : Power3.easeOut  } );
 }
 
@@ -351,6 +351,7 @@ States.prototype.listenEnd = function(){
 	if( this.listeningStarted ) {
 		for( var i = 0 ; i < this.rings.length ; i++ ) this.listenTls[i].stop();
 		this.listenTl2.stop();
+		this.listeningStarted = false;
 	}
 	for( var i = 0 ; i < this.rings.length ; i++ ){
 		var tl = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
