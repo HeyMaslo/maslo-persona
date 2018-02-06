@@ -287,7 +287,7 @@ States.prototype.tap = function(){
 }
 
 
-States.prototype.listening = function(){
+States.prototype.listen = function(){
 
 	for( var i = 0 ; i < this.rings.length ; i++ ){
 		var ring = this.rings[i];
@@ -317,6 +317,61 @@ States.prototype.listening = function(){
 	var tl2 = new TimelineMax(  );
 	tl2.to( this , 1, { timeInc : 0.05, ease : Power3.easeOut  } )
 	.to( this , 0.4, { timeInc : 0.01, delay : 4, ease : Power3.easeOut  } );
+}
+
+States.prototype.listenStart = function(){
+	this.listeningStarted = true;
+	this.listenTls = [];
+	for( var i = 0 ; i < this.rings.length ; i++ ){
+		var ring = this.rings[i];
+		var theta = -Math.PI/12 - i * 0.001 ;
+
+		this.listenTls[i] = new TimelineMax( { 
+			onComplete : function(){
+				this.setState('idle');
+				this.listeningStarted = false;
+			}.bind(this)
+		} );
+		this.listenTls[i].to( this.rings[i] , 1, {
+			theta : theta,
+			gaussIt : 0.8,
+			weightIn : 0.6,
+			intensity : 0.3,
+			osc : 0.14,
+			ease: Power4.easeOut,
+			delay : ( ( this.rings.length - i ) / this.rings.length ) / 2
+		} );
+	}
+
+	this.listenTl2 = new TimelineMax(  );
+	this.listenTl2.to( this , 1, { timeInc : 0.05, ease : Power3.easeOut  } );
+}
+
+States.prototype.listenEnd = function(){
+	if( this.listeningStarted ) {
+		for( var i = 0 ; i < this.rings.length ; i++ ) this.listenTls[i].stop();
+		this.listenTl2.stop();
+	}
+	for( var i = 0 ; i < this.rings.length ; i++ ){
+		var tl = new TimelineMax( { onComplete : function(){ this.setState('idle') }.bind(this) } );
+		tl.to( this.rings[i] , 0.4, {
+			gaussIt : 0.98,
+			weightIn : 1,
+			intensity : 0.21,
+			osc : 0.06,
+			delay : ( ( this.rings.length - i ) / this.rings.length ) / 20
+		})
+
+		var tl2 = new TimelineMax( );
+		tl2.to( this.rings[i] , 1, {
+			theta : i * 0.01,
+			delay : ( ( this.rings.length - i ) / this.rings.length ) / 20,
+			ease: Elastic.easeOut.config(1, 0.8)
+		});
+
+	}
+	var tl2 = new TimelineMax(  );
+	tl2.to( this , 0.4, { timeInc : 0.01, ease : Power3.easeOut  } );
 }
 
 

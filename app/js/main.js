@@ -14,6 +14,8 @@ var Main = function() {
 	this.element = document.getElementById('main');
 	this.debugBut = document.getElementById('debugBut');
 	this.debugEl = document.getElementById('debug');
+	this.listeningBut = document.getElementById('listeningBut');
+
 	this.mouseIsDown = false;
 	this.startAngle = 0;
 	this.angleSpeed = 0;
@@ -23,10 +25,15 @@ var Main = function() {
 	this.element.addEventListener('mousedown', this.onMouseDown.bind(this));
 	this.element.addEventListener('mouseup', this.onMouseUp.bind(this));
 	this.element.addEventListener('mousemove', this.onMouseMove.bind(this));
+
 	if( this.debugBut ) this.debugBut.addEventListener('mousedown', this.debugToggle.bind(this));
 
 	this.controls = document.getElementsByClassName('controlBut');
-	for( var i = 0 ; i < this.controls.length ; i++ ) this.controls[i].addEventListener( 'click', this.controlClicked.bind(this) );
+	for( var i = 0 ; i < this.controls.length ; i++ ) if( this.controls[i].getAttribute('id') !== 'listeningBut' ) this.controls[i].addEventListener( 'click', this.controlClicked.bind(this) );
+
+	
+	if( this.listeningBut ) this.listeningBut.addEventListener('mousedown', this.questionMouseDown.bind( this ) );
+	if( this.listeningBut ) this.listeningBut.addEventListener('mouseup', this.questionMouseUp.bind( this ) );
 
 	// Three scene
 	this.renderer = new THREE.WebGLRenderer( { alpha : true, antialias : true } );
@@ -65,6 +72,14 @@ var Main = function() {
 
 	this.resize();
 	this.step();
+}
+
+Main.prototype.questionMouseDown = function(){
+	this.persona.setState( 'listenStart' );
+}
+
+Main.prototype.questionMouseUp = function(){
+	this.persona.setState( 'listenEnd' );
 }
 
 Main.prototype.debugToggle = function(){
