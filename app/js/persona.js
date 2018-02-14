@@ -35,6 +35,21 @@ var Persona = function( parent, settings ){
 	
 	this.rings = [];
 	for( var i = 0 ; i < this.ringCount ; i++ ) this.rings.push( new Ring( this, i ) );
+	
+	// export to svg
+	// setTimeout(function(){
+	// 	var str = '<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">';
+	// 	for( var j = 0 ; j < this.rings.length ; j++ ){
+	// 		var ar = this.rings[j].mesh.geometry.attributes.position.array;
+	// 		str += '<path d="M'+ar[3].toFixed(4)+' '+ar[4].toFixed(4)
+	// 		for(var i = 6 ; i < ar.length/3 ; i+=3 ){ str += 'L'+ar[i].toFixed(4)+' '+ar[i+1].toFixed(4) }
+	// 		str += 'z" />'
+			
+	// 	}
+	// 	str += '</svg>'
+	// 	console.log( str );
+	// }.bind(this), 8000)
+	
 
 	this.computeColors();
 
