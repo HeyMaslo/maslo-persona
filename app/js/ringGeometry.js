@@ -19,8 +19,8 @@ var RingGeometry = function( parent ){
 	// color
 	var colors = [];
 	for( var i = 0 ; i < this.parent.parent.ringRes + 1 ; i++ ) colors.push( 0, 0, 0, 1 );
-	for( var i = this.parent.parent.ringRes + 1 ; i < this.parent.parent.ringRes * 2 + 1 ; i++ ) colors.push( 0, 0, 0, 0.15 );
-	for( var i = this.parent.parent.ringRes * 2 + 1 ; i < this.parent.parent.ringRes * 3 + 1 ; i++ ) colors.push( 0, 0, 0, 0 );
+	for( var i = this.parent.parent.ringRes + 1 ; i < this.parent.parent.ringRes * 2 + 1 ; i++ ) colors.push( this.parent.shadowColor, this.parent.shadowColor, this.parent.shadowColor, this.parent.shadowIntensity );
+	for( var i = this.parent.parent.ringRes * 2 + 1 ; i < this.parent.parent.ringRes * 3 + 1 ; i++ ) colors.push( this.parent.shadowColor, this.parent.shadowColor, this.parent.shadowColor, 0 );
 	this.geoData.addAttribute( 'color', new THREE.BufferAttribute( new Float32Array( colors ), 4 ) );
 
 	// uvs
@@ -89,6 +89,13 @@ RingGeometry.prototype.step = function( time ){
 		this.geoData.attributes.position.setXY( ( i + 1 ), this.points[i].x, this.points[i].y );
 		this.geoData.attributes.position.setXY( ( this.parent.parent.ringRes + i + 1 ), this.points[i].x, this.points[i].y );
 		this.geoData.attributes.position.setXY( ( this.parent.parent.ringRes * 2 + i + 1 ), this.points[i].x + vector.x * this.parent.shadowSpread, this.points[i].y + vector.y * this.parent.shadowSpread );
+	}
+
+	for( var i = this.parent.parent.ringRes + 1 ; i < this.parent.parent.ringRes * 2 + 1 ; i++ ){
+		this.geoData.attributes.color.setXYZW( i, this.parent.shadowColor, this.parent.shadowColor, this.parent.shadowColor, this.parent.shadowIntensity );	
+	} 
+	for( var i = this.parent.parent.ringRes * 2 + 1 ; i < this.parent.parent.ringRes * 3 + 1 ; i++ ){
+		this.geoData.attributes.color.setXYZW( i, this.parent.shadowColor, this.parent.shadowColor, this.parent.shadowColor, 0 );
 	}
 	
 	this.geoData.attributes.color.needsUpdate = true;

@@ -53,6 +53,8 @@ var Main = function() {
 		}
 	}.bind(this));
 
+	// this.persona.glow = true;
+
 
 	var geometry = new THREE.PlaneBufferGeometry( 1, 1 );
 	var material = new THREE.ShaderMaterial( {

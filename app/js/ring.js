@@ -12,6 +12,7 @@ var Ring = function( parent, id ){
 	this.gaussIt = 0;
 	this.weightIn = 0;
 	this.shadowSpread = 0.01;
+	this.shadowColor = 0;
 	this.shadowIntensity = 0.15;
 	this.theta = Math.random();
 	this.gaussAmplitude = 0.3;

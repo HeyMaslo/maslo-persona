@@ -12,6 +12,8 @@ var Persona = function( parent, settings ){
 
 	this.emitter = ee();
 
+	this.glow = false;
+
 	this.ringCount = this.settings.ringCount || 8;
 	this.ringRes = this.settings.ringRes || 256;
 	this.position = this.settings.position || new THREE.Vector3(0,0,0);
@@ -72,6 +74,12 @@ Persona.prototype.computeColors = function(){
 	this.rings[2].color = this.rings[1].color.darken(0.3);
 	
 	for( var i = 3 ; i < this.ringCount ; i++ ) this.rings[i].color = this.colorHSL.darken( i - 3.5 );
+
+	if( this.glow ){
+		this.rings[0].shadowColor = 1;
+		this.rings[0].shadowSpread = 0.1;
+		this.rings[0].shadowIntensity = 0.3;
+	}
 }
 
 Persona.prototype.step = function( time ){
