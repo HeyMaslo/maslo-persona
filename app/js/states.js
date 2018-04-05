@@ -41,10 +41,6 @@ States.prototype.idle = function( ){
 		}
 	}
 
-	console.log(globalMods)
-
-
-
 	for( var i = 0 ; i < this.rings.length ; i++ ){
 		var ringMods = {};
 

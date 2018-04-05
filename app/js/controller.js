@@ -60,7 +60,7 @@ Controller.prototype.step = function( time ){
 		}	
 	}
 
-	for (var val in this.vals) document.getElementById( val ).style.background = 'rgba(255,255,255,' + this.vals[val] + ')';
+	// for (var val in this.vals) document.getElementById( val ).style.background = 'rgba(255,255,255,' + this.vals[val] + ')';
 	this.slider.style.transform = 'translate3d( ' + this.position.x + 'px, ' + this.position.y + 'px, 0px )';
 }
 
