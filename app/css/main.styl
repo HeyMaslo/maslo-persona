@@ -1,3 +1,6 @@
+::selection
+	background rgba(0,0,0,0)
+	
 html
 	height 100%
 	padding 0
@@ -28,6 +31,7 @@ body
 	z-index 2
 	.feeling
 		display inline-block
+		font-weight 800
 		width 40px
 		height 10px
 		font-size 9px
@@ -38,14 +42,14 @@ body
 		top 50px
 		left 50px
 		margin-left -20px
-		margin-top -5px
+		margin-top -6px
 		pointer-events none
 		z-index 1
 		&::after
 			z-index 0
 			content " "
 			position absolute
-			top 5px
+			top 6px
 			left 20px
 			margin-left -14px
 			margin-top -14px

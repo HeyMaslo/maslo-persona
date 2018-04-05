@@ -9,8 +9,10 @@ var Controller = function(){
 	this.position = { x : 0, y : 0 };
 	this.distance = 0;
 	this.angle = 0;
+	this.titles = {};
 
 	for( var i = 0 ; i < this.feelings.length ; i++ ){
+		this.titles[ this.feelings[i].getAttribute('id') ] = this.feelings[ i ].innerHTML;
 		var p = { id : this.feelings[i].getAttribute('id'), x : Math.cos( Math.PI * 2 * i / this.feelings.length )  * this.node.offsetWidth / 2, y : -Math.sin( Math.PI * 2 * i / this.feelings.length )  * this.node.offsetWidth / 2 }
 		this.feelings[ i ].style.transform = 'translate3d( ' + p.x + 'px, ' + p.y + 'px, 0px )';
 		this.vals[ this.feelings[i].getAttribute( 'id' ) ] = 0;
@@ -60,7 +62,10 @@ Controller.prototype.step = function( time ){
 		}	
 	}
 
-	// for (var val in this.vals) document.getElementById( val ).style.background = 'rgba(255,255,255,' + this.vals[val] + ')';
+	for (var val in this.vals){
+		if( this.vals[val] == 0 ) document.getElementById( val ).innerHTML = this.titles[ val ];
+		else document.getElementById( val ).innerHTML = Math.round( this.vals[val] * 100 ) + '%';
+	}
 	this.slider.style.transform = 'translate3d( ' + this.position.x + 'px, ' + this.position.y + 'px, 0px )';
 }
 
