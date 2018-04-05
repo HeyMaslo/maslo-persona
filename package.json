@@ -39,7 +39,8 @@
     "three": "^0.86.0",
     "three-line-2d": "^1.1.6",
     "three-orbit-controls": "^82.1.0",
-    "uglify-js": "^3.0.15"
+    "uglify-js": "^3.0.15",
+    "ws": "^5.1.1"
   },
   "devDependencies": {
     "body-parser": "^1.17.1",

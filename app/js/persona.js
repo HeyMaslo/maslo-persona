@@ -89,6 +89,8 @@ Persona.prototype.step = function( time ){
 
 	this.computeColors();
 
+	if( this.state == 'idle' ) this.idle();
+
 	this.updateStates( time );
 
 	for( var i = 0 ; i < this.rings.length ; i++ ) this.rings[i].step( this.time );

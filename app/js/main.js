@@ -7,10 +7,10 @@ var Gsap = require('gsap');
 // Custom modules
 var Debug = require('./debug');
 var Persona = require('./persona');
+var Controller = require('./controller');
 
 var Main = function() {
 	window.main = this;
-	console.log(this)
 	this.element = document.getElementById('main');
 	this.debugBut = document.getElementById('debugBut');
 	this.debugEl = document.getElementById('debug');
@@ -45,6 +45,7 @@ var Main = function() {
 
 	this.debug = new Debug( this );
 	this.persona = new Persona( this );
+	this.controller = new Controller( this );
 
 	this.persona.emitter.on('stateChange', function (args) {
 		for( var i = 0 ; i < this.controls.length ; i++ ){
@@ -145,6 +146,8 @@ Main.prototype.step = function( time ) {
 
 	this.debug && this.debug.step(time);
 	this.persona && this.persona.step(time);
+	this.controller && this.controller.step(time);
+	this.persona.mood = this.controller.vals;
 
 	this.renderer.render( this.scene, this.camera );
 };

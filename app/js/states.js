@@ -20,8 +20,70 @@ States.prototype.init = function(){
 	}
 }	
 
-States.prototype.idle = function(){
-	
+States.prototype.idle = function( ){
+	var moods = this.mood;
+
+	var globalMods = {};
+	var globalModifiers = {
+		joy : {
+			timeInc : 0.15
+		},
+		love : {
+			timeInc : 0.4	
+		}
+	}
+	for (var mood in moods) {
+		if( globalModifiers[ mood ] ){
+			for( var modifier in globalModifiers[ mood ] ){
+				if( !globalMods[ modifier] ) globalMods[ modifier ] = 0;
+				globalMods[ modifier ] += globalModifiers[ mood ][ modifier ] * moods[mood];
+			}
+		}
+	}
+
+	console.log(globalMods)
+
+
+
+	for( var i = 0 ; i < this.rings.length ; i++ ){
+		var ringMods = {};
+
+		var ringModifiers = {
+			joy : {
+				gaussIt : -0.98,
+				weightIn : -0.9,
+				theta : i / 8,
+				intensity : 2,
+				osc : 0.04
+			},
+			love : {
+				gaussIt : -0.98,
+				weightIn : -0.9,
+				theta : i / 8,
+				intensity : 2,
+				osc : 0.04
+			}
+
+		}
+
+		for (var mood in moods) {
+			if( ringModifiers[ mood ] ){
+				for( var modifier in ringModifiers[ mood ] ){
+					if( !ringMods[ modifier] ) ringMods[ modifier ] = 0;
+					ringMods[ modifier ] += ringModifiers[ mood ][ modifier ] * moods[mood];
+				}
+			}
+		}
+
+		this.rings[i].gaussIt = 0.98 + ringMods.gaussIt;
+		this.rings[i].weightIn = 1 + ringMods.weightIn;
+		this.rings[i].intensity = 0.21 + ringMods.intensity;
+		this.rings[i].theta = i * 0.01 + ringMods.theta;
+		this.rings[i].osc = 0.06 + ringMods.osc;
+	}
+
+	this.timeInc = 0.005 + globalMods.timeInc
+
 }
 
 States.prototype.joy = function(){
