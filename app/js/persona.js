@@ -14,6 +14,9 @@ var Persona = function( parent, settings ){
 
 	this.glow = false;
 
+	this.modifierTime = 0;
+	this.modifierTimestep = 0;
+
 	this.ringCount = this.settings.ringCount || 8;
 	this.ringRes = this.settings.ringRes || 256;
 	this.position = this.settings.position || new THREE.Vector3(0,0,0);
@@ -86,6 +89,7 @@ Persona.prototype.step = function( time ){
 	this.group.rotation.z = this.rotation * Math.PI * 2;
 	this.group.scale.set( this.radius * this.scale.x, this.radius * this.scale.y, 1 );
 	this.time += this.timeInc;
+	this.modifierTime += this.modifierTimestep;
 
 	this.computeColors();
 

@@ -18,8 +18,9 @@ var Ring = function( parent, id ){
 	this.gaussAmplitude = 0.3;
 	this.opacity = 0;
 	this.color;
-	this.scale = new THREE.Vector3(1,1,1);
-	this.position = new THREE.Vector3(0,0,0);
+	this.scaleInc = new THREE.Vector3( 0, 0, 0 );
+	this.scale = new THREE.Vector3( 1, 1, 1 );
+	this.position = new THREE.Vector3( 0, 0, 0 );
 	this.easingFactor = 0;
 
 	this.ringGeometry = new RingGeometry( this );
@@ -38,7 +39,7 @@ var Ring = function( parent, id ){
 Ring.prototype.step = function( time ){
 	this.ringGeometry.step( time );
 	this.rotationGroup.rotation.z = this.theta * Math.PI * 2;
-	this.rotationGroup.scale.set(this.scale.x,this.scale.y,this.scale.z)
+	this.rotationGroup.scale.set( this.scale.x + this.scaleInc.x, this.scale.y + this.scaleInc.y, 1 )
 	this.translationGroup.position.set(this.position.x,this.position.y,this.position.z)
 	this.ringMaterial.matData.uniforms.opacity.value = this.opacity;
 }

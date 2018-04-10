@@ -30,7 +30,6 @@ var Main = function() {
 
 	this.controls = document.getElementsByClassName('controlBut');
 	for( var i = 0 ; i < this.controls.length ; i++ ) if( this.controls[i].getAttribute('id') !== 'listeningBut' ) this.controls[i].addEventListener( 'click', this.controlClicked.bind(this) );
-
 	
 	if( this.listeningBut ) this.listeningBut.addEventListener('mousedown', this.questionMouseDown.bind( this ) );
 	if( this.listeningBut ) this.listeningBut.addEventListener('mouseup', this.questionMouseUp.bind( this ) );

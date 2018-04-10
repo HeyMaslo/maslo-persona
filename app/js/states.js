@@ -29,7 +29,18 @@ States.prototype.idle = function( ){
 			timeInc : 0.15
 		},
 		love : {
-			timeInc : 0.4	
+			timeInc : 0.15,
+			modifierTimestep : 0.003
+		},
+		surprise : {
+			timeInc : 0.05
+		},
+		terror : {
+			timeInc : 0.1,
+			modifierTimestep : 0.03
+		},
+		sadness : {
+			timeStep : -0.004
 		}
 	}
 	for (var mood in moods) {
@@ -44,6 +55,9 @@ States.prototype.idle = function( ){
 	for( var i = 0 ; i < this.rings.length ; i++ ){
 		var ringMods = {};
 
+		var n = this.simplex.noise2D( i / 8 * 10, this.modifierTime );
+		var n2 = this.simplex.noise2D( this.modifierTime, i / 8 * 10 );
+
 		var ringModifiers = {
 			joy : {
 				gaussIt : -0.98,
@@ -56,7 +70,33 @@ States.prototype.idle = function( ){
 				gaussIt : -0.98,
 				weightIn : -0.9,
 				theta : i / 8,
+				intensity : 1,
+				osc : 0.04,
+				scaleInc : 0,
+				positionX : 0.2 + 0.01 * i * Math.sin( Math.PI * 2 * this.modifierTime ),
+				positionY : 0.2 + 0.01 * i * Math.cos( Math.PI * 2 * this.modifierTime )
+			},
+			surprise : {
+				gaussIt : - 0.98,
+				weightIn : - 0.3,
 				intensity : 2,
+				theta : i / 8,
+				osc : 0.03,
+				scaleInc : 0.15 * ( ( 8 - i ) / 8 )
+			},
+			terror : {
+				gaussIt : - 0.98,
+				weightIn : - 0.9,
+				rotation : i / 8,
+				intensity : 0.8,
+				osc : 0.1,
+				scaleInc : 0.1 * ( ( 8 - i ) / 16 ),
+				positionX : n * 0.1,
+				positionY : n2 * 0.1
+			},
+			sadness : {
+				gaussIt : - 0.8,
+				weightIn : - 0.2,
 				osc : 0.04
 			}
 
@@ -76,9 +116,13 @@ States.prototype.idle = function( ){
 		this.rings[i].intensity = 0.21 + ringMods.intensity;
 		this.rings[i].theta = i * 0.01 + ringMods.theta;
 		this.rings[i].osc = 0.06 + ringMods.osc;
+		this.rings[i].scaleInc = new THREE.Vector3( ringMods.scaleInc, ringMods.scaleInc, 0 );
+		this.rings[i].position.x = ringMods.positionX;
+		this.rings[i].position.y = ringMods.positionY;
 	}
 
 	this.timeInc = 0.005 + globalMods.timeInc
+	this.modifierTimestep = globalMods.modifierTimestep
 
 }
 
