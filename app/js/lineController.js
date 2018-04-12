@@ -53,11 +53,8 @@ LineController.prototype.step = function( time ){
 		joy = 0;
 		love = 0;
 	}
-	if( val <= 0 ){
-		sadness = Math.abs( val );
-	} else {
-		sadness = 0;
-	}
+	if( val <= 0 ) sadness = Math.abs( val );
+	else sadness = 0;
 	
 	this.vals.joy = joy;
 	this.vals.love = love;
