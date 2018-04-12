@@ -22,7 +22,38 @@ body
 		width 100%
 		height 100%
 
-#controller
+#lineController
+	z-index 2
+	position absolute
+	width 100px
+	height 2px
+	border-radius 2px
+	background #ffffff
+	top 200px
+	right 30px
+	.slider
+		position absolute
+		width 20px
+		height 20px
+		border-radius 20px
+		left 50px
+		top 1px
+		margin-top -10px
+		margin-left -10px
+		cursor pointer
+		.sliderInner
+			position absolute
+			width 10px
+			height 10px
+			border solid 1px #ffffff
+			background #ffffff
+			border-radius 20px
+			left 10px
+			top 10px
+			margin-top -6px
+			margin-left -6px
+
+#circleController
 	position absolute
 	width 100px
 	height 100px
@@ -57,7 +88,7 @@ body
 			height 26px
 			border solid 1px #ffffff
 			border-radius 20px
-	#slider
+	.slider
 		position absolute
 		width 20px
 		height 20px
@@ -67,7 +98,7 @@ body
 		margin-top -10px
 		margin-left -10px
 		cursor pointer
-		#sliderInner
+		.sliderInner
 			position absolute
 			width 10px
 			height 10px

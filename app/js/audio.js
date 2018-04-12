@@ -3,6 +3,7 @@ var AudioPlayer = function(){
 	for( var i = 0 ; i < audioTracks.length ; i++ ) this[audioTracks[i]] = new Audio( 'audio/' + audioTracks[ i ] + '.mp3' );
 }
 AudioPlayer.prototype.play = function( track ) {
+	return;
 	if( this.currentTrack ){
 		this[this.currentTrack].pause();
 		this[this.currentTrack].currentTime = 0;

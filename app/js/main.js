@@ -7,7 +7,8 @@ var Gsap = require('gsap');
 // Custom modules
 var Debug = require('./debug');
 var Persona = require('./persona');
-var Controller = require('./controller');
+var CircleController = require('./circleController');
+var LineController = require('./lineController');
 
 var Main = function() {
 	window.main = this;
@@ -44,7 +45,8 @@ var Main = function() {
 
 	this.debug = new Debug( this );
 	this.persona = new Persona( this );
-	this.controller = new Controller( this );
+	this.circleController = new CircleController( this );
+	this.lineController = new LineController( this );
 
 	this.persona.emitter.on('stateChange', function (args) {
 		for( var i = 0 ; i < this.controls.length ; i++ ){
@@ -145,8 +147,13 @@ Main.prototype.step = function( time ) {
 
 	this.debug && this.debug.step(time);
 	this.persona && this.persona.step(time);
-	this.controller && this.controller.step(time);
-	this.persona.mood = this.controller.vals;
+	this.circleController && this.circleController.step(time);
+	this.lineController && this.lineController.step(time);
+	
+	var mood = {};
+	for ( var val in this.circleController.vals ) mood[ val ] = this.circleController.vals[ val ] + this.lineController.vals[ val ];
+
+	this.persona.mood = mood;
 
 	this.renderer.render( this.scene, this.camera );
 };

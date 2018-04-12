@@ -1,6 +1,6 @@
-var Controller = function(){
-	this.node = document.getElementById( 'controller' );
-	this.slider = document.getElementById( 'slider' );
+var CircleController = function(){
+	this.node = document.getElementById( 'circleController' );
+	this.slider = this.node.getElementsByClassName( 'slider' )[0];
 	this.feelings = document.getElementsByClassName( 'feeling' );
 
 	this.vals = {};
@@ -23,22 +23,22 @@ var Controller = function(){
 	document.body.addEventListener( 'mouseup', this.mouseUp.bind( this ) );
 }
 
-Controller.prototype.mouseDown = function( e ){
+CircleController.prototype.mouseDown = function( e ){
 	this.dragging = true;
 	this.originDrag = { x : e.screenX, y : e.screenY };
 	this.dragginPosition = { x : e.screenX, y : e.screenY };
 	this.position = { x : 0, y : 0 };
 }
 
-Controller.prototype.mouseUp = function( e ){
+CircleController.prototype.mouseUp = function( e ){
 	this.dragging = false;
 }
 
-Controller.prototype.mouseMove = function( e ){
+CircleController.prototype.mouseMove = function( e ){
 	if( this.dragging ) this.dragginPosition = { x : e.screenX, y : e.screenY };
 }
 
-Controller.prototype.step = function( time ){
+CircleController.prototype.step = function( time ){
 	// slider position
 	if( this.dragging ) this.position = { x : this.dragginPosition.x - this.originDrag.x, y : this.dragginPosition.y - this.originDrag.y };
 	else this.position = { x : this.position.x - this.position.x * 0.1, y : this.position.y - this.position.y * 0.1 }
@@ -69,4 +69,4 @@ Controller.prototype.step = function( time ){
 	this.slider.style.transform = 'translate3d( ' + this.position.x + 'px, ' + this.position.y + 'px, 0px )';
 }
 
-module.exports = Controller;
+module.exports = CircleController;
