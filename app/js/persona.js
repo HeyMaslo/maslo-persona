@@ -54,7 +54,6 @@ var Persona = function( parent, settings ){
 	// 	str += '</svg>'
 	// 	console.log( str );
 	// }.bind(this), 8000)
-	
 
 	this.computeColors();
 
@@ -75,10 +74,11 @@ Persona.prototype.computeColors = function(){
 	this.rings[0].color = chroma.hsl(0, 0, this.hsl.z * 2);
 	this.rings[1].color = this.rings[0].color.darken(0.5);
 	this.rings[2].color = this.rings[1].color.darken(0.3);
-	
 	for( var i = 3 ; i < this.ringCount ; i++ ) this.rings[i].color = this.colorHSL.darken( i - 3.5 );
 
 	if( this.glow ){
+		var colors = [ '#C3C3C3', '#DADADA', '#FDFDFD', '#9E9EFF', '#A9A9FF', '#B9B9FF', '#DCDCFF', '#DCFFFF' ];
+		for( var i = 0 ; i < colors.length ; i++ ) this.rings[i].color = chroma(colors[i]);
 		this.rings[0].shadowColor = 1;
 		this.rings[0].shadowSpread = 0.1;
 		this.rings[0].shadowIntensity = 0.3;
