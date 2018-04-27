@@ -7,6 +7,7 @@ var States = require('./states');
 var ee = require('event-emitter');
 
 var Persona = function( parent, settings ){
+	if(window.pageMode) console.log('running page')
 	this.parent = parent;
 	this.settings = settings || {};
 

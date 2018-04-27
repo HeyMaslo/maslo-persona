@@ -1,6 +1,6 @@
 var CircleController = function(){
 	this.node = document.getElementById( 'circleController' );
-	if(!this.node)return;
+	if(window.pageMode)return;
 	this.slider = this.node.getElementsByClassName( 'slider' )[0];
 	this.feelings = document.getElementsByClassName( 'feeling' );
 
@@ -40,7 +40,7 @@ CircleController.prototype.mouseMove = function( e ){
 }
 
 CircleController.prototype.step = function( time ){
-	if(!this.node)return;
+	if(window.pageMode)return;
 	// slider position
 	if( this.dragging ) this.position = { x : this.dragginPosition.x - this.originDrag.x, y : this.dragginPosition.y - this.originDrag.y };
 	else this.position = { x : this.position.x - this.position.x * 0.1, y : this.position.y - this.position.y * 0.1 }

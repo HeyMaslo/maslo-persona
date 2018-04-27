@@ -1,6 +1,6 @@
 var LineController = function(){
 	this.node = document.getElementById( 'lineController' );
-	if(!this.node)return;
+	if(window.pageMode)return;
 	this.slider = this.node.getElementsByClassName( 'slider' )[0];
 	
 	this.originDrag = 0;
@@ -38,7 +38,7 @@ LineController.prototype.mouseMove = function( e ){
 }
 
 LineController.prototype.step = function( time ){
-	if(!this.node)return;
+	if(window.pageMode)return;
 	// slider position
 	if( this.dragging ) this.position = this.dragginPosition - this.originDrag;
 	else this.position = this.position - this.position * 0.1;
