@@ -21,7 +21,7 @@ States.prototype.init = function(){
 }	
 
 States.prototype.idle = function( ){
-	if(window.page) return;
+	if(window.pageMode) return;
 	var moods = this.mood;
 
 	var globalMods = {};
