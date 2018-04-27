@@ -17,6 +17,9 @@ var Persona = function( parent, settings ){
 	this.modifierTime = 0;
 	this.modifierTimestep = 0;
 
+
+	
+
 	this.ringCount = this.settings.ringCount || 8;
 	this.ringRes = this.settings.ringRes || 256;
 	this.position = this.settings.position || new THREE.Vector3(0,0,0);
@@ -41,6 +44,14 @@ var Persona = function( parent, settings ){
 	this.rings = [];
 	for( var i = 0 ; i < this.ringCount ; i++ ) this.rings.push( new Ring( this, i ) );
 	
+
+	var colors = [ '#C3C3C3', '#DADADA', '#FDFDFD', '#9E9EFF', '#A9A9FF', '#B9B9FF', '#DCDCFF', '#DCFFFF' ];
+	for( var i = 0 ; i < colors.length ; i++ ){
+		var color = chroma(colors[i]).hsl();
+		this.rings[i].originalColor = new THREE.Vector3(color[0] || 0, color[1], color[2]);
+		this.rings[i].hsl = this.rings[i].originalColor;
+	}
+	// console.log(this.rings)
 	// export to svg
 	// setTimeout(function(){
 	// 	var str = '<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">';
@@ -78,7 +89,9 @@ Persona.prototype.computeColors = function(){
 
 	if( this.glow ){
 		var colors = [ '#C3C3C3', '#DADADA', '#FDFDFD', '#9E9EFF', '#A9A9FF', '#B9B9FF', '#DCDCFF', '#DCFFFF' ];
-		for( var i = 0 ; i < colors.length ; i++ ) this.rings[i].color = chroma(colors[i]);
+		for( var i = 0 ; i < colors.length ; i++ ){
+			this.rings[i].color = chroma(colors[i]);
+		}
 		this.rings[0].shadowColor = 1;
 		this.rings[0].shadowSpread = 0.1;
 		this.rings[0].shadowIntensity = 0.3;
