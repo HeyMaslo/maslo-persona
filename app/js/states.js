@@ -40,8 +40,18 @@ States.prototype.idle = function( ){
 			timeInc : 0.1,
 			modifierTimestep : 0.03
 		},
+		anger : {
+			timeInc : 0.3,
+			modifierTimestep : 0.05
+		},
 		sadness : {
 			timeStep : -0.004
+		},
+		sleepy : {
+			modifierTimestep : 0.001
+		},
+		calm : {
+			modifierTimestep : 0.001
 		}
 	}
 	for (var mood in moods) {
@@ -95,11 +105,30 @@ States.prototype.idle = function( ){
 				positionX : n * 0.1,
 				positionY : n2 * 0.1
 			},
+			anger : {
+				gaussIt : - 0.98,
+				weightIn : - 0.9,
+				intensity : 2,
+				theta : i / 8,
+				osc : 0.1,
+				scaleInc : ( ( i ) / 32 ),
+				positionX : n * 0.1 * ( ( 8 - i ) / 4 ),
+				positionY : n2 * 0.1 * ( ( 8 - i ) / 4 )
+			},
 			sadness : {
 				gaussIt : - 0.8,
 				weightIn : - 0.2,
 				osc : 0.04
-			}
+			},
+			sleepy : {
+				theta : i / 8,
+				scaleInc : 0.15 * ( ( 8 - i ) / 8 ) * Math.cos( Math.PI * 2 * this.modifierTime )
+			},
+			calm : {
+				gaussIt : - 0.6,
+				weightIn : - 0.5,
+				scaleInc : 0.15 * ( ( i ) / 8 ) * Math.cos( Math.PI * 2 * this.modifierTime )
+			},
 
 		}
 
