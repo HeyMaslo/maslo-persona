@@ -59,10 +59,16 @@ var Main = function() {
 
 
 	var geometry = new THREE.PlaneBufferGeometry( 1, 1 );
-	var material = new THREE.ShaderMaterial( {
-		vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }',
-		fragmentShader: 'varying vec2 vUv; void main() { float intensity = smoothstep( 0.0, 0.3, vUv.x * vUv.y ); gl_FragColor = vec4( 0.215686274509804 * (1.0-intensity) + 0.6352941176 * (intensity), 0.733333333333333 * (1.0-intensity) + 0.43921568627451 * (intensity), 1.0 * (1.0-intensity) + 1.0 * (intensity), 1.0 ); }'
+	
+	// flat background
+    var fs = 'varying vec2 vUv; void main() { float intensity = smoothstep( 0.0, 0.3, vUv.x * vUv.y ); gl_FragColor = vec4( 0.215686274509804 * (1.0-intensity) + 0.6352941176 * (intensity), 0.733333333333333 * (1.0-intensity) + 0.43921568627451 * (intensity), 1.0 * (1.0-intensity) + 1.0 * (intensity), 1.0 ); }'
+    if(window.pageMode) fs = 'varying vec2 vUv; void main() { gl_FragColor = vec4( 0.37, 0.73, 0.98, 1.0 ); }';
+
+    var material = new THREE.ShaderMaterial( {
+        vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }',
+        fragmentShader: fs
 	} );
+	
 	material.transparent = true;
 	material.blending = THREE.MultiplyBlending;
 	this.plane = new THREE.Mesh( geometry, material );
@@ -92,6 +98,19 @@ Main.prototype.debugToggle = function(){
 	this.debugActive = !this.debugActive;
 	if( this.debugActive ) this.debugEl.classList.add('active');
 	else this.debugEl.classList.remove('active');
+
+	if( !this.originalMaterials ) this.originalMaterials = [];
+
+	for( var i = 0 ; i < this.persona.group.children.length ; i++ ){
+		var ring = this.persona.group.children[i].children[0].children[0];
+
+		if( this.debugActive ) {
+			this.originalMaterials[ i ] = ring.material;
+			ring.material = new THREE.MeshBasicMaterial( { wireframe : true, color : 0xffffff, opacity : 0.5, transparent : true } )
+		} else {
+			ring.material = this.originalMaterials[ i ]
+		}
+	}
 }
 
 Main.prototype.changeColor = function( e ){
