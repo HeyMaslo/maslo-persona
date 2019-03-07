@@ -7,7 +7,8 @@ Want to add a cute and adorable personified entity to your AI project? YOU HAVE 
 You can think of the persona as the companion's ‘face’. This is a mathematically expressed amorphous shape. This shape consists of multiple properties (ie: size, speed, brightness, complexity, color, etc) that change based on user inputs and interaction. Every user can have a unique persona and their persona will evolve over time. 
 
 ## Persona Reactions
-Each persona will react to the user inputs through animations that include visual changes, sound, color, and haptic feedback. The types of reactions described below:
+Each persona will react to the user inputs through animations that include visual changes, sound, color, and haptic feedback. You can play with the reactions here: (https://heymaslo.github.io/maslo-persona-2d/)
+The types of reactions described below:
 * State Reaction: A reaction is a particular audiovisual response from the persona. 
 * Dynamic Idle: An anthropomorphised animation based on average of computed sentiment.
 
