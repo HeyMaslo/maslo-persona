@@ -5,7 +5,7 @@
         "type": "git"
     },
     "description": "Data viz for Maslo-1a",
-    "main": "main.js",
+    "main": "lib/index.js",
     "keywords": [],
     "author": "lct",
     "license": "MIT",
