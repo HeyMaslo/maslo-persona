@@ -1,3 +1,4 @@
+/* eslint-disable */
 var SimplexNoise = require('simplex-noise');
 var chroma = require('chroma-js');
 
@@ -19,7 +20,7 @@ var Persona = function( parent, settings ){
 	this.modifierTimestep = 0;
 
 
-	
+
 
 	this.ringCount = this.settings.ringCount || 8;
 	this.ringRes = this.settings.ringRes || 256;
@@ -41,10 +42,10 @@ var Persona = function( parent, settings ){
 	this.globalContainer.add(this.group);
 	this.parent.scene.add(this.globalContainer);
 	this.group.scale.set( this.radius, this.radius, 1 );
-	
+
 	this.rings = [];
 	for( var i = 0 ; i < this.ringCount ; i++ ) this.rings.push( new Ring( this, i ) );
-	
+
 
 	var colors = [ '#C3C3C3', '#DADADA', '#FDFDFD', '#9E9EFF', '#A9A9FF', '#B9B9FF', '#DCDCFF', '#DCFFFF' ];
 	for( var i = 0 ; i < colors.length ; i++ ){
@@ -61,7 +62,7 @@ var Persona = function( parent, settings ){
 	// 		str += '<path d="M'+ar[3].toFixed(4)+' '+ar[4].toFixed(4)
 	// 		for(var i = 6 ; i < ar.length/3 ; i+=3 ){ str += 'L'+ar[i].toFixed(4)+' '+ar[i+1].toFixed(4) }
 	// 		str += 'z" />'
-			
+
 	// 	}
 	// 	str += '</svg>'
 	// 	console.log( str );
@@ -75,7 +76,7 @@ var Persona = function( parent, settings ){
 Persona.prototype = States.prototype;
 
 Persona.prototype.setState = function(state){
-	if( this.state == state ) return; 
+	if( this.state == state ) return;
 	this.emitter.emit( 'stateChange', state );
 	this.state = state;
 	if( this[state] ) this[state]()

@@ -1,0 +1,46 @@
+{
+    "name": "maslo-persona-2d-web-demo",
+    "private": true,
+    "version": "1.0.0",
+    "description": "",
+    "engines": {
+        "node": "^8.9 || ^10.7",
+        "yarn": "^1.13"
+    },
+    "scripts": {
+        "dev": "webpack-dev-server --host 0.0.0.0 --mode development --color --env.noclear",
+        "build": "webpack --display-error-details --mode development"
+    },
+    "dependencies": {
+        "@babel/polyfill": "^7.2.5"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.2.3",
+        "@babel/core": "^7.3.4",
+        "@babel/plugin-proposal-class-properties": "^7.3.4",
+        "@babel/plugin-proposal-decorators": "^7.3.0",
+        "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+        "@babel/preset-env": "^7.3.4",
+        "babel-eslint": "^10.0.1",
+        "babel-loader": "^8.0.5",
+        "babel-minify-webpack-plugin": "^0.3.1",
+        "clean-webpack-plugin": "^2.0.1",
+        "eslint": "^5.15.1",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-plugin-import": "^2.16.0",
+        "file-loader": "^3.0.1",
+        "html-webpack-plugin": "^3.2.0",
+        "mini-css-extract-plugin": "^0.5.0",
+        "optimize-css-assets-webpack-plugin": "^5.0.1",
+        "raw-loader": "^1.0.0",
+        "underscore-template-loader": "^1.0.0",
+        "webpack": "^4.29.6",
+        "webpack-cli": "^3.3.0",
+        "webpack-dev-server": "^3.2.1"
+    },
+    "eslint": {
+        "settings": {
+            "import/resolver": "webpack"
+        }
+    }
+}

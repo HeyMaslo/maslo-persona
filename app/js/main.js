@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // Global libraries
 window.THREE = require('three');
 var Spring = require('spring');
@@ -31,7 +33,7 @@ var Main = function() {
 
 	this.controls = document.getElementsByClassName('controlBut');
 	for( var i = 0 ; i < this.controls.length ; i++ ) if( this.controls[i].getAttribute('id') !== 'listeningBut' ) this.controls[i].addEventListener( 'click', this.controlClicked.bind(this) );
-	
+
 	if( this.listeningBut ) this.listeningBut.addEventListener('mousedown', this.questionMouseDown.bind( this ) );
 	if( this.listeningBut ) this.listeningBut.addEventListener('mouseup', this.questionMouseUp.bind( this ) );
 	if( this.listeningBut ) this.listeningBut.addEventListener('mouseleave', this.questionMouseUp.bind( this ) );
@@ -59,7 +61,7 @@ var Main = function() {
 
 
 	var geometry = new THREE.PlaneBufferGeometry( 1, 1 );
-	
+
 	// flat background
     var fs = 'varying vec2 vUv; void main() { float intensity = smoothstep( 0.0, 0.3, vUv.x * vUv.y ); gl_FragColor = vec4( 0.215686274509804 * (1.0-intensity) + 0.6352941176 * (intensity), 0.733333333333333 * (1.0-intensity) + 0.43921568627451 * (intensity), 1.0 * (1.0-intensity) + 1.0 * (intensity), 1.0 ); }'
     if(window.pageMode) fs = 'varying vec2 vUv; void main() { gl_FragColor = vec4( 0.37, 0.73, 0.98, 1.0 ); }';
@@ -68,7 +70,7 @@ var Main = function() {
         vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }',
         fragmentShader: fs
 	} );
-	
+
 	material.transparent = true;
 	material.blending = THREE.MultiplyBlending;
 	this.plane = new THREE.Mesh( geometry, material );
@@ -168,7 +170,7 @@ Main.prototype.step = function( time ) {
 	this.persona && this.persona.step(time);
 	this.circleController && this.circleController.step(time);
 	this.lineController && this.lineController.step(time);
-	
+
 	var mood = {};
 	for ( var val in this.circleController.vals ) mood[ val ] = this.circleController.vals[ val ] + this.lineController.vals[ val ];
 

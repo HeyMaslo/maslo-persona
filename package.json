@@ -13,6 +13,9 @@
         "node": "^8.9 || ^10.7",
         "yarn": "^1.13"
     },
+    "scripts": {
+        "dev": "cd webdemo && yarn && yarn dev"
+    },
     "dependencies": {
         "chroma-js": "^2.0.3",
         "gsap": "^2.1.2",

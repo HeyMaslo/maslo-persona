@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 var RingGeometry = require('./ringGeometry');
 var RingMaterial = require('./ringMaterial');
 
@@ -5,7 +7,7 @@ var Ring = function( parent, id ){
 	this.parent = parent;
 	this.id = id;
 	this.seed = new THREE.Vector3( ( Math.random() - 0.5 ) * 2, ( Math.random() - 0.5 ) * 2, ( Math.random() - 0.5 ) * 2 );
-	
+
 	this.osc = 0.05;
 	this.intensity = 1;
 	this.frequency = 0.2;
