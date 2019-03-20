@@ -1,10 +1,10 @@
 import '@babel/polyfill';
 
-import { MasloPersonaWebRenderer } from '../web';
+import { MasloPersona } from '../web';
 
 const element = document.getElementById('root');
 
-const personaRenderer = new MasloPersonaWebRenderer({
+const personaRenderer = new MasloPersona({
     element,
     persona: {
         ringRes: 80,

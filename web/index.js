@@ -1,5 +1,5 @@
 import MasloPersonaWebRenderer from './MasloPersonaWebRenderer';
 
 export {
-    MasloPersonaWebRenderer,
+    MasloPersonaWebRenderer as MasloPersona,
 }

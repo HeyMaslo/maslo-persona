@@ -1,6 +1,8 @@
 import { MasloPersona } from '../lib';
 import * as THREE from 'three';
 
+import { States, AllStates } from '../lib/persona.states';
+
 /** @typedef {(import ('lib').MasloPersonaSettings)} MasloPersonaSettings */
 
 /** @typedef {Object} MasloPersonaWebRendererOptions
@@ -15,8 +17,8 @@ export default class MasloPersonaWebRenderer {
         this._element = options.element;
 
         const radius = (options.persona && options.persona.radius) || 200;
-        const width = 2.5 * radius;
-        const height = 2.5 * radius;
+        const width = 2.8 * radius;
+        const height = 2.8 * radius;
 
         this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         this._renderer.setSize(width, height, false);
@@ -31,26 +33,54 @@ export default class MasloPersonaWebRenderer {
 
         this._persona.setState('init');
 
-        this.step();
+        this._step();
+
+        let isListening = false;
+        const toggleListening = () => {
+            if (!isListening) {
+                this._persona.beginListen();
+            } else {
+                this._persona.endListen();
+            }
+            isListening = !isListening;
+        };
 
         this._element.onclick = () => {
-            this._persona.setState('joy');
+            // this.randomState();
+            this._persona.setState('listen');
+            // toggleListening();
         }
+
+        // an example how to demonstrate mood update
+        // setTimeout(() => {
+        //     this._persona.mood.joy = 0.5;
+        //     setTimeout(() => {
+        //         this._persona.mood.joy = 0;
+        //     }, 2000);
+        // }, 5000);
     }
 
-    onResize = () => {
+    get persona() { return this._persona; }
+
+    _onResize = () => {
 
     }
 
-    step = time => {
-        requestAnimationFrame(this.step);
+    _step = time => {
+        requestAnimationFrame(this._step);
 
         try {
             this._persona.step(time);
         } catch (err) {
-            console.error(err);
+            console.error('Persona step error', err);
         }
 
         this._renderer.render(this._scene, this._camera);
+    }
+
+    randomState() {
+        const randomIndex = Math.floor(Math.random() * AllStates.length);
+        const randomState = AllStates[randomIndex] || States.Idle;
+        this._persona.setState(randomState);
     }
 }
