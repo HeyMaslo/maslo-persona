@@ -36,19 +36,20 @@ export default class MasloPersonaWebRenderer {
         this._step();
 
         let isListening = false;
+        // an example how to begin/end listening
         const toggleListening = () => {
             if (!isListening) {
-                this._persona.beginListen();
+                this._persona.beginState('listen');
             } else {
-                this._persona.endListen();
+                this._persona.endState();
             }
             isListening = !isListening;
         };
 
         this._element.onclick = () => {
             // this.randomState();
-            this._persona.setState('listen');
-            // toggleListening();
+            // this._persona.setState('listen');
+            toggleListening();
         }
 
         // an example how to demonstrate mood update
