@@ -1,7 +1,7 @@
-import { MasloPersona } from '../lib';
+import { MasloPersona } from 'lib';
 import * as THREE from 'three';
 
-import { States, AllStates } from '../lib/persona.states';
+import { States, AllStates } from 'lib/persona.states';
 
 /** @typedef {(import ('lib').MasloPersonaSettings)} MasloPersonaSettings */
 

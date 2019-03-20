@@ -41,6 +41,8 @@ module.exports = env => {
         resolve: {
             modules: [pathResolve('../lib'), pathResolve('../web'), 'node_modules'],
             alias: {
+                lib: pathResolve('../lib/'),
+                web: pathResolve('../web/'),
             },
         },
         module: {
@@ -54,11 +56,22 @@ module.exports = env => {
                     },
                 },
                 {
+                    test: /\.(pug)$/,
+                    loader: 'pug-loader',
+                },
+                {
                     test: /\.js$/,
                     use: {
                         loader: 'babel-loader',
                     },
                     exclude: [/node_modules/, /dist/],
+                },
+                {
+                    test: /favicon\.ico/,
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                    },
                 },
                 {
                     test: /\.(png|jpg|gif|webp|svg|ico)$/,
@@ -118,8 +131,15 @@ module.exports = env => {
                 {
                     test: /\.css$|\.sass$|\.scss$/,
                     use: [
-                        isProd ? MiniCssExtractPlugin.loader : 'style-loader',
+                        MiniCssExtractPlugin.loader,
                         'css-loader', 'postcss-loader', 'sass-loader',
+                    ],
+                },
+                {
+                    test: /\.styl$/,
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        'css-loader', 'postcss-loader', 'stylus-loader',
                     ],
                 },
                 {
@@ -161,7 +181,8 @@ module.exports = env => {
                 },
             }),
 
-            htmlBuilder.createHtmlPlugin('index.html', './html/index.ejs', { inject: true }),
+            htmlBuilder.createHtmlPlugin('index.html', './views/main.pug', { inject: true }),
+            htmlBuilder.createHtmlPugPlugin(),
 
             new MiniCssExtractPlugin({
                 filename: isProd ? '[name].[hash:6].css' : '[name].css',

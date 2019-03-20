@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+var HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
 const fs = require('fs');
 const path = require('path');
 
@@ -45,6 +46,10 @@ class HtmlBuilder {
             inject: false,
             ...options,
         });
+    }
+
+    createHtmlPugPlugin() {
+        return new HtmlWebpackPugPlugin();
     }
 
     /** @returns {HtmlWebPackPlugin[]}

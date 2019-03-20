@@ -6,6 +6,8 @@
       "target": "ES6",
       "baseUrl": ".",
       "paths": {
+        "lib/*" : [ "./lib/*" ],
+        "web/*" : [ "./web/*" ],
       }
     },
     "exclude": [
