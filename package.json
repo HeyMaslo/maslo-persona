@@ -22,5 +22,11 @@
         "mobx": "^5.9.0",
         "simplex-noise": "^2.4.0",
         "three": "^0.102.1"
+    },
+    "devDependencies": {
+        "babel-eslint": "^10.0.1",
+        "eslint": "^5.15.3",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-plugin-import": "^2.16.0"
     }
 }

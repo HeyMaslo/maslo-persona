@@ -5,7 +5,9 @@ import { States, AllStates } from 'lib/persona.states';
 
 /** @typedef {(import ('lib').MasloPersonaSettings)} MasloPersonaSettings */
 
-/** @typedef {Object} MasloPersonaWebRendererOptions
+/**
+ * @typedef {Object} MasloPersonaWebRendererOptions
+ * @property {number} [scale=3]
  * @property {HTMLElement} element
  * @property {Partial<MasloPersonaSettings>=} persona
  */
@@ -17,8 +19,9 @@ export default class MasloPersonaWebRenderer {
         this._element = options.element;
 
         const radius = (options.persona && options.persona.radius) || 200;
-        const width = 2.8 * radius;
-        const height = 2.8 * radius;
+        const scale = options.scale || 3;
+        const width = scale * radius;
+        const height = scale * radius;
 
         this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         this._renderer.setSize(width, height, false);
@@ -33,24 +36,22 @@ export default class MasloPersonaWebRenderer {
 
         this._persona.setState('init');
 
-        this._step();
-
-        let isListening = false;
         // an example how to begin/end listening
-        const toggleListening = () => {
-            if (!isListening) {
-                this._persona.beginState('listen');
-            } else {
-                this._persona.endState();
-            }
-            isListening = !isListening;
-        };
+        // let isListening = false;
+        // const toggleListening = () => {
+        //     if (!isListening) {
+        //         this._persona.beginState('listen');
+        //     } else {
+        //         this._persona.endState();
+        //     }
+        //     isListening = !isListening;
+        // };
 
-        this._element.onclick = () => {
-            // this.randomState();
-            // this._persona.setState('listen');
-            toggleListening();
-        }
+        // this._element.onclick = () => {
+        //     this.randomState();
+        //     // this._persona.setState('listen');
+        //     // toggleListening();
+        // };
 
         // an example how to demonstrate mood update
         // setTimeout(() => {
@@ -61,17 +62,40 @@ export default class MasloPersonaWebRenderer {
         // }, 5000);
     }
 
-    get persona() { return this._persona; }
+    get core() { return this._persona; }
+    get scene() { return this._scene; }
 
-    _onResize = () => {
-
+    run() {
+        this._autoStep();
     }
 
-    _step = time => {
-        requestAnimationFrame(this._step);
+    resize = () => {
+        // const width = this._element.offsetWidth;
+        // const height = this._element.offsetHeight;
+
+        // this._renderer.setSize(width * 2, height * 2);
+        // this._renderer.domElement.width = width;
+        // this._renderer.domElement.height = height;
+
+        // this._camera.left = width / -2;
+        // this._camera.right = width / 2;
+        // this._camera.top = height / 2;
+        // this._camera.bottom = height / -2;
+
+        // this._camera.position.z = 1000;
+        // this._camera.updateProjectionMatrix();
+    }
+
+    _autoStep = () => {
+        requestAnimationFrame(this._autoStep);
+
+        this.step();
+    }
+
+    step = () => {
 
         try {
-            this._persona.step(time);
+            this._persona.step();
         } catch (err) {
             console.error('Persona step error', err);
         }

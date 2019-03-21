@@ -10,7 +10,6 @@ module.exports = {
             "globalReturn": false
         }
     },
-    "plugins": ["import"],
     "rules": {
         "camelcase": 2,
         "indent": ["warn", 4, {
@@ -42,15 +41,13 @@ module.exports = {
         "padded-blocks": 0,
         "no-multi-spaces": 0,
         "object-shorthand": 1,
+        "comma-style": 1,
         "max-len": [1, {
             "comments": 150
         }, {
             "code": 120
         }],
     },
-    // "settings": {
-    // 	"import/resolver": "webpack"
-    // },
     "env": {
         "es6": true,
         "node": true,
