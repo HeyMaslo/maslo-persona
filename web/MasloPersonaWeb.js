@@ -1,15 +1,17 @@
-import { MasloPersona } from 'lib';
+import { MasloPersona, UseResources as UseMasloResources } from 'lib';
 import * as THREE from 'three';
 
 import { States, AllStates } from 'lib/persona.states';
 
 /** @typedef {(import ('lib').MasloPersonaSettings)} MasloPersonaSettings */
+/** @typedef {(import ('lib').ResourcesData)} MasloResources */
 
 /**
  * @typedef {Object} MasloPersonaWebRendererOptions
  * @property {number} [scale=3]
  * @property {HTMLElement} element
  * @property {Partial<MasloPersonaSettings>=} persona
+ * @property {MasloResources=} resources
  */
 
 export default class MasloPersonaWebRenderer {
@@ -30,6 +32,7 @@ export default class MasloPersonaWebRenderer {
         this._camera = new THREE.OrthographicCamera(-width / 2, width / 2, height / 2, -height / 2, -1, 1000);
         this._camera.position.z = 100;
 
+        UseMasloResources(options.resources);
         this._persona = new MasloPersona(this._scene, options.persona);
 
         this._element.appendChild(this._renderer.domElement);
