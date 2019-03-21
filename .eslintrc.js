@@ -20,7 +20,7 @@ module.exports = {
         "no-use-before-define": "warn",
         "no-console": 1,
         "no-continue": 0,
-        "no-plusplus": 1,
+        "no-plusplus": 0,
         "no-tabs": 0,
         "no-var": 1,
         "linebreak-style": ["warn", process.platform === 'win32' ? 'windows' : "unix"],

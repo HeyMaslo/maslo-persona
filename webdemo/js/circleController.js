@@ -18,8 +18,12 @@ export class CircleController {
             /** @type {HTMLElement} */
             const feelingNode = this.feelings[i];
             this.titles[feelingNode.getAttribute('id')] = feelingNode.innerHTML;
-            const p = { id: feelingNode.getAttribute('id'), x: Math.cos(Math.PI * 2 * i / this.feelings.length)  * this.node.offsetWidth / 2, y: -Math.sin(Math.PI * 2 * i / this.feelings.length)  * this.node.offsetWidth / 2 }
-            feelingNode.style.transform = 'translate3d( ' + p.x + 'px, ' + p.y + 'px, 0px )';
+            const p = {
+                id: feelingNode.getAttribute('id'),
+                x: Math.cos(Math.PI * 2 * i / this.feelings.length)  * this.node.offsetWidth / 2,
+                y: -Math.sin(Math.PI * 2 * i / this.feelings.length)  * this.node.offsetWidth / 2,
+            };
+            feelingNode.style.transform = `translate3d( ${p.x}px, ${p.y}px, 0px )`;
             this.vals[feelingNode.getAttribute('id')] = 0;
         }
 
@@ -35,7 +39,7 @@ export class CircleController {
         this.position = { x: 0, y: 0 };
     }
 
-    mouseUp = e => {
+    mouseUp = () => {
         this.dragging = false;
     }
 
@@ -48,9 +52,12 @@ export class CircleController {
     step = () => {
         // slider position
         if (this.dragging) {
-            this.position = { x: this.dragginPosition.x - this.originDrag.x, y: this.dragginPosition.y - this.originDrag.y };
+            this.position = {
+                x: this.dragginPosition.x - this.originDrag.x,
+                y: this.dragginPosition.y - this.originDrag.y,
+            };
         } else {
-            this.position = { x: this.position.x - this.position.x * 0.1, y: this.position.y - this.position.y * 0.1 }
+            this.position = { x: this.position.x - this.position.x * 0.1, y: this.position.y - this.position.y * 0.1 };
         }
 
         // influences
@@ -60,7 +67,7 @@ export class CircleController {
             angle = Math.PI + (Math.PI + angle);
         }
 
-        let dist = Math.sqrt(Math.pow(this.position.x, 2) + Math.pow(this.position.y, 2)) / (this.node.offsetWidth / 2);
+        let dist = Math.sqrt((this.position.x ** 2) + (this.position.y ** 2)) / (this.node.offsetWidth / 2);
         dist = Math.min(1, Math.max(0, (dist - minDist) / (1 - minDist)));
         const angleInc = Math.PI * 2 / this.feelings.length;
 
@@ -83,6 +90,6 @@ export class CircleController {
             }
         });
 
-        this.slider.style.transform = 'translate3d( ' + this.position.x + 'px, ' + this.position.y + 'px, 0px )';
+        this.slider.style.transform = `translate3d( ${this.position.x}px, ${this.position.y}px, 0px )`;
     }
 }
