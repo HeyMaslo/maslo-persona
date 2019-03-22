@@ -14,7 +14,7 @@
         "yarn": "^1.13"
     },
     "scripts": {
-        "dev": "cd webdemo && yarn && yarn dev"
+        "dev": "yarn && cd webdemo && yarn && yarn dev"
     },
     "dependencies": {
         "chroma-js": "^2.0.3",

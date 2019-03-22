@@ -1,6 +1,6 @@
 import { autorun } from 'mobx';
 import * as THREE from 'three';
-import { MasloPersona } from 'web';
+import { MasloPersona } from '../../web';
 import { LineController } from './lineController';
 import { CircleController } from './circleController';
 
@@ -22,7 +22,7 @@ export class Main {
         this.element.addEventListener('mouseup', this.onMouseUp.bind(this));
         this.element.addEventListener('mousemove', this.onMouseMove.bind(this));
 
-    	if (this.debugBut) {
+        if (this.debugBut) {
             this.debugBut.addEventListener('mousedown', this.debugToggle.bind(this));
         }
 
@@ -60,7 +60,7 @@ export class Main {
             const state = this._persona.core.state;
             for (let i = 0; i < this.controls.length; i++) {
                 this.controls[i].classList.remove('active');
-                if (this.controls[i].getAttribute('data-reaction') == state) {
+                if (this.controls[i].getAttribute('data-reaction') === state) {
                     this.controls[i].classList.add('active');
                 }
             }
@@ -74,13 +74,27 @@ export class Main {
         {
             const geometry = new THREE.PlaneBufferGeometry(1, 1);
 
-            // flat background
-            const fs = 'varying vec2 vUv; void main() { float intensity = smoothstep( 0.0, 0.3, vUv.x * vUv.y ); gl_FragColor = vec4( 0.215686274509804 * (1.0-intensity) + 0.6352941176 * (intensity), 0.733333333333333 * (1.0-intensity) + 0.43921568627451 * (intensity), 1.0 * (1.0-intensity) + 1.0 * (intensity), 1.0 ); }'
             // if (window.pageMode) fs = 'varying vec2 vUv; void main() { gl_FragColor = vec4( 0.37, 0.73, 0.98, 1.0 ); }';
 
             const material = new THREE.ShaderMaterial({
-                vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }',
-                fragmentShader: fs,
+                vertexShader: `
+varying vec2 vUv;
+void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}`,
+                // flat background
+                fragmentShader: `
+varying vec2 vUv;
+
+void main() {
+    float intensity = smoothstep( 0.0, 0.3, vUv.x * vUv.y );
+    float r = 0.215686274509804 * (1.0 - intensity) + 0.6352941176 * intensity;
+    float g = 0.733333333333333 * (1.0-intensity) + 0.43921568627451 * intensity;
+    float b = 1.0 * (1.0-intensity) + 1.0 * intensity;
+
+    gl_FragColor = vec4(r, g, b, 1.0);
+}`,
             });
 
             material.transparent = true;
@@ -137,7 +151,7 @@ export class Main {
         }, 100);
 
         const personaPos = this._persona.core._settings.position;
-        this.startAngle = Math.atan2(e.clientY - (this.element.offsetHeight / 2 + personaPos.y), e.clientX - (this.element.offsetWidth / 2 + personaPos.x))/ (Math.PI * 2);
+        this.startAngle = Math.atan2(e.clientY - (this.element.offsetHeight / 2 + personaPos.y), e.clientX - (this.element.offsetWidth / 2 + personaPos.x)) / (Math.PI * 2);
         this.lastAngle = this.startAngle;
     }
 
@@ -155,10 +169,13 @@ export class Main {
         }
 
         const personaPos = this._persona.core._settings.position;
-        const angle = Math.atan2(e.clientY - (this.element.offsetHeight / 2 + personaPos.y), e.clientX -(this.element.offsetWidth / 2 + personaPos.x))/ (Math.PI * 2);
+        const angle = Math.atan2(
+            e.clientY - (this.element.offsetHeight / 2 + personaPos.y),
+            e.clientX - (this.element.offsetWidth / 2 + personaPos.x),
+        ) / (Math.PI * 2);
 
         if (this.mouseIsDown) {
-            this.angleSpeed += (Math.min(Math.max(-0.05, this.lastAngle - angle), 0.05) - this.angleSpeed) * 0.15 ;
+            this.angleSpeed += (Math.min(Math.max(-0.05, this.lastAngle - angle), 0.05) - this.angleSpeed) * 0.15;
             this._persona.core._settings.rotation += this.angleSpeed;
             this.lastAngle = angle;
         }

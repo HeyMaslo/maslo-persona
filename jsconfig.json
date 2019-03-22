@@ -5,10 +5,6 @@
       "experimentalDecorators": true,
       "target": "ES6",
       "baseUrl": ".",
-      "paths": {
-        "lib/*" : [ "./lib/*" ],
-        "web/*" : [ "./web/*" ],
-      }
     },
     "exclude": [
       "node_modules",

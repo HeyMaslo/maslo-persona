@@ -1,7 +1,10 @@
-import { MasloPersona, UseResources as UseMasloResources } from 'lib';
 import * as THREE from 'three';
-
-import { States, AllStates } from 'lib/persona.states';
+import {
+    MasloPersona,
+    UseResources as UseMasloResources,
+    States,
+    AllStates,
+} from '../lib';
 
 /** @typedef {(import ('lib').MasloPersonaSettings)} MasloPersonaSettings */
 /** @typedef {(import ('lib').ResourcesData)} MasloResources */
@@ -67,7 +70,9 @@ export default class MasloPersonaWebRenderer {
 
     get core() { return this._persona; }
     get scene() { return this._scene; }
+    get domElemenet() { return this._renderer.domElement; }
 
+    /** Starts Persona update via `window.requestAnimationFrame` */
     run() {
         this._autoStep();
     }
@@ -89,12 +94,14 @@ export default class MasloPersonaWebRenderer {
         // this._camera.updateProjectionMatrix();
     }
 
+    /** @private */
     _autoStep = () => {
-        requestAnimationFrame(this._autoStep);
+        window.requestAnimationFrame(this._autoStep);
 
         this.step();
     }
 
+    /** Manually updates Persona */
     step = () => {
 
         try {
@@ -106,9 +113,12 @@ export default class MasloPersonaWebRenderer {
         this._renderer.render(this._scene, this._camera);
     }
 
+    /** Sets random state of Persona */
     randomState() {
         const randomIndex = Math.floor(Math.random() * AllStates.length);
         const randomState = AllStates[randomIndex] || States.Idle;
         this._persona.setState(randomState);
     }
+
+
 }

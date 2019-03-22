@@ -50,7 +50,6 @@ export class LineController {
         }
 
         // influences
-        const minDist = 0;
         const val = Math.max(-1, Math.min(1, this.position / (this.node.offsetWidth / 2)));
 
         let joy;
@@ -58,7 +57,7 @@ export class LineController {
         let sadness;
 
         if (val > 0) {
-            joy = Math.max(0, 1 - Math.sqrt(Math.pow(val - 0.5, 2)) / 0.5);
+            joy = Math.max(0, 1 - Math.sqrt((val - 0.5) ** 2) / 0.5);
             love = Math.max(0, (val - 0.5) / 0.5);
         } else {
             joy = 0;

@@ -41,8 +41,6 @@ module.exports = env => {
         resolve: {
             modules: [pathResolve('../lib'), pathResolve('../web'), 'node_modules'],
             alias: {
-                lib: pathResolve('../lib/'),
-                web: pathResolve('../web/'),
             },
         },
         module: {
