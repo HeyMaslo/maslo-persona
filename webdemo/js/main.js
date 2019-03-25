@@ -1,6 +1,6 @@
 import { autorun } from 'mobx';
 import * as THREE from 'three';
-import { MasloPersona } from '../../web';
+import { MasloPersona, States } from '../../web';
 import { LineController } from './lineController';
 import { CircleController } from './circleController';
 
@@ -147,10 +147,10 @@ void main() {
     onMouseDown = e => {
         this.mouseIsDown = true;
         this.tapTimeout = setTimeout(() => {
-            this._persona.core.setState('tap');
+            this._persona.core.setState(States.Tap);
         }, 100);
 
-        const personaPos = this._persona.core._settings.position;
+        const personaPos = this._persona.core.position;
         this.startAngle = Math.atan2(e.clientY - (this.element.offsetHeight / 2 + personaPos.y), e.clientX - (this.element.offsetWidth / 2 + personaPos.x)) / (Math.PI * 2);
         this.lastAngle = this.startAngle;
     }
@@ -168,7 +168,7 @@ void main() {
             clearInterval(this.tapTimeout);
         }
 
-        const personaPos = this._persona.core._settings.position;
+        const personaPos = this._persona.core.position;
         const angle = Math.atan2(
             e.clientY - (this.element.offsetHeight / 2 + personaPos.y),
             e.clientX - (this.element.offsetWidth / 2 + personaPos.x),
@@ -176,7 +176,7 @@ void main() {
 
         if (this.mouseIsDown) {
             this.angleSpeed += (Math.min(Math.max(-0.05, this.lastAngle - angle), 0.05) - this.angleSpeed) * 0.15;
-            this._persona.core._settings.rotation += this.angleSpeed;
+            this._persona.core.rotation += this.angleSpeed;
             this.lastAngle = angle;
         }
     }
@@ -205,7 +205,7 @@ void main() {
         window.requestAnimationFrame(this.step);
 
         this.angleSpeed -= this.angleSpeed * 0.05;
-        this._persona.core._data.rotation += this.angleSpeed;
+        this._persona.core.rotation += this.angleSpeed;
 
         // this.debug && this.debug.step(time);
         this.circleController.step();
