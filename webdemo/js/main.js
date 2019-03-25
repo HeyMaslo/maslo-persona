@@ -50,8 +50,8 @@ export class Main {
             scale: 3,
             element: this.element,
             persona: {
-                ringRes: 80,
-                radius: 350,
+                ringRes: 100,
+                radius: 300,
                 glow: false,
             },
         });

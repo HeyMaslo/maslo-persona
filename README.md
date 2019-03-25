@@ -33,7 +33,91 @@ The types of reactions described below:
 1. `lib` – here lives ES6 classes with meaningful JSDoc comments for Maslo Persona core code. Not ready for rendering, requires further integration to a rendering scene, but all core logic is placed here including usage of Three.js, gsap, mobx.
 2. `web` – a HTML/WebGL renderer for Maslo Persona that is ready to be placed right in HTML project with minimal additional configuration.
 3. `webdemo` – basically the only runnable (and main for now) guy here, single page site based on webpack dev server that uses `web` package for Persona rendering.
-4. TODO:  `react-native` – renderer for RN
+4. [TODO]  `react-native` – renderer for RN
+
+## How To Use
+
+Maslo Persona is available for usage only in Web environment for now. React Native adapter is on its way.
+
+You can check out `webdemo` sub-package to see how it has been used for web demo. All environment-specific stuff is configured there.
+
+General notes are the following:
+
+* The sources use ES6 and some extra features like decorators. It is intended to be build with Babel. Appropriate configuration can be hooked up from `webdemo/babel.config.js`.
+* `require`'s across files are used with `webpack` in mind, but without aliases.
+* `web` sub-package sets up persona in Web ennvironment, but not runnable itself.
+
+To instantiate and manipulate Maslo Persona:
+
+```javascript
+import { MasloPersona, States } from 'maslo-persona-2d/web';
+
+/* ... */
+const targetElement = document.body.querySelector('#main');
+
+const persona = new MasloPersona({
+    scale: 3,
+    element: targetElement,
+    persona: {
+        ringRes: 80,
+        radius: 350,
+        glow: false,
+    },
+});
+
+// run auto updates
+persona.run();
+// stop/pause
+persona.stop();
+
+// or manually update it every frame
+persona.step();
+
+// resize (not really required so far, but may be so in future)
+persona.resize();
+
+// Working with Persona itself:
+
+const currentState = persona.core.state; // gets current persona state, observable via MobX
+persona.core.setState(States.Hey); // sets new state
+
+// Run prolongated state. For now only "listen" is supported.
+persona.core.beginState(States.Listen);
+persona.core.endState();
+
+// Update Persona mood moficators (0..1)
+persona.core.mood.joy = 1.0;
+```
+
+All functions' parameters are documented via JSDoc, including available states and mood modificators. But, for the sake of this Readme completeness, here they are:
+
+```javascript
+States = "joy" | "surprise" | "listen" | "init" | "idle" | "upset" | "yes" | "no" | "hey" | "shake" | "tap" | "question";
+Moods = "joy" | "love" | "surprise" | "terror" | "anger" | "sadness" | "sleepy" | "calm";
+```
+
+### Resources
+
+All resources for Persona are located in `lib/assets` folder. They're `require`d using `webpack` style, and output for images & audios are URL, and for shaders are just raw strings. Corresponding `webpack` loaders are configured in `webdemo/webpack.config.js`. But if you don't want to use `webpack`, you should provide those URLs and shaders strings manually to Persona configuration:
+
+```javascript
+new MasloPersona({
+    // add this block to Persona's configuration. JSDoc (at least in VSCode) should be able to provide info about this argument shape
+    resources: {
+        textures: {
+            noise: { url: 'url/to/noise.png' },
+        },
+        audio: {
+            hey: { url: '/assets/audio/hey.mp3' },
+            /* ... */
+        },
+        shaders: {
+            PersonaFragment: { raw: '<shader raw sources>' },
+            /** ... */
+        },
+    },
+});
+```
 
 ## Contributing
 

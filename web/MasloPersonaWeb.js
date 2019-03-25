@@ -77,6 +77,12 @@ export default class MasloPersonaWebRenderer {
         this._autoStep();
     }
 
+    stop() {
+        if (this._rafId) {
+            window.cancelAnimationFrame(this._rafId);
+        }
+    }
+
     resize = () => {
         // const width = this._element.offsetWidth;
         // const height = this._element.offsetHeight;
@@ -96,7 +102,7 @@ export default class MasloPersonaWebRenderer {
 
     /** @private */
     _autoStep = () => {
-        window.requestAnimationFrame(this._autoStep);
+        this._rafId = window.requestAnimationFrame(this._autoStep);
 
         this.step();
     }
