@@ -13,9 +13,7 @@
         "postinstall": "cd ../web && yarn"
     },
     "dependencies": {
-        "@babel/polyfill": "^7.2.5",
-        "mobx": "^5.9.0",
-        "three": "^0.102.1"
+        "@babel/polyfill": "^7.2.5"
     },
     "devDependencies": {
         "@babel/cli": "^7.2.3",

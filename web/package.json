@@ -2,8 +2,5 @@
     "name": "maslo-persona-2d-web",
     "private": true,
     "version": "1.0.0",
-    "main": "index.js",
-    "dependencies": {
-        "three": "^0.102.1"
-    }
+    "main": "index.js"
 }

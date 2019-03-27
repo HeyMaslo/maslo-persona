@@ -47,6 +47,7 @@ module.exports = {
         }, {
             "code": 120
         }],
+        "import/no-extraneous-dependencies": ["error", {"packageDir": path.join(__dirname)}],
     },
     "env": {
         "es6": true,
