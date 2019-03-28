@@ -1,6 +1,6 @@
 import { autorun } from 'mobx';
 import * as THREE from 'three';
-import { MasloPersona, States } from '../../web';
+import { Persona, States } from '../../web';
 import { LineController } from './lineController';
 import { CircleController } from './circleController';
 
@@ -46,13 +46,19 @@ export class Main {
         this.circleController = new CircleController();
         this.lineController = new LineController();
 
-        this._persona = new MasloPersona({
-            scale: 3,
+        this._persona = new Persona({
+            // target HTML container that will hold WebGL canvas
             element: this.element,
+
+            // size of the canvas, in pixels. Recommended is `persona.radius` multiplied by 3
+            size: 900,
+
             persona: {
+                // amount of vertices per ring. Bigger value increases quality, smaller increases performance
                 ringRes: 100,
+
+                // radius of Persona view, in pixels
                 radius: 300,
-                glow: false,
             },
         });
 
@@ -211,21 +217,13 @@ void main() {
         this.circleController.step();
         this.lineController.step();
 
-        // const logMoods = [];
         Object.keys(this.circleController.vals).forEach(key => {
             let val = this.circleController.vals[key] + this.lineController.vals[key];
 
             val = Math.round(val * 10000) / 10000;
 
             this._persona.core.mood[key] = val;
-            // if (Math.abs(val) > 0) {
-            //     logMoods.push({ key, val });
-            // }
         });
-
-        // if (logMoods.length > 0) {
-        //     console.log(...logMoods);
-        // }
 
         this._persona.step();
     };

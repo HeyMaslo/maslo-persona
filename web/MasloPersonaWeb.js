@@ -1,32 +1,32 @@
 import * as THREE from 'three';
 import {
-    MasloPersona,
+    PersonaCore,
     UseResources as UseMasloResources,
     States,
     AllStates,
 } from '../lib';
 
-/** @typedef {(import ('lib').MasloPersonaSettings)} MasloPersonaSettings */
-/** @typedef {(import ('lib').ResourcesData)} MasloResources */
+/** @typedef {(import ('lib').PersonaSettings)} PersonaSettings */
+/** @typedef {(import ('lib').ResourcesData)} ResourcesConfig */
 
 /**
- * @typedef {Object} MasloPersonaWebRendererOptions
- * @property {number} [scale=3]
- * @property {HTMLElement} element
- * @property {Partial<MasloPersonaSettings>=} persona
- * @property {MasloResources=} resources
+ * @typedef {Object} PersonaWebOptions
+ * @property {HTMLElement} element target HTML container that will hold WebGL canvas
+ * @property {number} [size=600] size of the canvas, in pixels. Recommended is `persona.radius` multiplied by 3
+ * @property {Partial<PersonaSettings>=} persona settings for Persona
+ * @property {ResourcesConfig=} resources overrides Persona Resources links
  */
 
 export default class MasloPersonaWebRenderer {
 
-    /** @param {MasloPersonaWebRendererOptions} options */
+    /** @param {PersonaWebOptions} options */
     constructor(options) {
         this._element = options.element;
 
         const radius = (options.persona && options.persona.radius) || 200;
-        const scale = options.scale || 3;
-        const width = scale * radius;
-        const height = scale * radius;
+        const size = options.size || (3 * radius);
+        const width = size;
+        const height = size;
 
         this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         this._renderer.setSize(width, height, false);
@@ -36,7 +36,7 @@ export default class MasloPersonaWebRenderer {
         this._camera.position.z = 100;
 
         UseMasloResources(options.resources);
-        this._persona = new MasloPersona(this._scene, options.persona);
+        this._persona = new PersonaCore(this._scene, options.persona);
 
         this._element.appendChild(this._renderer.domElement);
 

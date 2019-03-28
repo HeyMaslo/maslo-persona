@@ -55,13 +55,20 @@ import { MasloPersona, States } from 'maslo-persona-2d/web';
 /* ... */
 const targetElement = document.body.querySelector('#main');
 
+// Web Renderer will use `targetElement` as container for WebGL canvas
 const persona = new MasloPersona({
-    scale: 3,
-    element: targetElement,
+    // target HTML container that will hold WebGL canvas
+    element: this.element,
+
+    // size of the canvas, in pixels. Recommended is `persona.radius` multiplied by 3
+    size: 900,
+
     persona: {
-        ringRes: 80,
-        radius: 350,
-        glow: false,
+        // amount of vertices per ring. Bigger value increases quality, smaller increases performance
+        ringRes: 100,
+
+        // radius of Persona view, in pixels
+        radius: 300,
     },
 });
 
@@ -73,7 +80,7 @@ persona.stop();
 // or manually update it every frame
 persona.step();
 
-// resize (not really required so far, but may be so in future)
+// resize (not really required by now, but may be so in future)
 persona.resize();
 
 // Working with Persona itself:
