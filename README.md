@@ -50,13 +50,13 @@ General notes are the following:
 To instantiate and manipulate Maslo Persona:
 
 ```javascript
-import { MasloPersona, States } from 'maslo-persona-2d/web';
+import { Persona, States } from 'maslo-persona-2d/web';
 
 /* ... */
 const targetElement = document.body.querySelector('#main');
 
 // Web Renderer will use `targetElement` as container for WebGL canvas
-const persona = new MasloPersona({
+const persona = new Persona({
     // target HTML container that will hold WebGL canvas
     element: this.element,
 
