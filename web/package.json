@@ -1,5 +1,5 @@
 {
-    "name": "maslo-persona-2d-web",
+    "name": "@heymaslo/persona-web",
     "private": true,
     "version": "1.0.0",
     "main": "index.js"

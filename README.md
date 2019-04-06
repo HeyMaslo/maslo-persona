@@ -1,6 +1,6 @@
-![](https://cdn-images-1.medium.com/max/1600/1*Gm7A7w4vJZeNXKHJQxhq7Q.gif)
+# persona-playground
 
-# maslo-persona-2d
+![](https://cdn-images-1.medium.com/max/1600/1*Gm7A7w4vJZeNXKHJQxhq7Q.gif)
 
 Want to add a cute and adorable personified entity to your AI project? YOU HAVE COME TO THE RIGHT PLACE! From the makers of the highly popular toy BB-8 comes Maslo... an animated expressive empathetic entity. Use Maslo on a website, mobile phone, or anywhere you'd like.
 
