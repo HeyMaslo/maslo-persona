@@ -12,7 +12,7 @@ module.exports = {
     },
     "rules": {
         "camelcase": 2,
-        "indent": ["warn", 4, {
+        "indent": ["warn", 2, {
             "SwitchCase": 1
         }],
         "quotes": [2, "single"],
@@ -21,7 +21,7 @@ module.exports = {
         "no-console": 1,
         "no-continue": 0,
         "no-plusplus": 0,
-        "no-tabs": 0,
+        "no-tabs": 1,
         "no-var": 1,
         "linebreak-style": ["warn", process.platform === 'win32' ? 'windows' : "unix"],
         "lines-between-class-members": 0,
@@ -30,16 +30,16 @@ module.exports = {
         "global-require": 1,
         "import/prefer-default-export": 0,
         "no-param-reassign": 1,
-        "func-names": 0,
-        "prefer-arrow-callback": 0,
-        "no-underscore-dangle": 0,
+        "func-names": 1,
+        "prefer-arrow-callback": 1,
+        "no-underscore-dangle": 1,
         "class-methods-use-this": 1,
         "no-unused-expressions": 1,
-        "arrow-parens": 0,
+        "arrow-parens": 1,
         "nonblock-statement-body-position": 0,
         "curly": 0,
         "padded-blocks": 0,
-        "no-multi-spaces": 0,
+        "no-multi-spaces": 1,
         "object-shorthand": 1,
         "comma-style": 1,
         "max-len": [1, {
