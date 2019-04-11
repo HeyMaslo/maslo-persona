@@ -50,7 +50,7 @@ General notes are the following:
 To instantiate and manipulate Maslo Persona:
 
 ```javascript
-import { Persona, States } from 'maslo-persona-2d/web';
+import { Persona, States } from '@heymaslo/persona/web';
 
 /* ... */
 const targetElement = document.body.querySelector('#main');
@@ -80,7 +80,7 @@ persona.stop();
 // or manually update it every frame
 persona.step();
 
-// resize (not really required by now, but may be so in future)
+// resize – react to screen dimensions changes (not really required by now, but may be so in future)
 persona.resize();
 
 // Working with Persona itself:
