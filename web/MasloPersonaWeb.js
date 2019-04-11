@@ -37,8 +37,12 @@ export default class MasloPersonaWebRenderer {
 
         UseMasloResources(options.resources);
         this._persona = new PersonaCore(this._scene, options.persona);
-
         this._element.appendChild(this._renderer.domElement);
+
+        this._init();
+    }
+
+    _init() {
 
         this._persona.setState('init');
 
@@ -80,6 +84,7 @@ export default class MasloPersonaWebRenderer {
     stop() {
         if (this._rafId) {
             window.cancelAnimationFrame(this._rafId);
+            this._rafId = 0;
         }
     }
 
