@@ -131,5 +131,9 @@ export default class MasloPersonaWebRenderer {
     this._persona.setState(randomState);
   }
 
-
+  dispose() {
+    this.stop();
+    this._element.removeChild(this._renderer.domElement);
+    this._renderer.dispose();
+  }
 }

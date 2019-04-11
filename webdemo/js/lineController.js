@@ -75,4 +75,9 @@ export class LineController {
     this.slider.style.transform = `translate3d( ${this.position}px, 0px, 0px )`;
   }
 
+  dispose() {
+    this.slider.removeEventListener('mousedown', this.mouseDown);
+    document.body.removeEventListener('mousemove', this.mouseMove);
+    document.body.removeEventListener('mouseup', this.mouseUp);
+  }
 }

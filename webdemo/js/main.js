@@ -11,37 +11,12 @@ export class Main {
     this.debugBut = document.getElementById('debugBut');
     this.debugEl = document.getElementById('debug');
     this.listeningBut = document.getElementById('listeningBut');
+    this.controls = document.getElementsByClassName('controlBut');
 
     this.mouseIsDown = false;
     this.startAngle = 0;
     this.angleSpeed = 0;
     this.debugActive = false;
-
-    window.addEventListener('resize', this.resize.bind(this));
-    this.element.addEventListener('mousedown', this.onMouseDown.bind(this));
-    this.element.addEventListener('mouseup', this.onMouseUp.bind(this));
-    this.element.addEventListener('mousemove', this.onMouseMove.bind(this));
-
-    if (this.debugBut) {
-      this.debugBut.addEventListener('mousedown', this.debugToggle.bind(this));
-    }
-
-    this.controls = document.getElementsByClassName('controlBut');
-    for (let i = 0; i < this.controls.length; i++) {
-      if (this.controls[i].getAttribute('id') !== 'listeningBut') {
-        this.controls[i].addEventListener('click', this.controlClicked.bind(this));
-      }
-    }
-
-    if (this.listeningBut) {
-      this.listeningBut.addEventListener('mousedown', this.questionMouseDown.bind(this));
-    }
-    if (this.listeningBut) {
-      this.listeningBut.addEventListener('mouseup', this.questionMouseUp.bind(this));
-    }
-    if (this.listeningBut) {
-      this.listeningBut.addEventListener('mouseleave', this.questionMouseUp.bind(this));
-    }
 
     this.circleController = new CircleController();
     this.lineController = new LineController();
@@ -65,14 +40,65 @@ export class Main {
     autorun(() => {
       const { state } = this._persona.core;
       for (let i = 0; i < this.controls.length; i++) {
-        this.controls[i].classList.remove('active');
-        if (this.controls[i].getAttribute('data-reaction') === state) {
-          this.controls[i].classList.add('active');
+        const control = this.controls[i];
+        control.classList.remove('active');
+        if (control.getAttribute('data-reaction') === state) {
+          control.classList.add('active');
         }
       }
     });
 
+    this._subscribe();
+
     // this._addBackground();
+  }
+
+  _subscribe() {
+    window.addEventListener('resize', this.resize);
+    this.element.addEventListener('mousedown', this.onMouseDown);
+    this.element.addEventListener('mouseup', this.onMouseUp);
+    this.element.addEventListener('mousemove', this.onMouseMove);
+
+    if (this.debugBut) {
+      this.debugBut.addEventListener('mousedown', this.debugToggle);
+    }
+
+    for (let i = 0; i < this.controls.length; i++) {
+      const control = this.controls[i];
+      if (control.getAttribute('id') !== 'listeningBut') {
+        control.addEventListener('click', this.controlClicked);
+      }
+    }
+
+    if (this.listeningBut) {
+      this.listeningBut.addEventListener('mousedown', this.questionMouseDown);
+      this.listeningBut.addEventListener('mouseup', this.questionMouseUp);
+      this.listeningBut.addEventListener('mouseleave', this.questionMouseUp);
+    }
+  }
+
+  _unsubscribe() {
+    window.removeEventListener('resize', this.resize);
+    this.element.removeEventListener('mousedown', this.onMouseDown);
+    this.element.removeEventListener('mouseup', this.onMouseUp);
+    this.element.removeEventListener('mousemove', this.onMouseMove);
+
+    if (this.debugBut) {
+      this.debugBut.removeEventListener('mousedown', this.debugToggle);
+    }
+
+    for (let i = 0; i < this.controls.length; i++) {
+      const control = this.controls[i];
+      if (control.getAttribute('id') !== 'listeningBut') {
+        control.removeEventListener('click', this.controlClicked);
+      }
+    }
+
+    if (this.listeningBut) {
+      this.listeningBut.removeEventListener('mousedown', this.questionMouseDown);
+      this.listeningBut.removeEventListener('mouseup', this.questionMouseUp);
+      this.listeningBut.removeEventListener('mouseleave', this.questionMouseUp);
+    }
   }
 
   _addBackground() {
@@ -214,7 +240,7 @@ void main() {
   }
 
   step = () => {
-    window.requestAnimationFrame(this.step);
+    this.rafId = window.requestAnimationFrame(this.step);
 
     this.angleSpeed -= this.angleSpeed * 0.05;
     this._persona.core.rotation += this.angleSpeed;
@@ -232,5 +258,14 @@ void main() {
     });
 
     this._persona.step();
-  };
+  }
+
+  dispose() {
+    window.cancelAnimationFrame(this.rafId);
+    this._unsubscribe();
+
+    this.circleController.dispose();
+    this.lineController.dispose();
+    this._persona.dispose();
+  }
 }
