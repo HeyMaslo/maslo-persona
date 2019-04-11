@@ -5,92 +5,92 @@ import { LineController } from './lineController';
 import { CircleController } from './circleController';
 
 export class Main {
-    constructor() {
+  constructor() {
 
-        this.element = document.getElementById('main');
-        this.debugBut = document.getElementById('debugBut');
-        this.debugEl = document.getElementById('debug');
-        this.listeningBut = document.getElementById('listeningBut');
+    this.element = document.getElementById('main');
+    this.debugBut = document.getElementById('debugBut');
+    this.debugEl = document.getElementById('debug');
+    this.listeningBut = document.getElementById('listeningBut');
 
-        this.mouseIsDown = false;
-        this.startAngle = 0;
-        this.angleSpeed = 0;
-        this.debugActive = false;
+    this.mouseIsDown = false;
+    this.startAngle = 0;
+    this.angleSpeed = 0;
+    this.debugActive = false;
 
-        window.addEventListener('resize', this.resize.bind(this));
-        this.element.addEventListener('mousedown', this.onMouseDown.bind(this));
-        this.element.addEventListener('mouseup', this.onMouseUp.bind(this));
-        this.element.addEventListener('mousemove', this.onMouseMove.bind(this));
+    window.addEventListener('resize', this.resize.bind(this));
+    this.element.addEventListener('mousedown', this.onMouseDown.bind(this));
+    this.element.addEventListener('mouseup', this.onMouseUp.bind(this));
+    this.element.addEventListener('mousemove', this.onMouseMove.bind(this));
 
-        if (this.debugBut) {
-            this.debugBut.addEventListener('mousedown', this.debugToggle.bind(this));
-        }
-
-        this.controls = document.getElementsByClassName('controlBut');
-        for (let i = 0; i < this.controls.length; i++) {
-            if (this.controls[i].getAttribute('id') !== 'listeningBut') {
-                this.controls[i].addEventListener('click', this.controlClicked.bind(this));
-            }
-        }
-
-        if (this.listeningBut) {
-            this.listeningBut.addEventListener('mousedown', this.questionMouseDown.bind(this));
-        }
-        if (this.listeningBut) {
-            this.listeningBut.addEventListener('mouseup', this.questionMouseUp.bind(this));
-        }
-        if (this.listeningBut) {
-            this.listeningBut.addEventListener('mouseleave', this.questionMouseUp.bind(this));
-        }
-
-        this.circleController = new CircleController();
-        this.lineController = new LineController();
-
-        this._persona = new Persona({
-            // target HTML container that will hold WebGL canvas
-            element: this.element,
-
-            // size of the canvas, in pixels. Recommended is `persona.radius` multiplied by 3
-            size: 900,
-
-            persona: {
-                // amount of vertices per ring. Bigger value increases quality, smaller increases performance
-                ringRes: 100,
-
-                // radius of Persona view, in pixels
-                radius: 300,
-            },
-        });
-
-        autorun(() => {
-            const state = this._persona.core.state;
-            for (let i = 0; i < this.controls.length; i++) {
-                this.controls[i].classList.remove('active');
-                if (this.controls[i].getAttribute('data-reaction') === state) {
-                    this.controls[i].classList.add('active');
-                }
-            }
-        });
-
-        // this._addBackground();
+    if (this.debugBut) {
+      this.debugBut.addEventListener('mousedown', this.debugToggle.bind(this));
     }
 
-    _addBackground() {
-        const scene = this._persona.scene;
-        {
-            const geometry = new THREE.PlaneBufferGeometry(1, 1);
+    this.controls = document.getElementsByClassName('controlBut');
+    for (let i = 0; i < this.controls.length; i++) {
+      if (this.controls[i].getAttribute('id') !== 'listeningBut') {
+        this.controls[i].addEventListener('click', this.controlClicked.bind(this));
+      }
+    }
 
-            // if (window.pageMode) fs = 'varying vec2 vUv; void main() { gl_FragColor = vec4( 0.37, 0.73, 0.98, 1.0 ); }';
+    if (this.listeningBut) {
+      this.listeningBut.addEventListener('mousedown', this.questionMouseDown.bind(this));
+    }
+    if (this.listeningBut) {
+      this.listeningBut.addEventListener('mouseup', this.questionMouseUp.bind(this));
+    }
+    if (this.listeningBut) {
+      this.listeningBut.addEventListener('mouseleave', this.questionMouseUp.bind(this));
+    }
 
-            const material = new THREE.ShaderMaterial({
-                vertexShader: `
+    this.circleController = new CircleController();
+    this.lineController = new LineController();
+
+    this._persona = new Persona({
+      // target HTML container that will hold WebGL canvas
+      element: this.element,
+
+      // size of the canvas, in pixels. Recommended is `persona.radius` multiplied by 3
+      size: 900,
+
+      persona: {
+        // amount of vertices per ring. Bigger value increases quality, smaller increases performance
+        ringRes: 100,
+
+        // radius of Persona view, in pixels
+        radius: 300,
+      },
+    });
+
+    autorun(() => {
+      const { state } = this._persona.core;
+      for (let i = 0; i < this.controls.length; i++) {
+        this.controls[i].classList.remove('active');
+        if (this.controls[i].getAttribute('data-reaction') === state) {
+          this.controls[i].classList.add('active');
+        }
+      }
+    });
+
+    // this._addBackground();
+  }
+
+  _addBackground() {
+    const { scene } = this._persona;
+    {
+      const geometry = new THREE.PlaneBufferGeometry(1, 1);
+
+      // if (window.pageMode) fs = 'varying vec2 vUv; void main() { gl_FragColor = vec4( 0.37, 0.73, 0.98, 1.0 ); }';
+
+      const material = new THREE.ShaderMaterial({
+        vertexShader: `
 varying vec2 vUv;
 void main() {
     vUv = uv;
     gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }`,
-                // flat background
-                fragmentShader: `
+        // flat background
+        fragmentShader: `
 varying vec2 vUv;
 
 void main() {
@@ -101,130 +101,136 @@ void main() {
 
     gl_FragColor = vec4(r, g, b, 1.0);
 }`,
-            });
+      });
 
-            material.transparent = true;
-            material.blending = THREE.MultiplyBlending;
-            this.plane = new THREE.Mesh(geometry, material);
-            this.plane.position.z = -10;
-            scene.add(this.plane);
-        }
-
-        {
-            const geometry = new THREE.PlaneBufferGeometry(1, 1);
-            const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-            this.background = new THREE.Mesh(geometry, material);
-            this.background.position.z = -100;
-            scene.add(this.background);
-        }
+      material.transparent = true;
+      material.blending = THREE.MultiplyBlending;
+      this.plane = new THREE.Mesh(geometry, material);
+      this.plane.position.z = -10;
+      scene.add(this.plane);
     }
 
-    run() {
-        this.resize();
-        this.step();
+    {
+      const geometry = new THREE.PlaneBufferGeometry(1, 1);
+      const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      this.background = new THREE.Mesh(geometry, material);
+      this.background.position.z = -100;
+      scene.add(this.background);
+    }
+  }
+
+  run() {
+    this.resize();
+    this.step();
+  }
+
+  questionMouseDown = (e) => {
+    e.preventDefault();
+    this._persona.core.beginState('listen');
+  }
+
+  questionMouseUp = () => {
+    this._persona.core.endState();
+  }
+
+  debugToggle = () => {
+    this.debugActive = !this.debugActive;
+    if (this.debugActive) {
+      this.debugEl.classList.add('active');
+    } else {
+      this.debugEl.classList.remove('active');
     }
 
-    questionMouseDown = (e) => {
-        e.preventDefault();
-        this._persona.core.beginState('listen');
+    this._persona.core.activateRenderingDebug(this.debugActive);
+  }
+
+  // changeColor = e => {
+  //     this.colorScheme = e.target.getAttribute('color-scheme');
+  //     for(var i = 0 ; i < this.colorButs.length ; i++) this.colorButs[i].classList.remove('active')
+  //     e.target.classList.add('active');
+  // }
+
+  onMouseDown = (e) => {
+    this.mouseIsDown = true;
+    this.tapTimeout = setTimeout(() => {
+      this._persona.core.setState(States.Tap);
+    }, 100);
+
+    const personaPos = this._persona.core.position;
+    this.startAngle = Math.atan2(
+      e.clientY - (this.element.offsetHeight / 2 + personaPos.y),
+      e.clientX - (this.element.offsetWidth / 2 + personaPos.x),
+    ) / (Math.PI * 2);
+    this.lastAngle = this.startAngle;
+  }
+
+  onMouseUp = () => {
+    this.mouseIsDown = false;
+    // const angle = Math.atan2(
+    //   e.clientY - (this.element.offsetHeight / 2 + this._persona.core.position.y),
+    //   e.clientX - (this.element.offsetWidth / 2 + this._persona.core.position.x),
+    // ) / (Math.PI * 2);
+    if (Math.abs(this.angleSpeed) > 0.01) {
+      this._persona.core.audio.play('swipe');
+    }
+  }
+
+  onMouseMove = (e) => {
+    if (this.mouseIsDown) {
+      clearInterval(this.tapTimeout);
     }
 
-    questionMouseUp = () => {
-        this._persona.core.endState();
+    const personaPos = this._persona.core.position;
+    const angle = Math.atan2(
+      e.clientY - (this.element.offsetHeight / 2 + personaPos.y),
+      e.clientX - (this.element.offsetWidth / 2 + personaPos.x),
+    ) / (Math.PI * 2);
+
+    if (this.mouseIsDown) {
+      this.angleSpeed += (Math.min(Math.max(-0.05, this.lastAngle - angle), 0.05) - this.angleSpeed) * 0.15;
+      this._persona.core.rotation += this.angleSpeed;
+      this.lastAngle = angle;
     }
+  }
 
-    debugToggle = () => {
-        this.debugActive = !this.debugActive;
-        if (this.debugActive) {
-            this.debugEl.classList.add('active');
-        } else {
-            this.debugEl.classList.remove('active');
-        }
-
-        this._persona.core.activateRenderingDebug(this.debugActive);
+  controlClicked = (e) => {
+    const nextState = e.target.dataset.reaction;
+    if (nextState) {
+      this._persona.core.setState(nextState);
     }
+  }
 
-    // changeColor = e => {
-    //     this.colorScheme = e.target.getAttribute('color-scheme');
-    //     for(var i = 0 ; i < this.colorButs.length ; i++) this.colorButs[i].classList.remove('active')
-    //     e.target.classList.add('active');
-    // }
+  resize = () => {
+    const width = this.element.offsetWidth;
+    const height = this.element.offsetHeight;
 
-    onMouseDown = (e) => {
-        this.mouseIsDown = true;
-        this.tapTimeout = setTimeout(() => {
-            this._persona.core.setState(States.Tap);
-        }, 100);
-
-        const personaPos = this._persona.core.position;
-        this.startAngle = Math.atan2(e.clientY - (this.element.offsetHeight / 2 + personaPos.y), e.clientX - (this.element.offsetWidth / 2 + personaPos.x)) / (Math.PI * 2);
-        this.lastAngle = this.startAngle;
+    if (this.background) {
+      this.background.scale.set(width, height, 1);
     }
-
-    onMouseUp = () => {
-        this.mouseIsDown = false;
-        // var angle = Math.atan2(e.clientY - (this.element.offsetHeight / 2 + this.persona.position.y), e.clientX -(this.element.offsetWidth / 2 + this.persona.position.x))/ (Math.PI * 2);
-        if (Math.abs(this.angleSpeed) > 0.01) {
-            this._persona.core.audio.play('swipe');
-        }
+    if (this.plane) {
+      this.plane.scale.set(this.element.offsetWidth, this.element.offsetHeight, 1);
     }
+    this._persona.resize();
+  }
 
-    onMouseMove = (e) => {
-        if (this.mouseIsDown) {
-            clearInterval(this.tapTimeout);
-        }
+  step = () => {
+    window.requestAnimationFrame(this.step);
 
-        const personaPos = this._persona.core.position;
-        const angle = Math.atan2(
-            e.clientY - (this.element.offsetHeight / 2 + personaPos.y),
-            e.clientX - (this.element.offsetWidth / 2 + personaPos.x),
-        ) / (Math.PI * 2);
+    this.angleSpeed -= this.angleSpeed * 0.05;
+    this._persona.core.rotation += this.angleSpeed;
 
-        if (this.mouseIsDown) {
-            this.angleSpeed += (Math.min(Math.max(-0.05, this.lastAngle - angle), 0.05) - this.angleSpeed) * 0.15;
-            this._persona.core.rotation += this.angleSpeed;
-            this.lastAngle = angle;
-        }
-    }
+    // this.debug && this.debug.step(time);
+    this.circleController.step();
+    this.lineController.step();
 
-    controlClicked = (e) => {
-        const nextState = e.target.dataset.reaction;
-        if (nextState) {
-            this._persona.core.setState(nextState);
-        }
-    }
+    Object.keys(this.circleController.vals).forEach((key) => {
+      let val = this.circleController.vals[key] + this.lineController.vals[key];
 
-    resize = (e) => {
-        const width = this.element.offsetWidth;
-        const height = this.element.offsetHeight;
+      val = Math.round(val * 10000) / 10000;
 
-        if (this.background) {
-            this.background.scale.set(width, height, 1);
-        }
-        if (this.plane) {
-            this.plane.scale.set(this.element.offsetWidth, this.element.offsetHeight, 1);
-        }
-        this._persona.resize();
-    }
+      this._persona.core.mood[key] = val;
+    });
 
-    step = () => {
-        window.requestAnimationFrame(this.step);
-
-        this.angleSpeed -= this.angleSpeed * 0.05;
-        this._persona.core.rotation += this.angleSpeed;
-
-        // this.debug && this.debug.step(time);
-        this.circleController.step();
-        this.lineController.step();
-
-        Object.keys(this.circleController.vals).forEach(key => {
-            let val = this.circleController.vals[key] + this.lineController.vals[key];
-
-            val = Math.round(val * 10000) / 10000;
-
-            this._persona.core.mood[key] = val;
-        });
-
-        this._persona.step();
-    };
+    this._persona.step();
+  };
 }

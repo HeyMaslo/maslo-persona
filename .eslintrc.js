@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
     "extends": ["airbnb-base"],
     "parser": "babel-eslint",
@@ -25,7 +27,7 @@ module.exports = {
         "no-var": 1,
         "linebreak-style": ["warn", process.platform === 'win32' ? 'windows' : "unix"],
         "lines-between-class-members": 0,
-        "prefer-destructuring": 1,
+        "prefer-destructuring": [1, { array: false, object: true }],
         "prefer-template": 1,
         "global-require": 1,
         "import/prefer-default-export": 0,
