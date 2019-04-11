@@ -32,7 +32,7 @@ export class CircleController {
         document.body.addEventListener('mouseup', this.mouseUp.bind(this));
     }
 
-    mouseDown = e => {
+    mouseDown = (e) => {
         this.dragging = true;
         this.originDrag = { x: e.screenX, y: e.screenY };
         this.dragginPosition = { x: e.screenX, y: e.screenY };
@@ -43,7 +43,7 @@ export class CircleController {
         this.dragging = false;
     }
 
-    mouseMove = e => {
+    mouseMove = (e) => {
         if (this.dragging) {
             this.dragginPosition = { x: e.screenX, y: e.screenY };
         }

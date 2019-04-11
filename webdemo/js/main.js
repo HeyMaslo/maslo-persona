@@ -124,7 +124,7 @@ void main() {
         this.step();
     }
 
-    questionMouseDown = e => {
+    questionMouseDown = (e) => {
         e.preventDefault();
         this._persona.core.beginState('listen');
     }
@@ -150,7 +150,7 @@ void main() {
     //     e.target.classList.add('active');
     // }
 
-    onMouseDown = e => {
+    onMouseDown = (e) => {
         this.mouseIsDown = true;
         this.tapTimeout = setTimeout(() => {
             this._persona.core.setState(States.Tap);
@@ -161,7 +161,7 @@ void main() {
         this.lastAngle = this.startAngle;
     }
 
-    onMouseUp = e => {
+    onMouseUp = () => {
         this.mouseIsDown = false;
         // var angle = Math.atan2(e.clientY - (this.element.offsetHeight / 2 + this.persona.position.y), e.clientX -(this.element.offsetWidth / 2 + this.persona.position.x))/ (Math.PI * 2);
         if (Math.abs(this.angleSpeed) > 0.01) {
@@ -187,14 +187,14 @@ void main() {
         }
     }
 
-    controlClicked = e => {
+    controlClicked = (e) => {
         const nextState = e.target.dataset.reaction;
         if (nextState) {
             this._persona.core.setState(nextState);
         }
     }
 
-    resize = e => {
+    resize = (e) => {
         const width = this.element.offsetWidth;
         const height = this.element.offsetHeight;
 
