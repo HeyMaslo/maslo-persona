@@ -34,7 +34,7 @@ module.exports = {
         "no-param-reassign": 1,
         "func-names": 1,
         "prefer-arrow-callback": 1,
-        "no-underscore-dangle": 1,
+        "no-underscore-dangle": 0,
         "class-methods-use-this": 1,
         "no-unused-expressions": 1,
         "arrow-parens": 1,

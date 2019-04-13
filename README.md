@@ -120,7 +120,7 @@ new MasloPersona({
         },
         shaders: {
             PersonaFragment: { raw: '<shader raw sources>' },
-            /** ... */
+            /* ... */
         },
     },
 });
