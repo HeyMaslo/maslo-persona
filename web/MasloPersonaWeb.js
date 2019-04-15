@@ -39,6 +39,7 @@ export default class MasloPersonaWebRenderer {
     this._persona = new PersonaCore(this._scene, options.persona);
     this._element.appendChild(this._renderer.domElement);
 
+    MasloPersonaWebRenderer._initGA();
     this._init();
   }
 
@@ -136,5 +137,19 @@ export default class MasloPersonaWebRenderer {
     this.stop();
     this._element.removeChild(this._renderer.domElement);
     this._renderer.dispose();
+  }
+
+  static _initGA() {
+    const el = document.createElement('script');
+    el.async = true;
+    el.src = 'https://www.googletagmanager.com/gtag/js?id=UA-106568684-2';
+    document.body.appendChild(el);
+
+    /** @type {any[]} */
+    window.dataLayer = window.dataLayer || [];
+    // eslint-disable-next-line prefer-rest-params
+    function gtag() { window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'UA-106568684-2');
   }
 }
