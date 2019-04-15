@@ -14,9 +14,11 @@
         "yarn": "^1.13"
     },
     "scripts": {
-        "dev": "yarn && cd webdemo && yarn && yarn dev"
+        "dev": "yarn && cd webdemo && yarn && yarn dev",
+        "lint": "eslint ./"
     },
     "dependencies": {
+        "@babel/polyfill": "^7.4.3",
         "chroma-js": "^2.0.3",
         "gsap": "^2.1.2",
         "mobx": "^5.9.0",

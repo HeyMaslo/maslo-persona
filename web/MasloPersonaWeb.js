@@ -118,6 +118,7 @@ export default class MasloPersonaWebRenderer {
     try {
       this._persona.step();
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Persona step error', err);
     }
 
