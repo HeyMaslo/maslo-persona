@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin').default;
 const MinifyPlugin = require('babel-minify-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const helpers = require('./webpack.helpers').default;
+const helpers = require('./webpack.helpers');
 
 // eslint-disable-next-line prefer-destructuring
 const pathResolve = helpers.pathResolve;
