@@ -35,6 +35,12 @@ export class Main {
         // radius of Persona view, in pixels
         radius: 300,
       },
+
+      analytics: {
+        appName: '@heymaslo/webdemo',
+        dataSource: 'DemoUI',
+        ignoreMood: true,
+      },
     });
 
     autorun(() => {
