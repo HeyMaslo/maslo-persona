@@ -6,7 +6,6 @@ import {
   AllStates,
 } from '../lib';
 import { AnalyticsManagerGA } from './analytics.ga';
-import logger from '../lib/utils/logger';
 
 /** @typedef {(import ('lib').PersonaSettings)} PersonaSettings */
 /** @typedef {(import ('lib').ResourcesData)} ResourcesConfig */

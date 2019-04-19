@@ -1,12 +1,17 @@
 /* eslint-disable class-methods-use-this */
 import { AnalyticsManager } from '../lib/analytics';
-import logger from '../lib/utils/logger';
 
 /** @typedef {import ('../lib/analytics').AnalyticsConfig} AnalyticsConfigBase */
 
 const TRACKING_ID = 'UA-106568684-2';
 
 let inited = false;
+
+function gtag() {
+  if (window.dataLayer) {
+    window.dataLayer.push(arguments);
+  }
+}
 
 function initGA() {
   if (inited) {
@@ -23,7 +28,6 @@ function initGA() {
   /** @type {any[]} */
   window.dataLayer = window.dataLayer || [];
   // eslint-disable-next-line prefer-rest-params
-  function gtag() { window.dataLayer.push(arguments); }
   window.gtag = gtag;
   gtag('js', new Date());
   gtag('config', TRACKING_ID);
@@ -33,13 +37,23 @@ export class AnalyticsManagerGA extends AnalyticsManager {
 
   init() {
     initGA();
+
+    this._category = `${this._config.appName}|${this._config.dataSource}`;
   }
 
-  trackEvent(name, ...values) {
-    if (window.gtag) {
-      window.gtag('event', name);
-    } else {
-      logger.warn('[AnalyticsManagerGA] Not initialized!');
+  trackEvent(name, label = null, value = null) {
+    const opts = {
+      event_category: this._category,
+    };
+
+    if (label) {
+      opts.event_label = label;
     }
+
+    if (value) {
+      opts.value = value;
+    }
+
+    gtag('event', name, opts);
   }
 }
