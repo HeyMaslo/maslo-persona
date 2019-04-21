@@ -5,9 +5,11 @@ import {
   States,
   AllStates,
 } from '../lib';
+import { AnalyticsManagerGA } from './analytics.ga';
 
 /** @typedef {(import ('lib').PersonaSettings)} PersonaSettings */
 /** @typedef {(import ('lib').ResourcesData)} ResourcesConfig */
+/** @typedef {import ('lib').AnalyticsConfig} AnalyticsConfig */
 
 /**
  * @typedef {Object} PersonaWebOptions
@@ -15,6 +17,7 @@ import {
  * @property {number} [size=600] size of the canvas, in pixels. Recommended is `persona.radius` multiplied by 3
  * @property {Partial<PersonaSettings>=} persona settings for Persona
  * @property {ResourcesConfig=} resources overrides Persona Resources links
+ * @property {AnalyticsConfig} analytics
  */
 
 export default class MasloPersonaWebRenderer {
@@ -38,6 +41,9 @@ export default class MasloPersonaWebRenderer {
     UseMasloResources(options.resources);
     this._persona = new PersonaCore(this._scene, options.persona);
     this._element.appendChild(this._renderer.domElement);
+
+    this._persona.setAnalytics(new AnalyticsManagerGA(options.analytics));
+    this._persona.analytics.init();
 
     this._init();
   }
