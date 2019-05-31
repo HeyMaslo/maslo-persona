@@ -2,15 +2,19 @@
 
 ![](https://cdn-images-1.medium.com/max/1600/1*Gm7A7w4vJZeNXKHJQxhq7Q.gif)
 
-Want to add a cute and adorable personified entity to your AI project? YOU HAVE COME TO THE RIGHT PLACE! From the makers of the highly popular toy BB-8 comes Maslo... an animated expressive empathetic entity. Use Maslo on a website, mobile phone, or anywhere you'd like.
+
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="en" dir="ltr">All static computing ideas need to die. Only evolving, growing, non-terminating processes going forward.</p>&mdash; un1crom (@un1crom) <a href="https://twitter.com/un1crom/status/1133878969667792896?ref_src=twsrc%5Etfw">May 29, 2019</a></blockquote>
+
+
+Meet Maslo... an animated expressive empathetic entity to add a personified computing layer to a project.
 
 ## Persona Module
 
-You can think of the persona as the companion's ‘face’. This is a mathematically expressed amorphous shape. This shape consists of multiple properties (ie: size, speed, brightness, complexity, color, etc) that change based on user inputs and interaction. Every user can have a unique persona and their persona will evolve over time.
+Think of the persona as the companion's ‘face’. This is a mathematically expressed amorphous shape. This shape consists of multiple properties (ie: size, speed, brightness, complexity, color, etc) that change based on user inputs and interaction. Every user can have a unique persona and their persona will evolve over time.
 
 ## Persona Reactions
 
-Each persona will react to the user inputs through animations that include visual changes, sound, color, and haptic feedback. You can play with the reactions here: (https://heymaslo.github.io/maslo-persona-2d/)
+Each persona will react to the user inputs through animations that include visual changes, sound, color, and haptic feedback. 
 The types of reactions described below:
 
 * State Reaction: A reaction is a particular audiovisual response from the persona.
