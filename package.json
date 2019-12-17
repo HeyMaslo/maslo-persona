@@ -23,11 +23,12 @@
         "gsap": "^3.0.4",
         "mobx": "^5.15.1",
         "simplex-noise": "^2.4.0",
-        "three": "^0.111.0"
+        "three": "^0.108.0"
     },
     "devDependencies": {
         "@types/chroma-js": "^1.4.3",
         "@types/node": "^12.12.19",
+        "@types/react": "^16.9.16",
         "babel-eslint": "^10.0.3",
         "eslint": "^6.7.2",
         "eslint-config-airbnb-base": "^14.0.0",

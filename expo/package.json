@@ -1,0 +1,19 @@
+{
+  "name": "@heymaslo/persona-expo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "expo-av": "^8.0.0",
+    "expo-gl": "^8.0.0",
+    "expo-three": "^5.3.0",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz"
+  },
+  "devDependencies": {
+    "@types/react-native": "^0.60.25"
+  }
+}

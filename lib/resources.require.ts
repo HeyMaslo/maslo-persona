@@ -1,6 +1,6 @@
 import { IResourcesProvider } from './abstractions';
 
-export function getDefaultResources(): IResourcesProvider {
+export function getRequireResources(): IResourcesProvider {
   return {
     audio: {
       hey: { url: require('./assets/audio/hey.mp3') },

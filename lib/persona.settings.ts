@@ -17,12 +17,12 @@ export const DefaultSettings = {
   audio: {
     play() { /* do nothing */ },
   } as IAudioPlayer,
+  glow: false,
 };
 
 export const DefaultInternalSettings = {
   ringCount: 8,
   simplex: new SimplexNoise(Math.random),
-  glow: false,
 };
 
 export type PersonaSettings = typeof DefaultSettings & { audio: IAudioPlayer };
