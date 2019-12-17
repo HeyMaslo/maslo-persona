@@ -1,3 +1,4 @@
+import { EnumStringHelper } from './utils/enumHelper';
 
 export enum States {
   Init = 'init',
@@ -12,4 +13,8 @@ export enum States {
   Tap = 'tap',
   Listen = 'listen',
   Question = 'question',
+}
+
+export namespace States {
+  export const Helper = new EnumStringHelper<States>(States);
 }

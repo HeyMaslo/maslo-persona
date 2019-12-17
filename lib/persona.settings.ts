@@ -14,6 +14,9 @@ export const DefaultSettings = {
     '#DCDCFF',
     '#DCFFFF',
   ],
+  audio: {
+    play() { /* do nothing */ },
+  } as IAudioPlayer,
 };
 
 export const DefaultInternalSettings = {

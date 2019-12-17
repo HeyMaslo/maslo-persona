@@ -1,13 +1,18 @@
 /* eslint-disable class-methods-use-this */
 import { AnalyticsManager } from '../lib/analytics';
 
-/** @typedef {import ('../lib/analytics').AnalyticsConfig} AnalyticsConfigBase */
-
 const TRACKING_ID = 'UA-106568684-2';
 
 let inited = false;
 
-function gtag() {
+declare global {
+  export interface Window {
+    dataLayer: any[];
+    gtag(...arg: any[]): void;
+  }
+}
+
+function gtag(...args: any[]) {
   if (window.dataLayer) {
     window.dataLayer.push(arguments);
   }
@@ -35,14 +40,16 @@ function initGA() {
 
 export class AnalyticsManagerGA extends AnalyticsManager {
 
+  private _category: string;
+
   init() {
     initGA();
 
-    this._category = `${this._config.appName}|${this._config.dataSource}`;
+    this._category = `${this.config.appName}|${this.config.dataSource}`;
   }
 
-  trackEvent(name, label = null, value = null) {
-    const opts = {
+  doTrack(name: string, label: string = null, value: string = null) {
+    const opts: any = {
       event_category: this._category,
     };
 

@@ -3,27 +3,32 @@ import {
   PersonaCore,
   UseResources as UseMasloResources,
   States,
-  AllStates,
+  PersonaSettings,
+  IResourcesProvider,
+  AnalyticsConfig,
 } from '../lib';
 import { AnalyticsManagerGA } from './analytics.ga';
 
-/** @typedef {(import ('lib').PersonaSettings)} PersonaSettings */
-/** @typedef {(import ('lib').ResourcesData)} ResourcesConfig */
-/** @typedef {import ('lib').AnalyticsConfig} AnalyticsConfig */
-
-/**
- * @typedef {Object} PersonaWebOptions
- * @property {HTMLElement} element target HTML container that will hold WebGL canvas
- * @property {number} [size=600] size of the canvas, in pixels. Recommended is `persona.radius` multiplied by 3
- * @property {Partial<PersonaSettings>=} persona settings for Persona
- * @property {ResourcesConfig=} resources overrides Persona Resources links
- * @property {AnalyticsConfig} analytics
- */
+export type PersonaWebOptions = {
+  element: HTMLElement,
+  size?: number,
+  persona: Partial<PersonaSettings>,
+  resources?: IResourcesProvider,
+  analytics: AnalyticsConfig,
+};
 
 export default class MasloPersonaWebRenderer {
 
-  /** @param {PersonaWebOptions} options */
-  constructor(options) {
+  private readonly _element: HTMLElement;
+  private readonly _renderer: THREE.WebGLRenderer;
+  private readonly _scene: THREE.Scene;
+  private readonly _camera: THREE.Camera;
+
+  private readonly _persona: PersonaCore;
+
+  private _rafId: number;
+
+  constructor(private readonly options: PersonaWebOptions) {
     this._element = options.element;
 
     const radius = (options.persona && options.persona.radius) || 200;
@@ -39,6 +44,7 @@ export default class MasloPersonaWebRenderer {
     this._camera.position.z = 100;
 
     UseMasloResources(options.resources);
+
     this._persona = new PersonaCore(this._scene, options.persona);
     this._element.appendChild(this._renderer.domElement);
 
@@ -50,7 +56,7 @@ export default class MasloPersonaWebRenderer {
 
   _init() {
 
-    this._persona.setState('init');
+    this._persona.setState(States.Init);
 
     // an example how to begin/end listening
     // let isListening = false;
@@ -111,8 +117,7 @@ export default class MasloPersonaWebRenderer {
     // this._camera.updateProjectionMatrix();
   }
 
-  /** @private */
-  _autoStep = () => {
+  private _autoStep = () => {
     this._rafId = window.requestAnimationFrame(this._autoStep);
 
     this.step();
@@ -133,8 +138,9 @@ export default class MasloPersonaWebRenderer {
 
   /** Sets random state of Persona */
   randomState() {
-    const randomIndex = Math.floor(Math.random() * AllStates.length);
-    const randomState = AllStates[randomIndex] || States.Idle;
+    const allStates = States.Helper.Values;
+    const randomIndex = Math.floor(Math.random() * allStates.length);
+    const randomState = allStates[randomIndex] || States.Idle;
     this._persona.setState(randomState);
   }
 

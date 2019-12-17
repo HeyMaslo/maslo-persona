@@ -10,7 +10,7 @@ export type AnalyticsConfig = {
 
 export abstract class AnalyticsManager {
 
-  constructor(private readonly config?: AnalyticsConfig) {
+  constructor(protected readonly config?: AnalyticsConfig) {
     logger.log('[ANALYTICS] Init', config);
   }
 

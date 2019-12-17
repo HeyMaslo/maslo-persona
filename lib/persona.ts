@@ -59,7 +59,7 @@ export class PersonaCore implements IPersonaCore {
 
   private colorHSL: Chroma.Color;
 
-  constructor(scene: THREE.Scene, settings: PersonaSettings = null) {
+  constructor(scene: THREE.Scene, settings: Partial<PersonaSettings> = null) {
     this._settings = {
       ...DefaultSettings,
       ...settings,
