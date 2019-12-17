@@ -1,90 +1,71 @@
 import { observable, observe } from 'mobx';
 import * as THREE from 'three';
-import * as Chroma from 'chroma-js';
+import Chroma from 'chroma-js';
+import SimplexNoise from 'simplex-noise';
+
 import logger from './utils/logger';
 
-import { AudioPlayer } from './audio';
 import { PersonaRing } from './ring';
-import { DefaultInternalSettings, DefaultSettings } from './persona.settings';
-import { createStates } from './persona.states';
-import { getRingMoodModifiers, getMoodModifiers } from './persona.mood';
+import { DefaultInternalSettings, DefaultSettings, PersonaSettings, PersonaInternalSettings } from './persona.settings';
+import { createStates, States, PersonaListeningState, StateRunners, StateRunnerArgs, ContinualStates } from './persona.states';
+import { getRingMoodModifiers, getMoodModifiers, MoodIntensityMap } from './persona.mood';
 
-import { AnalyticsManager } from './analytics';
+import { AnalyticsManager, LoggerAnalyticsManager } from './analytics';
+import { IAudioPlayer, PersonCoreAnimationData, IPersonaCore, IPersonaRing } from './abstractions';
 
-/** @typedef {(import ('./persona.settings').PersonaSettings)} PersonaSettings */
-/** @typedef {(import ('./persona.settings').PersonaConfig)} PersonaConfig */
+export class PersonaCore implements IPersonaCore {
 
-/** @typedef {(persona: PersonaCore) => void} PersonaStateRunner */
+  private readonly _settings: PersonaSettings & PersonaInternalSettings;
 
-/** @typedef {(import ('./persona.states').StateTypes)} States */
-/** @typedef {(import ('./persona.states').ContinualStatesType)} ContinualStates */
-/** @typedef {(import ('./persona.states').PersonaListeningState)} PersonaListeningState */
-/** @typedef {(import ('./persona.states').StateRunnerArgs)} StateRunnerArgs */
-
-/** @typedef {(import ('./persona.mood').MoodTypes)} MoodTypes */
-/** @typedef {(import ('./persona.mood').MoodModifiersMap)} MoodModifiersMap */
-/** @typedef {(import ('./persona.mood').MoodIntensitysMap)} MoodIntensitysMap */
-
-const Colors = [
-  '#C3C3C3',
-  '#DADADA',
-  '#FDFDFD',
-  '#9E9EFF',
-  '#A9A9FF',
-  '#B9B9FF',
-  '#DCDCFF',
-  '#DCFFFF',
-];
-
-export class PersonaCore {
-
-  /**
-   * @private
-   * @type {States}
-   * */
   @observable
-  _state;
+  private _state: States;
 
-  /** @type {MoodIntensitysMap} */
   @observable
-  _mood = {};
+  private _mood: MoodIntensityMap = {};
 
-  /** @type {Partial<PersonaListeningState>} */
   @observable
-  _listening = {};
+  private _listening: Partial<PersonaListeningState> = {};
 
-  /**
-   * @param {THREE.Scene} scene
-   * @param {Partial<PersonaSettings>} settings=
-  */
-  constructor(scene, settings = null) {
-    /** @type {PersonaConfig} */
-    this._settings = Object.assign({}, DefaultSettings, settings, DefaultInternalSettings);
+  private readonly _data = {
+    time: 0,
+    timeInc: 0.005,
 
-    this.audio = new AudioPlayer();
+    position: new THREE.Vector3(0, 0, 0),
+    rotation: 0,
+    scale: new THREE.Vector3(1, 1, 1),
+    hsl: new THREE.Vector3(198, 1, 0.6),
 
-    this._data = {
-      time: 0,
-      timeInc: 0.005,
+    rotationSpeed: 0,
 
-      position: new THREE.Vector3(0, 0, 0),
-      rotation: 0,
-      scale: new THREE.Vector3(1, 1, 1),
-      hsl: new THREE.Vector3(198, 1, 0.6),
+    modifierTime: 0,
+    modifierTimestep: 0,
 
-      rotationSpeed: 0,
+    currentTimeline: null as TimelineMax,
 
-      modifierTime: 0,
-      modifierTimestep: 0,
+    simplex: null as SimplexNoise,
+  };
 
-      /** @type {import ('gsap').TimelineMax} */
-      currentTimeline: null,
+  private readonly _globalContainer = new THREE.Object3D();
+  private readonly _group = new THREE.Object3D();
 
-      simplex: this._settings.simplex,
+  private readonly _rings: PersonaRing[];
+  private readonly _states: StateRunners;
+
+  private _moodDirty = false;
+  private _disposeUpdateMoodReaction: () => void;
+
+  private _analytics: AnalyticsManager;
+  private _continualResolve: () => void;
+
+  private colorHSL: Chroma.Color;
+
+  constructor(scene: THREE.Scene, settings: PersonaSettings = null) {
+    this._settings = {
+      ...DefaultSettings,
+      ...settings,
+      ...DefaultInternalSettings,
     };
 
-    this._globalContainer = new THREE.Object3D();
-    this._group = new THREE.Object3D();
     this._globalContainer.add(this._group);
     this._group.scale.set(this._settings.radius, this._settings.radius, 1);
 
@@ -93,17 +74,17 @@ export class PersonaCore {
     this._states = createStates(this);
 
     /** @type {PersonaRing[]} */
-    this.rings = [];
+    this._rings = [];
     for (let i = 0; i < this._settings.ringCount; i++) {
       const ring = new PersonaRing(i, this._settings);
       this._group.add(ring.theGroup);
 
-      this.rings.push(ring);
+      this._rings.push(ring);
 
       // get color
       {
-        const colorIndex = (i + 1) % Colors.length;
-        const color = Chroma(Colors[colorIndex]).hsl();
+        const colorIndex = (i + 1) % this._settings.colors.length;
+        const color = Chroma(this._settings.colors[colorIndex]).hsl();
         const originalColor = new THREE.Vector3(color[0] || 0, color[1], color[2]);
 
         ring.data.originalColor = originalColor;
@@ -113,15 +94,19 @@ export class PersonaCore {
 
     this._computeColors();
 
-    this._moodDirty = false;
     this._disposeUpdateMoodReaction = observe(this._mood, (change) => {
       if (change.type === 'update' || change.type === 'add') {
         // logger.log('Mood', change.name, change.type, change.oldValue, '=>', change.newValue);
-        this.analytics.trackMoodChange(change.name, change.newValue || 0);
+        this.analytics.trackMoodChange(change.name && change.name.toString(), change.newValue || 0);
       }
       this._moodDirty = true;
     });
   }
+
+  public get audio(): IAudioPlayer { return this._settings.audio; }
+  public get animationData(): PersonCoreAnimationData { return this._data; }
+
+  public get rings(): ReadonlyArray<IPersonaRing> { return this._rings; }
 
   /** Returns current Persona state. Observable via `mobx's autorun`. */
   get state() { return this._state; }
@@ -138,7 +123,7 @@ export class PersonaCore {
 
   get analytics() {
     if (!this._analytics) {
-      this._analytics = new AnalyticsManager();
+      this._analytics = new LoggerAnalyticsManager();
     }
     return this._analytics;
   }
@@ -147,8 +132,7 @@ export class PersonaCore {
     this._disposeUpdateMoodReaction();
   }
 
-  /** @param {AnalyticsManager} analytics */
-  setAnalytics(analytics) {
+  setAnalytics(analytics: AnalyticsManager) {
     this._analytics = analytics;
   }
 
@@ -183,25 +167,19 @@ export class PersonaCore {
     }
 
     // update rings
-    for (let i = 0; i < this.rings.length; i++) {
-      const ring = this.rings[i];
-      const prevRing = (i > 0 && this.rings[i - 1]) || null;
+    for (let i = 0; i < this._rings.length; i++) {
+      const ring = this._rings[i];
+      const prevRing = (i > 0 && this._rings[i - 1]) || null;
       ring.step(this._data.time, prevRing);
     }
   }
 
-
-  /** @param {States} state */
-  setState(state) {
+  setState(state: States) {
     // do not allow to use the reset of `_setState`'s parameters
     this._setState(state);
   }
 
-  /**
-   * @param {States} state
-   * @param {StateRunnerArgs} stateArgs
-   * */
-  _setState(state, force = false, stateArgs = null) {
+  private _setState(state: States, force = false, stateArgs: StateRunnerArgs = null) {
     if (!force && this._state === state) {
       return;
     }
@@ -234,16 +212,14 @@ export class PersonaCore {
     }
   }
 
-  /** @param {ContinualStates} state */
-  beginState(state) {
+  beginState(state: ContinualStates) {
     this.endState();
 
     const continualPromise = new Promise((resolve) => {
       this._continualResolve = resolve;
     });
 
-    /** @type {StateRunnerArgs} */
-    const continualArgs = {
+    const continualArgs: StateRunnerArgs = {
       finishPromise: continualPromise,
       used: false,
     };
@@ -263,11 +239,8 @@ export class PersonaCore {
     }
   }
 
-  /**
-   * @param {boolean} active
-   */
-  activateRenderingDebug(active) {
-    this.rings.forEach((ring) => {
+  activateRenderingDebug(active: boolean) {
+    this._rings.forEach((ring) => {
       ring.activateDebbugRendering(active);
     });
   }
@@ -285,8 +258,8 @@ export class PersonaCore {
     }
 
     if (glow) {
-      for (let i = 0; i < Colors.length; i++) {
-        this.rings[i].data.color = Chroma(Colors[i]);
+      for (let i = 0; i < this._settings.colors.length; i++) {
+        this.rings[i].data.color = Chroma(this._settings.colors[i]);
       }
       this.rings[0].data.shadowColor = 1;
       this.rings[0].data.shadowSpread = 0.1;

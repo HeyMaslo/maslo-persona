@@ -2,16 +2,25 @@ import * as THREE from 'three';
 import { PersonaRingData } from './ring.data';
 import { RingGeometry } from './ring.geometry';
 import { RingMaterial } from './ring.material';
+import { PersonaConfig } from './persona.settings';
+import { IPersonaRing } from './abstractions';
 
-/** @typedef {(import ('./persona.settings').PersonaConfig)} PersonaConfig */
-/** @typedef {{id: number, config: PersonaConfig}} RingSettings */
+export type RingSettings = { id: number, config: PersonaConfig };
 
-export class PersonaRing {
-  /**
-   * @param {number} id
-   * @param {PersonaConfig} config
-   * */
-  constructor(id, config) {
+export class PersonaRing implements IPersonaRing {
+
+  readonly data: PersonaRingData;
+  private readonly _geometry: RingGeometry;
+  private readonly _material: THREE.ShaderMaterial;
+  private readonly _originalMaterial: THREE.ShaderMaterial;
+  private readonly mesh: THREE.Mesh;
+
+  private readonly translationGroup: THREE.Object3D;
+  private readonly rotationGroup: THREE.Object3D;
+
+  private _debugMaterial: THREE.MeshBasicMaterial;
+
+  constructor(id: number, config: PersonaConfig) {
     this.data = new PersonaRingData(id, config);
 
     this._geometry = new RingGeometry(this.data);
@@ -29,11 +38,7 @@ export class PersonaRing {
 
   get theGroup() { return this.rotationGroup; }
 
-  /**
-   * @param {number} time
-   * @param {PersonaRing} prevRing
-   */
-  step(time, prevRing) {
+  step(time: number, prevRing: PersonaRing) {
     this._geometry.step(time, prevRing && prevRing._geometry);
     this.rotationGroup.rotation.z = this.data.theta * Math.PI * 2;
     this.rotationGroup.scale.set(this.data.scale.x + this.data.scaleInc.x, this.data.scale.y + this.data.scaleInc.y, 1);
@@ -41,8 +46,7 @@ export class PersonaRing {
     this._material.uniforms.opacity.value = this.data.opacity;
   }
 
-  /** @param {boolean} active */
-  activateDebbugRendering(active) {
+  activateDebbugRendering(active: boolean) {
     if (!active) {
       this.mesh.material = this._originalMaterial;
       return;

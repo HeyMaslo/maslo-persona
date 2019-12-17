@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictBindCallApply": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "ES2017",
+    "jsx": "react",
+    "plugins": [{ "transform": "ts-nameof", "type": "raw" }]
+  },
+  "exclude": [
+    "node_modules",
+    "mobile/node_modules"
+  ]
+}

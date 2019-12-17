@@ -26,9 +26,15 @@
         "three": "^0.111.0"
     },
     "devDependencies": {
+        "@types/chroma-js": "^1.4.3",
+        "@types/node": "^12.12.19",
         "babel-eslint": "^10.0.3",
         "eslint": "^6.7.2",
         "eslint-config-airbnb-base": "^14.0.0",
-        "eslint-plugin-import": "^2.19.1"
+        "eslint-plugin-import": "^2.19.1",
+        "ts-nameof": "^4.2.2",
+        "ts-node": "^8.5.4",
+        "tslint": "^5.20.1",
+        "typescript": "^3.7.3"
     }
 }

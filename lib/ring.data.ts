@@ -1,18 +1,13 @@
 import * as THREE from 'three';
-
-/** @typedef {(import ('chroma-js').Color)} ChromaColor */
-
-/** @typedef {(import ('./persona.settings').PersonaConfig)} PersonaConfig */
+import { Color as ChromaColor } from 'chroma-js';
+import { PersonaConfig } from './persona.settings';
 
 export class PersonaRingData {
 
-  /** @type {THREE.Vector3} */
-  originalColor;
-  /** @type {THREE.Vector3} */
-  hsl;
+  originalColor: THREE.Vector3;
+  hsl: THREE.Vector3;
 
-  /** @type {ChromaColor} */
-  color;
+  color: ChromaColor;
 
   seed = new THREE.Vector3((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2);
 
@@ -32,10 +27,5 @@ export class PersonaRingData {
   position = new THREE.Vector3(0, 0, 0);
   easingFactor = 0;
 
-  /** @param {number} id */
-  /** @param {PersonaConfig} settings */
-  constructor(id, settings) {
-    this.id = id;
-    this.settings = settings;
-  }
+  constructor(readonly id: number, readonly settings: PersonaConfig) { }
 }

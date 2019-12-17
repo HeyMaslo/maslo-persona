@@ -1,15 +1,7 @@
-/* eslint-disable global-require */
+import { IResourcesProvider } from './abstractions';
 
-/** @typedef {(import ('./audio').AudioTracksValues)} AudioTracksValues */
-
-/** @typedef {{url: string}} ResourceUrl */
-/** @typedef {{raw: string}} ResourceRaw */
-
-/** @typedef {{ [key in AudioTracksValues]: ResourceUrl }} AudioTracksUrls */
-
-export function getDefaultResources() {
+export function getDefaultResources(): IResourcesProvider {
   return {
-    /** @type {AudioTracksUrls} */
     audio: {
       hey: { url: require('./assets/audio/hey.mp3') },
       joy: { url: require('./assets/audio/joy.mp3') },
@@ -33,22 +25,3 @@ export function getDefaultResources() {
     },
   };
 }
-
-/** @template T extends (...args: any[]) => any
- * @typedef {(import ("./utils/returnType").ReturnType<T>)} ReturnType */
-
-/** @typedef {ReturnType<typeof getDefaultResources>} ResourcesData */
-
-/** @type {ResourcesData} */
-let _current;
-
-const Manager = {
-  get Current() { return _current; },
-};
-
-/** @param {ResourcesData=} resources */
-export function initializeResources(resources = null) {
-  _current = resources || getDefaultResources();
-}
-
-export default Manager;

@@ -1,16 +1,14 @@
 import * as THREE from 'three';
-
-/** @typedef {(import ('./ring.data').PersonaRingData)} PersonaRingData */
+import { PersonaRingData } from './ring.data';
 
 export class RingGeometry {
-  /** @param {PersonaRingData} data */
-  constructor(data) {
-    this.data = data;
 
-    this.geoData = new THREE.BufferGeometry();
+  geoData = new THREE.BufferGeometry();
+  gauss: number[] = [];
+  points: THREE.Vector2[];
+  oldPoints: THREE.Vector2[];
 
-    this.gauss = [];
-
+  constructor(readonly data: PersonaRingData) {
     const { ringRes } = this.data.settings;
 
     // positions
@@ -103,14 +101,9 @@ export class RingGeometry {
     }
   }
 
-  /**
-   * @param {number} time
-   * @param {RingGeometry} prevRingGeometry
-   */
-  step(time, prevRingGeometry) {
+  step(time: number, prevRingGeometry: RingGeometry) {
     const { ringRes, simplex } = this.data.settings;
 
-    /** @type {THREE.Vector2[]} */
     this.points = [];
     if (prevRingGeometry) {
       this.oldPoints = prevRingGeometry.points;
@@ -186,7 +179,7 @@ export class RingGeometry {
       this.geoData.attributes.color.setXYZW(i, this.data.shadowColor, this.data.shadowColor, this.data.shadowColor, 0);
     }
 
-    this.geoData.attributes.color.needsUpdate = true;
-    this.geoData.attributes.position.needsUpdate = true;
+    (this.geoData.attributes.color as THREE.BufferAttribute).needsUpdate = true;
+    (this.geoData.attributes.position as THREE.BufferAttribute).needsUpdate = true;
   }
 }

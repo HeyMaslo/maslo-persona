@@ -1,36 +1,27 @@
-import * as AudioTracks from './audio.tracks';
-import ResourcesManager from './resources';
+import { AudioTracks } from './audio.tracks';
+import { IAudioPlayer, IResourcesProvider } from './abstractions';
 import logger from './utils/logger';
 
 export {
   AudioTracks,
 };
 
-/** @typedef {typeof AudioTracks} TracksList */
-/** @typedef {TracksList[keyof TracksList]} AudioTracksValues */
+export class HtmlAudioPlayer implements IAudioPlayer {
 
+    currentTrack: string;
+    tracks: { [track: string]: HTMLAudioElement } = {};
 
-export class AudioPlayer {
+    constructor(resources: IResourcesProvider) {
 
-    /** @type {string} */
-    currentTrack;
-
-    constructor() {
-      /** @type {{ [track:string]: HTMLAudioElement }} */
-      this.tracks = {};
-
-      Object.keys(AudioTracks).forEach((k) => {
-        /** @type {AudioTracksValues} */
-        const p = AudioTracks[k];
-        const res = ResourcesManager.Current.audio[p];
+      AudioTracks.Helper.Values.forEach(p => {
+        const res = resources.audio[p];
         const path = res.url;
 
         this.tracks[p] = new Audio(path);
       });
     }
 
-    /** @param {AudioTracksValues} track */
-    play(track) {
+    play(track: AudioTracks) {
 
       if (this.currentTrack) {
         const t = this.tracks[this.currentTrack];

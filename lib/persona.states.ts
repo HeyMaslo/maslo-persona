@@ -6,36 +6,23 @@ import {
   Power2,
   Power3,
   Power4,
-  RoughEase,
 } from 'gsap';
+import { RoughEase } from 'gsap/EasePack';
 import { AudioTracks } from './audio';
-import * as States from './states';
+import { States } from './states';
+import { IPersonaCore } from './abstractions';
 
-/** @typedef {(import ('./persona').PersonaCore)} PersonaCore */
-/** @typedef {{started:boolean,timelines:TimelineMax[],tl2:TimelineMax}} PersonaListeningState */
-
-/** @typedef {(import ('./gsap.extensions'))} GsapExtensions */
-
-/** @typedef {typeof States} StatesConstsType */
-/** @typedef {StatesConstsType[keyof StatesConstsType]} StateTypes */
-
-/** @typedef {{finishPromise?: Promise<any>, used?: boolean}} StateRunnerArgs */
-
-/** @type {StateTypes[]} */
-const AllStates = Object.keys(States).map(key => States[key]);
-
-/** @typedef {StatesConstsType['Listen'] | StatesConstsType['Idle']} ContinualStatesType */
+export type PersonaListeningState = { started: boolean, timelines: TimelineMax[], tl2: TimelineMax };
+export type StateRunnerArgs = { finishPromise?: Promise<any>, used?: boolean };
+export type ContinualStates = States.Listen | States.Idle;
 
 export {
   States,
-  AllStates,
 };
 
-/**
- * @param {PersonaCore} persona
- * @returns {{ [key in StateTypes]: (args?:StateRunnerArgs) => TimelineMax }}
-*/
-export function createStates(persona) {
+export type StateRunners = { [key in States]: (args?: StateRunnerArgs) => TimelineMax };
+
+export function createStates(persona: IPersonaCore): StateRunners {
   const goToIdle = () => persona.setState(States.Idle);
   const createTimeline = () => new TimelineMax({ onComplete: goToIdle });
 
@@ -180,7 +167,6 @@ export function createStates(persona) {
             gaussIt: 0,
             weightIn: 0.3,
             osc: 0.2,
-            // @ts-ignore
             ease: RoughEase.ease.config({
               template: Power0.easeNone,
               strength: 0.3,
@@ -215,8 +201,8 @@ export function createStates(persona) {
       }
 
       timeline.add(new TimelineMax()
-        .fromTo(persona._data, 0.3, { timeInc: persona._data.timeInc }, { timeInc: 0.3, ease: Power3.easeOut })
-        .to(persona._data, 0.2, { timeInc: 0.01, delay: 1.65, ease: Power3.easeIn }),
+        .fromTo(persona.animationData, 0.3, { timeInc: persona.animationData.timeInc }, { timeInc: 0.3, ease: Power3.easeOut })
+        .to(persona.animationData, 0.2, { timeInc: 0.01, delay: 1.65, ease: Power3.easeIn }),
       0);
 
       return timeline;
@@ -229,7 +215,7 @@ export function createStates(persona) {
       const timeIn = 1.5;
       const timeOut = 1;
       const delayInOut = 1;
-      const data = persona._data;
+      const data = persona.animationData;
 
       for (let i = 0; i < persona.rings.length; i++) {
         const ringData = persona.rings[i].data;
@@ -288,7 +274,7 @@ export function createStates(persona) {
 
       persona.audio.play(AudioTracks.Yes);
 
-      const data = persona._data;
+      const data = persona.animationData;
 
       for (let i = 0; i < persona.rings.length; i++) {
 
@@ -384,11 +370,11 @@ export function createStates(persona) {
       }
 
       timeline.add(new TimelineMax()
-        .to(persona._data.hsl, 2, {
+        .to(persona.animationData.hsl, 2, {
           z: 0.2,
           ease: Power3.easeOut,
         })
-        .to(persona._data.hsl, 2, {
+        .to(persona.animationData.hsl, 2, {
           z: 0.47,
           delay: 1,
           ease: Power3.easeOut,
@@ -396,11 +382,11 @@ export function createStates(persona) {
       0);
 
       timeline.add(new TimelineMax()
-        .to(persona._data, 0.5, {
+        .to(persona.animationData, 0.5, {
           timeInc: 0,
           ease: Power3.easeOut,
         })
-        .to(persona._data, 2, {
+        .to(persona.animationData, 2, {
           timeInc: 0.01,
           delay: 1.5,
           ease: Power3.easeOut,
@@ -438,11 +424,11 @@ export function createStates(persona) {
       }
 
       timeline.add(new TimelineMax()
-        .to(persona._data, 1, {
+        .to(persona.animationData, 1, {
           timeInc: 0.1,
           ease: Power3.easeOut,
         })
-        .to(persona._data, 1, {
+        .to(persona.animationData, 1, {
           timeInc: 0.01,
           delay: 0.5,
           ease: Power3.easeOut,
@@ -481,11 +467,11 @@ export function createStates(persona) {
       }
 
       timeline.add(new TimelineMax()
-        .to(persona._data, 1, {
+        .to(persona.animationData, 1, {
           timeInc: 0.5,
           ease: Power3.easeOut,
         })
-        .to(persona._data, 1, {
+        .to(persona.animationData, 1, {
           timeInc: 0.01,
           delay: 0,
           ease: Power3.easeOut,
@@ -531,20 +517,19 @@ export function createStates(persona) {
       return timeline;
     },
 
-    /** @param {StateRunnerArgs=} args */
-    listen(args) {
+    listen(args?: StateRunnerArgs) {
       const finishPromise = args && args.finishPromise;
       if (finishPromise) {
         // eslint-disable-next-line no-param-reassign
         args.used = true;
-        let timeline = new TimelineMax();
+        let tl = new TimelineMax();
 
         for (let i = 0; i < persona.rings.length; i++) {
           const ring = persona.rings[i];
           const ringData = ring.data;
           const theta = -Math.PI / 12 - i * 0.001;
 
-          timeline.add(new TimelineMax()
+          tl.add(new TimelineMax()
             .to(ringData, 1, {
               theta,
               gaussIt: 0.8,
@@ -557,8 +542,8 @@ export function createStates(persona) {
           0);
         }
 
-        timeline.add(new TimelineMax()
-          .to(persona._data, 1, {
+        tl.add(new TimelineMax()
+          .to(persona.animationData, 1, {
             timeInc: 0.05,
             ease: Power3.easeOut,
           }),
@@ -566,13 +551,13 @@ export function createStates(persona) {
 
         finishPromise
           .then(() => {
-            timeline.kill();
-            timeline.clear();
-            timeline = createTimeline();
+            tl.kill();
+            tl.clear();
+            tl = createTimeline();
 
             for (let i = 0; i < persona.rings.length; i++) {
               const ring = persona.rings[i];
-              timeline.add(new TimelineMax()
+              tl.add(new TimelineMax()
                 .to(ring.data, 0.4, {
                   gaussIt: 0.98,
                   weightIn: 1,
@@ -582,7 +567,7 @@ export function createStates(persona) {
                 }),
               0);
 
-              timeline.add(new TimelineMax()
+              tl.add(new TimelineMax()
                 .to(ring.data, 1, {
                   theta: i * 0.01,
                   delay: ((persona.rings.length - i) / persona.rings.length) / 20,
@@ -591,15 +576,15 @@ export function createStates(persona) {
               0);
             }
 
-            timeline.add(new TimelineMax()
-              .to(persona._data, 0.4, {
+            tl.add(new TimelineMax()
+              .to(persona.animationData, 0.4, {
                 timeInc: 0.01,
                 ease: Power3.easeOut,
               }),
             0);
           });
 
-        return timeline;
+        return tl;
       }
 
       const timeline = createTimeline();
@@ -630,11 +615,11 @@ export function createStates(persona) {
       }
 
       timeline.add(new TimelineMax()
-        .to(persona._data, 1, {
+        .to(persona.animationData, 1, {
           timeInc: 0.05,
           ease: Power3.easeOut,
         })
-        .to(persona._data, 0.4, {
+        .to(persona.animationData, 0.4, {
           timeInc: 0.01,
           delay: 4,
           ease: Power3.easeOut,
@@ -646,7 +631,7 @@ export function createStates(persona) {
 
     question() {
       const timeline = createTimeline();
-      persona.audio.play('question');
+      persona.audio.play(AudioTracks.Question);
 
       const timeIn = 0.4;
       const delay = 0.4;
@@ -714,11 +699,11 @@ export function createStates(persona) {
       }
 
       timeline.add(new TimelineMax()
-        .to(persona._data, timeIn, {
+        .to(persona.animationData, timeIn, {
           timeInc: 0.1,
           ease: Power3.easeOut,
         })
-        .to(persona._data, timeOut, {
+        .to(persona.animationData, timeOut, {
           timeInc: 0.01,
           delay,
           ease: Power3.easeOut,
