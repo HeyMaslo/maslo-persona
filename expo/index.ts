@@ -1,7 +1,8 @@
 import { MasloPersonaExpo } from './MasloPersonaExpo';
-import { THREE } from '../lib';
+import { THREE, States } from '../lib';
 
 export {
   THREE,
   MasloPersonaExpo,
+  States,
 };

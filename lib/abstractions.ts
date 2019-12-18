@@ -6,15 +6,23 @@ export interface IAudioPlayer {
   play(track: AudioTracks): void | Promise<void>;
 }
 
-export type ResourceUrl = { url: string };
-export type ResourceRaw = { raw: string };
-
+export type ResourceUrl = { url: any };
+export type ResourceRaw<T = any> = { raw: T };
+export type ResourceRawOrUrl = Partial<ResourceUrl & ResourceRaw>;
 export type AudioTracksUrls = { [key in AudioTracks]: ResourceUrl };
+
+export function isRawResource<T = any>(res: ResourceRaw<T> | ResourceUrl): res is ResourceRaw<T> {
+  return (res as ResourceRaw<T>).raw !== undefined;
+}
+
+export function isUrlResource<T = any>(res: ResourceRaw<T> | ResourceUrl): res is ResourceUrl {
+  return (res as ResourceUrl).url !== undefined;
+}
 
 export interface IResourcesProvider {
   readonly audio: AudioTracksUrls,
   readonly textures: {
-    noise: ResourceUrl,
+    noise: ResourceRaw<THREE.Texture> | ResourceUrl,
   },
   shaders: {
     PersonaVertex: ResourceRaw,

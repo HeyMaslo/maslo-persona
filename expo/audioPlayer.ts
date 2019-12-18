@@ -7,13 +7,21 @@ export class AudioPlayer implements IAudioPlayer {
   constructor(readonly resources: IResourcesProvider) { }
 
   async play(track: AudioTracks): Promise<void> {
-    const url = this.resources.audio[track];
-
     try {
-      await this.sound.loadAsync(url);
+      await this.stop();
+
+      const resource = this.resources.audio[track];
+
+      await this.sound.loadAsync(resource.url);
       await this.sound.playAsync();
-    } finally {
-      // do nothing basically
+    } catch (err) {
+      console.warn('ExpoAudioPlayer: audio play error:', err);
+    }
+  }
+
+  async stop() {
+    if (this.sound._loaded) {
+      await this.sound.stopAsync();
     }
   }
 }

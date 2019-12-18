@@ -3,10 +3,10 @@ import { PersonaRingData } from './ring.data';
 
 export class RingGeometry {
 
-  geoData = new THREE.BufferGeometry();
-  gauss: number[] = [];
-  points: THREE.Vector2[];
-  oldPoints: THREE.Vector2[];
+  private readonly geoData = new THREE.BufferGeometry();
+  private readonly gauss: number[] = [];
+  private readonly points: THREE.Vector2[] = [];
+  private oldPoints: THREE.Vector2[];
 
   constructor(readonly data: PersonaRingData) {
     const { ringRes } = this.data.settings;
@@ -104,7 +104,7 @@ export class RingGeometry {
   step(time: number, prevRingGeometry: RingGeometry) {
     const { ringRes, simplex } = this.data.settings;
 
-    this.points = [];
+    this.points.length = 0;
     if (prevRingGeometry) {
       this.oldPoints = prevRingGeometry.points;
     } else {

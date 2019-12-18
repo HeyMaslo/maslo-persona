@@ -1,4 +1,4 @@
-import logger from './utils/logger';
+import { createLogger } from './utils/logger';
 import { States } from './states';
 
 export type AnalyticsConfig = {
@@ -8,10 +8,12 @@ export type AnalyticsConfig = {
   ignoreState?: boolean,
 };
 
+const logger = createLogger('[PersonaAnalytics]');
+
 export abstract class AnalyticsManager {
 
-  constructor(protected readonly config?: AnalyticsConfig) {
-    logger.log('[ANALYTICS] Init', config);
+  constructor(protected readonly config: AnalyticsConfig) {
+    logger.log('Init', config);
   }
 
   abstract init(): void;
@@ -19,7 +21,7 @@ export abstract class AnalyticsManager {
   protected abstract doTrack(name: string, ...values: string[]): void;
 
   trackEvent(name: string, ...values: string[]) {
-    logger.log('[ANALYTICS] track event', name, ...values);
+    logger.log('track event', name, ...values);
     this.doTrack(name, ...values);
   }
 
@@ -47,6 +49,10 @@ export abstract class AnalyticsManager {
 }
 
 export class LoggerAnalyticsManager extends AnalyticsManager {
+  constructor() {
+    super({ appName: 'dev', dataSource: 'dev' });
+  }
+
   init() {
     // do nothing!
   }

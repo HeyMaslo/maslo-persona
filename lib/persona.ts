@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import Chroma from 'chroma-js';
 import SimplexNoise from 'simplex-noise';
 
-import logger from './utils/logger';
+import { createLogger } from './utils/logger';
 
 import { PersonaRing } from './ring';
 import { DefaultInternalSettings, DefaultSettings, PersonaSettings, PersonaInternalSettings } from './persona.settings';
@@ -12,6 +12,8 @@ import { getRingMoodModifiers, getMoodModifiers, MoodIntensityMap } from './pers
 
 import { AnalyticsManager, LoggerAnalyticsManager } from './analytics';
 import { IAudioPlayer, PersonCoreAnimationData, IPersonaCore, IPersonaRing } from './abstractions';
+
+const logger = createLogger('[MasloPersona]');
 
 export class PersonaCore implements IPersonaCore {
 
@@ -28,7 +30,7 @@ export class PersonaCore implements IPersonaCore {
 
   private readonly _data = {
     time: 0,
-    timeInc: 0.005,
+    timeInc: 0.02,
 
     position: new THREE.Vector3(0, 0, 0),
     rotation: 0,
@@ -66,6 +68,8 @@ export class PersonaCore implements IPersonaCore {
       ...DefaultInternalSettings,
     };
 
+    logger.log('Initilalizing with settings:', { ...this._settings, audio: '<...>', simplex: '<...>' });
+
     this._globalContainer.add(this._group);
     this._group.scale.set(this._settings.radius, this._settings.radius, 1);
 
@@ -83,16 +87,18 @@ export class PersonaCore implements IPersonaCore {
 
       // get color
       {
-        const colorIndex = (i + 1) % this._settings.colors.length;
-        const color = Chroma(this._settings.colors[colorIndex]).hsl();
+        const colorIndex = i; // (i + 1) % this._settings.colors.length;
+        const chromaColor = Chroma(this._settings.colors[colorIndex]);
+        const color = chromaColor.hsl();
         const originalColor = new THREE.Vector3(color[0] || 0, color[1], color[2]);
 
+        ring.data.color = chromaColor;
         ring.data.originalColor = originalColor;
         ring.data.hsl = originalColor;
       }
     }
 
-    this._computeColors();
+    // this._computeColors();
 
     this._disposeUpdateMoodReaction = observe(this._mood, (change) => {
       if (change.type === 'update' || change.type === 'add') {
@@ -156,7 +162,7 @@ export class PersonaCore implements IPersonaCore {
     this._data.time += timeInc;
     this._data.modifierTime += modifierTimestep;
 
-    this._computeColors();
+    // this._computeColors();
 
     // this._updateStates(time);
 
@@ -245,7 +251,7 @@ export class PersonaCore implements IPersonaCore {
     });
   }
 
-  _computeColors() {
+  private _computeColors() {
     const { ringCount, glow } = this._settings;
     const { hsl } = this._data;
 
