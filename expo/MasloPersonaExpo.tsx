@@ -3,6 +3,7 @@ import ExpoTHREE from 'expo-three';
 import suppressExpoWarnings from 'expo-three/build/suppressWarnings';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { StyleSheet, Dimensions, View, PixelRatio } from 'react-native';
+import Constants from 'expo-constants';
 import {
   PersonaCore,
   THREE,
@@ -23,6 +24,7 @@ const Device = function() {
   return {
     width, height, aspectRatio,
     pixelRatio: PixelRatio.get(),
+    isDevice: Constants.isDevice,
     isSmall() {
       return (width <= 320) || aspectRatio < 1.6;
     },
@@ -156,10 +158,10 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
     return (
       <View style={styles.wrapper}>
-        <GLView
+        {Device.isDevice && <GLView
             style={styles.container}
             onContextCreate={this.onGLContextCreate}
-        />
+        />}
       </View>
     );
   }

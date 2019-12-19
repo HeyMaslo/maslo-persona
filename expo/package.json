@@ -13,8 +13,9 @@
   },
   "peerDependencies": {
     "expo-av": "^8.0.0",
-    "react": "16.8.3",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz"
+    "expo-constants": "^8.0.0",
+    "react": "^16.9.0",
+    "react-native": "^0.61"
   },
   "devDependencies": {
     "@types/react-native": "^0.60.25"
