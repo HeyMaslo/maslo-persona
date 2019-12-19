@@ -127,6 +127,11 @@ export class PersonaCore implements IPersonaCore {
   get scale() { return this._data.scale; }
   set scale(value) { this._data.scale = value; }
 
+  get radius() { return this._settings.radius; }
+  set radius(r: number) {
+    this._settings.radius = r;
+  }
+
   get analytics() {
     if (!this._analytics) {
       this._analytics = new LoggerAnalyticsManager();
@@ -143,7 +148,6 @@ export class PersonaCore implements IPersonaCore {
   }
 
   step() {
-
     const { radius } = this._settings;
     const {
       scale, rotation, timeInc, modifierTimestep,

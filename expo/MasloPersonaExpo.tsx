@@ -2,7 +2,7 @@ import React from 'react';
 import ExpoTHREE from 'expo-three';
 import suppressExpoWarnings from 'expo-three/build/suppressWarnings';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
-import { StyleSheet, Dimensions, View, PixelRatio, Text } from 'react-native';
+import { StyleSheet, Dimensions, View, PixelRatio, Text, LayoutChangeEvent } from 'react-native';
 import Constants from 'expo-constants';
 import {
   PersonaCore,
@@ -25,7 +25,7 @@ const Device = function() {
   return {
     width, height, aspectRatio,
     pixelRatio: PixelRatio.get(),
-    isDevice: Constants.isDevice,
+    enableGL: Constants.isDevice,
     isSmall() {
       return (width <= 320) || aspectRatio < 1.6;
     },
@@ -56,7 +56,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
   private _gl: ExpoWebGLRenderingContext = null;
   private _scene: THREE.Scene;
-  private _camera: THREE.Camera;
+  private _camera: THREE.OrthographicCamera;
   private _renderer: ExpoTHREE.Renderer;
   private _persona: PersonaCore;
 
@@ -72,7 +72,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
     this.loadResources()
       .then(() => {
-        if (!Device.isDevice) {
+        if (!Device.enableGL) {
           this._persona = new PersonaCore(new THREE.Scene(), {
             ringRes: 16, radius: 100,
             audio: new AudioPlayer(ResourceManager.Current),
@@ -134,6 +134,13 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     }
   }
 
+  private calcPersonaSize(pixelWidth: number, pixelHeight: number) {
+    const pixelRadius = Math.min(pixelWidth, pixelHeight);
+    const radius = Math.max(pixelRadius, 10) / Device.pixelRatio;
+    const ringRes = Math.round(pixelRadius / 100) * 10 + 16;
+    return { radius, ringRes };
+  }
+
   onGLContextCreate = async (gl: ExpoWebGLRenderingContext) => {
     this.cleanup(true);
 
@@ -155,13 +162,9 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     this._renderer = new ExpoTHREE.Renderer({ gl: this._gl as WebGLRenderingContext });
     this._renderer.setSize(width, height);
 
-    const pixelRadius = Math.min(width, height);
-    const radius = Math.max(pixelRadius, 10) / Device.pixelRatio;
-
     // position persona on screen
     this._persona = new PersonaCore(this._scene, {
-      ringRes: Math.round(pixelRadius / 100) * 10 + 16,
-      radius,
+      ...this.calcPersonaSize(width, height),
       glow: false,
       audio: new AudioPlayer(ResourceManager.Current),
       ...this.props.personaSettings,
@@ -172,7 +175,41 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     this.step();
   }
 
+  private onGLResize = (e: LayoutChangeEvent) => {
+    if (!e || !e.nativeEvent || !e.nativeEvent.layout) {
+      return;
+    }
+
+    logger.log('GLVIEW RESIZE!!!', e.nativeEvent.layout);
+    if (!this._gl || !this._renderer || !this._camera) {
+      return;
+    }
+
+    let { width, height } = e.nativeEvent.layout;
+    width *= Device.pixelRatio;
+    height *= Device.pixelRatio;
+
+    this._renderer.setSize(width, height);
+
+    // resize camera
+    this._camera.left = -width / 2;
+    this._camera.right = width / 2;
+    this._camera.top = height / 2;
+    this._camera.bottom = -height / 2;
+    this._camera.updateProjectionMatrix();
+
+    // resize persona
+    const { radius } = this.calcPersonaSize(width, height);
+    this._persona.radius = radius;
+
+    // apply stuff
+    this.step();
+  }
+
   step = () => {
+    // avoid accidental multiple subscribtions
+    cancelAnimationFrame(this._rafId);
+
     try {
       this._persona.step();
     } catch (err) {
@@ -216,10 +253,11 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
     return (
       <View style={styles.wrapper}>
-        {Device.isDevice ? (
+        {Device.enableGL ? (
           <GLView
-              style={styles.container}
-              onContextCreate={this.onGLContextCreate}
+            onLayout={this.onGLResize}
+            style={styles.container}
+            onContextCreate={this.onGLContextCreate}
           />
         ) : (
           <View style={styles.stub}>
@@ -241,8 +279,6 @@ const styles = StyleSheet.create({
   },
   container: {
       flex: 1,
-      // top: Device.isSmall() ? '-18%' : '-20%',
-      // opacity: 0.8,
   },
   stub: {
     position: 'absolute',
