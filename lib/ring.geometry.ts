@@ -3,7 +3,7 @@ import { PersonaRingData } from './ring.data';
 
 export class RingGeometry {
 
-  private readonly geoData = new THREE.BufferGeometry();
+  readonly geoData = new THREE.BufferGeometry();
   private readonly gauss: number[] = [];
   private readonly points: THREE.Vector2[] = [];
   private oldPoints: THREE.Vector2[];
