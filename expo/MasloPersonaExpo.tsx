@@ -2,7 +2,7 @@ import React from 'react';
 import ExpoTHREE from 'expo-three';
 import suppressExpoWarnings from 'expo-three/build/suppressWarnings';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
-import { StyleSheet, Dimensions, View, PixelRatio } from 'react-native';
+import { StyleSheet, Dimensions, View, PixelRatio, Text } from 'react-native';
 import Constants from 'expo-constants';
 import {
   PersonaCore,
@@ -68,7 +68,19 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       'THREE.WebGLRenderer',
     ];
 
-    this.loadResources();
+    this.loadResources()
+      .then(() => {
+        if (!Device.isDevice) {
+          this._persona = new PersonaCore(new THREE.Scene(), {
+            ringRes: 16, radius: 100,
+            audio: new AudioPlayer(ResourceManager.Current),
+            ...this.props.personaSettings,
+          });
+
+          this.setupObserver();
+          this.step();
+        }
+      });
   }
 
   componentWillUnmount() {
@@ -166,8 +178,10 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     this._rafId = requestAnimationFrame(this.step);
 
     // render scene
-    this._renderer.render(this._scene, this._camera);
-    this._gl.endFrameEXP();
+    if (this._renderer) {
+      this._renderer.render(this._scene, this._camera);
+      this._gl.endFrameEXP();
+    }
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
@@ -184,17 +198,26 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     }
   }
 
-  render(): any {
+  render() {
     if (!this.state.resourcesLoaded) {
       return null;
     }
 
     return (
       <View style={styles.wrapper}>
-        {Device.isDevice && <GLView
-            style={styles.container}
-            onContextCreate={this.onGLContextCreate}
-        />}
+        {Device.isDevice ? (
+          <GLView
+              style={styles.container}
+              onContextCreate={this.onGLContextCreate}
+          />
+        ) : (
+          <View style={styles.stub}>
+            <Text style={styles.stubTitle}>Persona State:</Text>
+            <Text style={styles.stubText}>
+              {this._persona ? this._persona.state : '<no persona>'}
+            </Text>
+          </View>
+        )}
       </View>
     );
   }
@@ -209,5 +232,21 @@ const styles = StyleSheet.create({
       flex: 1,
       // top: Device.isSmall() ? '-18%' : '-20%',
       // opacity: 0.8,
+  },
+  stub: {
+    position: 'absolute',
+    left: 0,
+    top: '50%',
+    backgroundColor: '#0099FFAA',
+    alignContent: 'center',
+    width: '100%',
+  },
+  stubTitle: {
+    textAlign: 'center',
+  },
+  stubText: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: 'brown',
   },
 });
