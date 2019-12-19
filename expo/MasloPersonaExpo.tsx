@@ -44,12 +44,14 @@ export type Props = {
 
 type CompState = {
   resourcesLoaded: boolean,
+  personStateStub: string,
 };
 
 export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
   state = {
     resourcesLoaded: false,
+    personStateStub: '<no persona>',
   };
 
   private _gl: ExpoWebGLRenderingContext = null;
@@ -116,11 +118,14 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
     if (this.props.context && this._persona) {
       this._persona.setState(this.props.context.state);
+      this._updatePersonState();
       const o1 = reaction(_ => this.props.context.state, s => {
         this._persona.setState(s);
+        this._updatePersonState();
       });
       const o2 = reaction(_ => this._persona.state, s => {
         this.props.context.state = s;
+        this._updatePersonState();
       });
       this._observerDispose = () => {
         o1();
@@ -198,6 +203,12 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     }
   }
 
+  private _updatePersonState() {
+    this.setState({
+      personStateStub: this._persona ? this._persona.state : '<no persona>',
+    });
+  }
+
   render() {
     if (!this.state.resourcesLoaded) {
       return null;
@@ -214,7 +225,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
           <View style={styles.stub}>
             <Text style={styles.stubTitle}>Persona State:</Text>
             <Text style={styles.stubText}>
-              {this._persona ? this._persona.state : '<no persona>'}
+              {this.state.personStateStub}
             </Text>
           </View>
         )}
