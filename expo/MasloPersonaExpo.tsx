@@ -15,6 +15,7 @@ import {
 import { AudioPlayer } from './audioPlayer';
 import { getExpoAssetsAsync } from './resources';
 import { createLogger } from '../lib/utils/logger';
+import { reaction } from 'mobx';
 
 const logger = createLogger('[MasloPersonaExpo]');
 
@@ -31,8 +32,12 @@ const Device = function() {
   };
 }();
 
+export interface IPersonaContext {
+  state: States;
+}
+
 export type Props = {
-  state?: States,
+  context: IPersonaContext,
   disabled?: boolean,
   personaSettings?: Partial<PersonaSettings>,
 };
@@ -54,6 +59,8 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   private _persona: PersonaCore;
 
   private _rafId: number;
+
+  private _observerDispose: () => void = null;
 
   componentDidMount() {
     suppressExpoWarnings(true);
@@ -81,6 +88,32 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     }
     if (this._rafId) {
       cancelAnimationFrame(this._rafId);
+    }
+    this.cleanupObserver();
+  }
+
+  private cleanupObserver() {
+    if (this._observerDispose) {
+      this._observerDispose();
+      this._observerDispose = null;
+    }
+  }
+
+  private setupObserver() {
+    this.cleanupObserver();
+
+    if (this.props.context && this._persona) {
+      this._persona.setState(this.props.context.state);
+      const o1 = reaction(_ => this.props.context.state, s => {
+        this._persona.setState(s);
+      });
+      const o2 = reaction(_ => this._persona.state, s => {
+        this.props.context.state = s;
+      });
+      this._observerDispose = () => {
+        o1();
+        o2();
+      };
     }
   }
 
@@ -117,7 +150,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       ...this.props.personaSettings,
     });
 
-    this._persona.setState(this.props.state || States.Init);
+    this.setupObserver();
 
     this.step();
   }
@@ -146,8 +179,8 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       }
     }
 
-    if (this._persona && this.props.state !== prevProps.state) {
-      this._persona.setState(this.props.state);
+    if (this.props.context !== prevProps.context) {
+      this.setupObserver();
     }
   }
 
