@@ -8,7 +8,7 @@ let inited = false;
 declare global {
   export interface Window {
     dataLayer: any[];
-    gtag(...arg: any[]): void;
+    gtag: (...arg: any[]) => void;
   }
 }
 
@@ -32,7 +32,6 @@ function initGA() {
 
   /** @type {any[]} */
   window.dataLayer = window.dataLayer || [];
-  // eslint-disable-next-line prefer-rest-params
   window.gtag = gtag;
   gtag('js', new Date());
   gtag('config', TRACKING_ID);

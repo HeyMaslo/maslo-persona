@@ -2,6 +2,7 @@ import { observable, observe } from 'mobx';
 import * as THREE from 'three';
 import Chroma from 'chroma-js';
 import SimplexNoise from 'simplex-noise';
+import GSAP from 'gsap';
 
 import { createLogger } from './utils/logger';
 
@@ -9,6 +10,7 @@ import { PersonaRing } from './ring';
 import { DefaultInternalSettings, DefaultSettings, PersonaSettings, PersonaInternalSettings } from './persona.settings';
 import { createStates, States, PersonaListeningState, StateRunners, StateRunnerArgs, ContinualStates } from './persona.states';
 import { getRingMoodModifiers, getMoodModifiers, MoodIntensityMap } from './persona.mood';
+import { PersonaViewState, createEmptyViewState } from './persona.view';
 
 import { AnalyticsManager, LoggerAnalyticsManager } from './analytics';
 import { IAudioPlayer, PersonCoreAnimationData, IPersonaCore, IPersonaRing } from './abstractions';
@@ -46,6 +48,8 @@ export class PersonaCore implements IPersonaCore {
 
     simplex: null as SimplexNoise,
   };
+
+  private readonly _view: PersonaViewState = createEmptyViewState();
 
   private readonly _globalContainer = new THREE.Object3D();
   private readonly _group = new THREE.Object3D();
@@ -113,6 +117,7 @@ export class PersonaCore implements IPersonaCore {
   public get animationData(): PersonCoreAnimationData { return this._data; }
 
   public get rings(): ReadonlyArray<IPersonaRing> { return this._rings; }
+  public get currentView(): Readonly<PersonaViewState> { return this._view; }
 
   /** Returns current Persona state. Observable via `mobx's autorun`. */
   get state() { return this._state; }
@@ -147,28 +152,51 @@ export class PersonaCore implements IPersonaCore {
     this._analytics = analytics;
   }
 
+  setViewState(view: PersonaViewState, duration = 1) {
+    const v = view || createEmptyViewState();
+
+    const ease = 'power4.inOut';
+
+    GSAP.killTweensOf(this._view);
+    GSAP.to(this._view, { rotation: v.rotation, duration, ease });
+    GSAP.to(this._view, { scale: Math.max(v.scale, 0.0001), duration, ease });
+
+    GSAP.killTweensOf(this._view.achorPoint);
+    const ap = v.achorPoint || { x: 0, y: 0 };
+    GSAP.to(this._view.achorPoint, { x: ap.x, y: ap.y, duration, ease });
+
+    GSAP.killTweensOf(this._view.position);
+    const pos = v.position || { x: 0, y: 0 };
+    GSAP.to(this._view.position, { x: pos.x, y: pos.y, duration, ease });
+  }
+
   step() {
     const { radius } = this._settings;
     const {
       scale, rotation, timeInc, modifierTimestep,
     } = this._data;
 
+    const anchor = this._view.achorPoint;
+
+    // update position
+    this._group.position.x = +this._view.position.x + anchor.x * radius;
+    this._group.position.y = +this._view.position.y + anchor.y * radius;
+
+    const twoPi = Math.PI * 2;
+    const toRadians = (deg: number) => twoPi * deg / 360;
+
     // update roatation
-    this._group.rotation.z = rotation * Math.PI * 2;
+    this._group.rotation.z = toRadians(this._view.rotation) + rotation * twoPi;
+
     // update scale
-    this._group.scale.set(
-      radius * scale.x,
-      radius * scale.y,
-      1,
-    );
+    this._group.scale.x = radius * scale.x * this._view.scale;
+    this._group.scale.y = radius * scale.y * this._view.scale;
 
     // update time
     this._data.time += timeInc;
     this._data.modifierTime += modifierTimestep;
 
     // this._computeColors();
-
-    // this._updateStates(time);
 
     if (this._moodDirty) {
       // logger.log('Updating mood:', mobxToJS(this._mood));

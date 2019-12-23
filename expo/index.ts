@@ -1,9 +1,11 @@
-import { MasloPersonaExpo, IPersonaContext } from './MasloPersonaExpo';
-import { THREE, States } from '../lib';
+import { MasloPersonaExpo } from './MasloPersonaExpo';
+import { THREE, States, PersonaViewState } from '../lib';
 
 export {
   THREE,
   MasloPersonaExpo,
-  IPersonaContext,
   States,
+  PersonaViewState,
 };
+
+export * from './context';

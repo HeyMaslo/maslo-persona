@@ -4,20 +4,23 @@ import suppressExpoWarnings from 'expo-three/build/suppressWarnings';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { StyleSheet, Dimensions, View, PixelRatio, Text, LayoutChangeEvent } from 'react-native';
 import Constants from 'expo-constants';
+import { reaction } from 'mobx';
 import {
   PersonaCore,
   THREE,
-  States,
   UseResources,
   ResourceManager,
   PersonaSettings,
+  PersonaViewState,
 } from '../lib';
 import { AudioPlayer } from './audioPlayer';
 import { getExpoAssetsAsync } from './resources';
 import { createLogger } from '../lib/utils/logger';
-import { reaction } from 'mobx';
+import { IPersonaContext } from './context';
 
 const logger = createLogger('[MasloPersonaExpo]');
+
+export const convertPercent = (s: string | number, multiplier = 1 / 100) => typeof s === 'string' ? (+s.replace('%', '') * multiplier) : s;
 
 const Device = function() {
   const { height, width } = Dimensions.get('window');
@@ -32,14 +35,11 @@ const Device = function() {
   };
 }();
 
-export interface IPersonaContext {
-  state: States;
-}
-
 export type Props = {
   context: IPersonaContext,
   disabled?: boolean,
   personaSettings?: Partial<PersonaSettings>,
+  viewTransitionDuration?: number,
 };
 
 type CompState = {
@@ -61,8 +61,9 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   private _persona: PersonaCore;
 
   private _rafId: number;
+  private _layout: { w: number, h: number } = null;
 
-  private _observerDispose: () => void = null;
+  private _contextObserverDispose: () => void = null;
 
   componentDidMount() {
     suppressExpoWarnings(true);
@@ -79,7 +80,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
             ...this.props.personaSettings,
           });
 
-          this.setupObserver();
+          this.setupContextObserver();
           this.step();
         }
       });
@@ -103,33 +104,38 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     if (this._rafId) {
       cancelAnimationFrame(this._rafId);
     }
-    this.cleanupObserver();
+    this.cleanupContextObserver();
   }
 
-  private cleanupObserver() {
-    if (this._observerDispose) {
-      this._observerDispose();
-      this._observerDispose = null;
+  private cleanupContextObserver() {
+    if (this._contextObserverDispose) {
+      this._contextObserverDispose();
+      this._contextObserverDispose = null;
     }
   }
 
-  private setupObserver() {
-    this.cleanupObserver();
+  private setupContextObserver() {
+    this.cleanupContextObserver();
 
     if (this.props.context && this._persona) {
       this._persona.setState(this.props.context.state);
-      this._updatePersonState();
-      const o1 = reaction(_ => this.props.context.state, s => {
-        this._persona.setState(s);
-        this._updatePersonState();
-      });
-      const o2 = reaction(_ => this._persona.state, s => {
-        this.props.context.state = s;
-        this._updatePersonState();
-      });
-      this._observerDispose = () => {
-        o1();
-        o2();
+      this._updatePersonaTextState();
+      this._updatePersonViewState(this.props.context.view, 0);
+      const disposers = [
+        reaction(_ => this.props.context.state, s => {
+          this._persona.setState(s);
+          this._updatePersonaTextState();
+        }),
+        reaction(_ => this._persona.state, s => {
+          this.props.context.state = s;
+          this._updatePersonaTextState();
+        }),
+        reaction(_ => this.props.context.view, v => {
+          this._updatePersonViewState(v);
+        }),
+      ];
+      this._contextObserverDispose = () => {
+        disposers.forEach(d => d());
       };
     }
   }
@@ -170,7 +176,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       ...this.props.personaSettings,
     });
 
-    this.setupObserver();
+    this.setupContextObserver();
 
     this.step();
   }
@@ -188,6 +194,8 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     let { width, height } = e.nativeEvent.layout;
     width *= Device.pixelRatio;
     height *= Device.pixelRatio;
+
+    this._layout = { w: width, h: height };
 
     this._renderer.setSize(width, height);
 
@@ -236,11 +244,28 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     }
 
     if (this.props.context !== prevProps.context) {
-      this.setupObserver();
+      this.setupContextObserver();
     }
   }
 
-  private _updatePersonState() {
+  private _updatePersonViewState(v: PersonaViewState<string | number>, duration?: number) {
+    const d = duration != null ? duration : (this.props.viewTransitionDuration || 1);
+    const vv = v as PersonaViewState;
+
+    const width = this._layout ? this._layout.w : (Device.width * Device.pixelRatio);
+    const height = this._layout ? this._layout.h : (Device.height * Device.pixelRatio);
+
+    if (v.position) {
+      vv.position.x = convertPercent(v.position.x || 0, width / 100);
+      vv.position.y = convertPercent(v.position.y || 0, height / 100);
+    }
+
+    console.log('_updatePersonViewState ====>', this._layout);
+
+    this._persona.setViewState(vv, d);
+  }
+
+  private _updatePersonaTextState() {
     this.setState({
       personStateStub: this._persona ? this._persona.state : '<no persona>',
     });

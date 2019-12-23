@@ -8,6 +8,7 @@ import { PersonaSettings } from './persona.settings';
 import { IAudioPlayer } from './abstractions';
 import { AnalyticsConfig, AnalyticsManager } from './analytics';
 import { AudioTracks } from './audio.tracks';
+import { PersonaViewState } from './persona.view';
 
 export function UseResources(resources: IResourcesProvider = null) {
   initializeResources(resources);
@@ -18,6 +19,7 @@ export {
 
   PersonaSettings,
   PersonaCore,
+  PersonaViewState,
   States,
 
   ResourceManager,
