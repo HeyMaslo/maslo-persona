@@ -140,9 +140,11 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   }
 
   private calcPersonaSize(pixelWidth: number, pixelHeight: number) {
-    const pixelRadius = Math.min(pixelWidth, pixelHeight);
-    const radius = Math.max(pixelRadius, 10) / Device.pixelRatio;
-    const ringRes = Math.round(pixelRadius / 100) * 10 + 16;
+    let radius = 0.96 * Math.min(pixelWidth, pixelHeight) / 2;
+    radius = Math.max(radius, 10);
+
+    let ringRes = Math.round(2 * radius / 9);
+    ringRes = Math.max(40, Math.min(120, ringRes));
     return { radius, ringRes };
   }
 
@@ -172,7 +174,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     // position persona on screen
     this._persona = new PersonaCore(this._scene, {
       ...this.calcPersonaSize(width, height),
-      glow: false,
+      skipTextures: 'background',
       audio: new AudioPlayer(ResourceManager.Current),
       ...this.props.personaSettings,
     });
