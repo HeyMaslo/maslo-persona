@@ -20,11 +20,11 @@ export class PersonaRing implements IPersonaRing {
 
   private _debugMaterial: THREE.MeshBasicMaterial;
 
-  constructor(id: number, config: PersonaConfig) {
+  constructor(id: number, config: PersonaConfig, skipTexture = false) {
     this.data = new PersonaRingData(id, config);
 
     this._geometry = new RingGeometry(this.data);
-    this._material = RingMaterial(id);
+    this._material = RingMaterial(id, skipTexture);
     this._originalMaterial = this._material;
 
     this.mesh = new THREE.Mesh(this._geometry.geoData, this._material);

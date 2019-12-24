@@ -1,7 +1,16 @@
 import SimplexNoise from 'simplex-noise';
 import { IAudioPlayer } from './abstractions';
 
-export const DefaultSettings = {
+export type PersonaSettings = {
+  ringRes: number,
+  radius: number,
+  colors: string[],
+  audio?: IAudioPlayer,
+  glow?: boolean,
+  skipTextures: false | 'all' | 'background',
+};
+
+export const DefaultSettings: PersonaSettings = {
   ringRes: 256,
   radius: 300,
   colors: [
@@ -18,13 +27,13 @@ export const DefaultSettings = {
     play() { /* do nothing */ },
   } as IAudioPlayer,
   glow: false,
+  skipTextures: false,
 };
 
 export const DefaultInternalSettings = {
-  ringCount: 8,
+  ringsCount: 8,
   simplex: new SimplexNoise(Math.random),
 };
 
-export type PersonaSettings = typeof DefaultSettings & { audio: IAudioPlayer };
 export type PersonaInternalSettings = typeof DefaultInternalSettings;
 export type PersonaConfig = PersonaSettings & PersonaInternalSettings;

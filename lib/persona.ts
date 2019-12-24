@@ -27,8 +27,8 @@ export class PersonaCore implements IPersonaCore {
   @observable
   private _mood: MoodIntensityMap = {};
 
-  @observable
-  private _listening: Partial<PersonaListeningState> = {};
+  // @observable
+  // private _listening: Partial<PersonaListeningState> = {};
 
   private readonly _data = {
     time: 0,
@@ -72,19 +72,24 @@ export class PersonaCore implements IPersonaCore {
       ...DefaultInternalSettings,
     };
 
+    const { skipTextures, ringsCount, radius } = this._settings;
+
     logger.log('Initilalizing with settings:', { ...this._settings, audio: '<...>', simplex: '<...>' });
 
     this._globalContainer.add(this._group);
-    this._group.scale.set(this._settings.radius, this._settings.radius, 1);
+    this._group.scale.set(radius, radius, 1);
 
     scene.add(this._globalContainer);
 
     this._states = createStates(this);
 
-    /** @type {PersonaRing[]} */
     this._rings = [];
-    for (let i = 0; i < this._settings.ringCount; i++) {
-      const ring = new PersonaRing(i, this._settings);
+    for (let i = 0; i < ringsCount; i++) {
+      const skipT = skipTextures && (skipTextures === 'all'
+        ? true
+        : i !== this._settings.ringsCount - 1
+      );
+      const ring = new PersonaRing(i, this._settings, skipT);
       this._group.add(ring.theGroup);
 
       this._rings.push(ring);
@@ -295,14 +300,14 @@ export class PersonaCore implements IPersonaCore {
   }
 
   private _computeColors() {
-    const { ringCount, glow } = this._settings;
+    const { ringsCount, glow } = this._settings;
     const { hsl } = this._data;
 
     this.colorHSL = Chroma.hsl(hsl.x, hsl.y, hsl.z);
     this.rings[0].data.color = Chroma.hsl(0, 0, hsl.z * 2);
     this.rings[1].data.color = this.rings[0].data.color.darken(0.5);
     this.rings[2].data.color = this.rings[1].data.color.darken(0.3);
-    for (let i = 3; i < ringCount; i++) {
+    for (let i = 3; i < ringsCount; i++) {
       this.rings[i].data.color = this.colorHSL.darken(i - 3.5);
     }
 
