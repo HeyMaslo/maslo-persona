@@ -14,7 +14,8 @@ import { IPersonaCore } from './abstractions';
 
 export type PersonaListeningState = { started: boolean, timelines: TimelineMax[], tl2: TimelineMax };
 export type StateRunnerArgs = { finishPromise?: Promise<any>, used?: boolean };
-export type ContinualStates = States.Listen | States.Idle;
+export const ContinualStates = [States.Listen as States.Listen];
+export type ContinualStatesTypes = typeof ContinualStates[number];
 
 export {
   States,
@@ -524,6 +525,8 @@ export function createStates(persona: IPersonaCore): StateRunners {
         args.used = true;
         let tl = new TimelineMax();
 
+        // CONTINUAL VERSION
+
         for (let i = 0; i < persona.rings.length; i++) {
           const ring = persona.rings[i];
           const ringData = ring.data;
@@ -586,6 +589,8 @@ export function createStates(persona: IPersonaCore): StateRunners {
 
         return tl;
       }
+
+      // SINGLE SHOT VERSION
 
       const timeline = createTimeline();
 
@@ -713,21 +718,5 @@ export function createStates(persona: IPersonaCore): StateRunners {
       return timeline;
     },
 
-    hide() {
-      const timeline = createTimeline();
-
-      for (let i = 0; i < persona.rings.length; i++) {
-        const ringData = persona.rings[i].data;
-
-        timeline.add(new TimelineMax()
-          .to(ringData, 0.6, {
-            opacity: 0,
-            ease: Power3.easeOut,
-            delay: 1,
-          }), 0);
-      }
-
-      return timeline;
-    },
   };
 }

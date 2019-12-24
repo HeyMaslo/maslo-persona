@@ -158,11 +158,11 @@ void main() {
 
   questionMouseDown = (e) => {
     e.preventDefault();
-    this._persona.core.beginState('listen');
+    this._persona.core.beginContinualState('listen');
   }
 
   questionMouseUp = () => {
-    this._persona.core.endState();
+    this._persona.core.endContinualState();
   }
 
   debugToggle = () => {

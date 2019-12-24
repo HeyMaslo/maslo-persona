@@ -4,7 +4,7 @@ import suppressExpoWarnings from 'expo-three/build/suppressWarnings';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { StyleSheet, Dimensions, View, PixelRatio, Text, LayoutChangeEvent } from 'react-native';
 import Constants from 'expo-constants';
-import { reaction } from 'mobx';
+import { reaction, toJS } from 'mobx';
 import {
   PersonaCore,
   THREE,
@@ -39,7 +39,6 @@ export type Props = {
   context: IPersonaContext,
   disabled?: boolean,
   personaSettings?: Partial<PersonaSettings>,
-  viewTransitionDuration?: number,
 };
 
 type CompState = {
@@ -118,12 +117,12 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     this.cleanupContextObserver();
 
     if (this.props.context && this._persona) {
-      this._persona.setState(this.props.context.state);
+      this._persona.setState(this.props.context.state, true);
       this._updatePersonaTextState();
       this._updatePersonViewState(this.props.context.view, 0);
       const disposers = [
         reaction(_ => this.props.context.state, s => {
-          this._persona.setState(s);
+          this._persona.setState(s, true);
           this._updatePersonaTextState();
         }),
         reaction(_ => this._persona.state, s => {
@@ -154,6 +153,8 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
     const width = gl.drawingBufferWidth;
     const height = gl.drawingBufferHeight;
+
+    this._layout = { w: width, h: height };
 
     logger.log('Initializing with GL context:', { width, height });
 
@@ -186,10 +187,11 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       return;
     }
 
-    logger.log('GLVIEW RESIZE!!!', e.nativeEvent.layout);
     if (!this._gl || !this._renderer || !this._camera) {
       return;
     }
+
+    logger.log('GLVIEW RESIZE!!!', e && e.nativeEvent && e.nativeEvent.layout, this._layout);
 
     let { width, height } = e.nativeEvent.layout;
     width *= Device.pixelRatio;
@@ -249,8 +251,14 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   }
 
   private _updatePersonViewState(v: PersonaViewState<string | number>, duration?: number) {
-    const d = duration != null ? duration : (this.props.viewTransitionDuration || 1);
-    const vv = v as PersonaViewState;
+    const vv = toJS(v as PersonaViewState);
+
+    if (duration) {
+      if (!vv.transition) {
+        vv.transition = {};
+      }
+      vv.transition.duration = duration;
+    }
 
     const width = this._layout ? this._layout.w : (Device.width * Device.pixelRatio);
     const height = this._layout ? this._layout.h : (Device.height * Device.pixelRatio);
@@ -260,9 +268,9 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       vv.position.y = convertPercent(v.position.y || 0, height / 100);
     }
 
-    console.log('_updatePersonViewState ====>', this._layout);
+    // console.log('_updatePersonViewState ====>', width, height);
 
-    this._persona.setViewState(vv, d);
+    this._persona.setViewState(vv);
   }
 
   private _updatePersonaTextState() {

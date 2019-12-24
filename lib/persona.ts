@@ -8,7 +8,7 @@ import { createLogger } from './utils/logger';
 
 import { PersonaRing } from './ring';
 import { DefaultInternalSettings, DefaultSettings, PersonaSettings, PersonaInternalSettings } from './persona.settings';
-import { createStates, States, PersonaListeningState, StateRunners, StateRunnerArgs, ContinualStates } from './persona.states';
+import { createStates, States, PersonaListeningState, StateRunners, StateRunnerArgs, ContinualStates, ContinualStatesTypes } from './persona.states';
 import { getRingMoodModifiers, getMoodModifiers, MoodIntensityMap } from './persona.mood';
 import { PersonaViewState, createEmptyViewState } from './persona.view';
 
@@ -152,22 +152,25 @@ export class PersonaCore implements IPersonaCore {
     this._analytics = analytics;
   }
 
-  setViewState(view: PersonaViewState, duration = 1) {
+  setViewState(view: PersonaViewState) {
     const v = view || createEmptyViewState();
-
-    const ease = 'power4.inOut';
+    const transition = v.transition || { };
+    const ease = transition.ease || 'power4.inOut';
+    const duration = transition.duration != null ? transition.duration : 1;
+    const delay = transition.delay != null ? transition.delay : 0;
 
     GSAP.killTweensOf(this._view);
-    GSAP.to(this._view, { rotation: v.rotation, duration, ease });
-    GSAP.to(this._view, { scale: Math.max(v.scale, 0.0001), duration, ease });
+    GSAP.to(this._view, { rotation: v.rotation, duration, ease, delay });
+    GSAP.to(this._view, { scale: Math.max(v.scale, 0.0001), duration, ease, delay });
+    GSAP.to(this._view, { transparency: v.transparency || 0, duration, ease, delay });
 
     GSAP.killTweensOf(this._view.achorPoint);
     const ap = v.achorPoint || { x: 0, y: 0 };
-    GSAP.to(this._view.achorPoint, { x: ap.x, y: ap.y, duration, ease });
+    GSAP.to(this._view.achorPoint, { x: ap.x, y: ap.y, duration, ease, delay });
 
     GSAP.killTweensOf(this._view.position);
     const pos = v.position || { x: 0, y: 0 };
-    GSAP.to(this._view.position, { x: pos.x, y: pos.y, duration, ease });
+    GSAP.to(this._view.position, { x: pos.x, y: pos.y, duration, ease, delay });
   }
 
   step() {
@@ -204,17 +207,25 @@ export class PersonaCore implements IPersonaCore {
       this._moodDirty = false;
     }
 
+    const opacity = 1 - this._view.transparency || 0;
+
     // update rings
     for (let i = 0; i < this._rings.length; i++) {
       const ring = this._rings[i];
+      ring.data.opacity = opacity;
       const prevRing = (i > 0 && this._rings[i - 1]) || null;
       ring.step(this._data.time, prevRing);
     }
   }
 
-  setState(state: States) {
-    // do not allow to use the reset of `_setState`'s parameters
-    this._setState(state);
+  setState(state: States, autoContinual = false) {
+    this.endContinualState();
+
+    if (autoContinual && ContinualStates.includes(state as ContinualStatesTypes)) {
+      this.beginContinualState(state as ContinualStatesTypes);
+    } else {
+      this._setState(state);
+    }
   }
 
   private _setState(state: States, force = false, stateArgs: StateRunnerArgs = null) {
@@ -250,8 +261,8 @@ export class PersonaCore implements IPersonaCore {
     }
   }
 
-  beginState(state: ContinualStates) {
-    this.endState();
+  beginContinualState(state: ContinualStatesTypes) {
+    this.endContinualState();
 
     const continualPromise = new Promise((resolve) => {
       this._continualResolve = resolve;
@@ -266,11 +277,11 @@ export class PersonaCore implements IPersonaCore {
 
     if (!continualArgs.used) {
       logger.error(`Tried to begin state "${state}", but its runner doesn't support it.`);
-      this.endState();
+      this.endContinualState();
     }
   }
 
-  endState() {
+  endContinualState() {
     if (this._continualResolve) {
       this._continualResolve();
       this._continualResolve = null;
