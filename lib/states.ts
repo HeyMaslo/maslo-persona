@@ -13,6 +13,7 @@ export enum States {
   Tap = 'tap',
   Listen = 'listen',
   Question = 'question',
+  Hide = 'hide',
 }
 
 export namespace States {
