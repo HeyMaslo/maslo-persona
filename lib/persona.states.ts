@@ -21,7 +21,8 @@ export {
   States,
 };
 
-export type StateRunners = { [key in States]: (args?: StateRunnerArgs) => TimelineMax };
+type StateRunnerFunction = (args?: StateRunnerArgs) => TimelineMax;
+export type StateRunners = { [key in States]: StateRunnerFunction } & { undefinedToIdle: StateRunnerFunction };
 
 export function createStates(persona: IPersonaCore): StateRunners {
   const goToIdle = () => persona.setState(States.Idle);
@@ -70,6 +71,32 @@ export function createStates(persona: IPersonaCore): StateRunners {
           z: c.z,
           ease: Power3.easeOut,
         }, 2);
+      }
+
+      return timeline;
+    },
+
+    undefinedToIdle() {
+      const timeline = new TimelineMax();
+
+      for (let i = 0; i < persona.rings.length; i++) {
+        const ring = persona.rings[i];
+        const c = ring.data.originalColor;
+
+        timeline
+          .to(ring.data.scale, 0.1, { x: 1, y: 1 })
+          .to(ring.data, 0.1, {
+            opacity: 1,
+            theta: i * 0.01,
+            gaussIt: 0.98,
+            weightIn: 1,
+            intensity: 0.21,
+            osc: 0.06,
+          }).to(ring.data.hsl, 0.1, {
+            x: c.x,
+            y: c.y,
+            z: c.z,
+          });
       }
 
       return timeline;

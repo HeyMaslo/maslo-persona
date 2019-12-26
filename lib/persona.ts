@@ -260,7 +260,12 @@ export class PersonaCore implements IPersonaCore {
     this.analytics.trackStateChange(state);
 
     try {
-      this._data.currentTimeline = nextState(stateArgs);
+      // FIX: if persona transitions from 'undfined' -> 'idle' – need to call manual setup
+      if (!prevState && state === States.Idle) {
+        this._data.currentTimeline = this._states.undefinedToIdle();
+      } else {
+        this._data.currentTimeline = nextState(stateArgs);
+      }
     } catch (err) {
       logger.error('Persona: state change error', err);
     }
