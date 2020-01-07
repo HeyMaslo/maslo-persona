@@ -242,7 +242,8 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     if (this.props.disabled !== prevProps.disabled) {
       if (this.props.disabled) {
         this.cleanup();
-      } else {
+      } else if (prevProps.disabled === true) {
+        this.setupContextObserver();
         this.step();
       }
     }
