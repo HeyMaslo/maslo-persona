@@ -224,8 +224,6 @@ export class PersonaCore implements IPersonaCore {
   }
 
   setState(state: States, autoContinual = false) {
-    this.endContinualState();
-
     if (autoContinual && ContinualStates.includes(state as ContinualStatesTypes)) {
       this.beginContinualState(state as ContinualStatesTypes);
     } else {
@@ -237,6 +235,8 @@ export class PersonaCore implements IPersonaCore {
     if (!force && this._state === state) {
       return;
     }
+
+    this.endContinualState();
 
     // find next state runner
     const nextState = this._states[state];
@@ -272,6 +272,10 @@ export class PersonaCore implements IPersonaCore {
   }
 
   beginContinualState(state: ContinualStatesTypes) {
+    if (this._state === state) {
+      return;
+    }
+
     this.endContinualState();
 
     const continualPromise = new Promise((resolve) => {

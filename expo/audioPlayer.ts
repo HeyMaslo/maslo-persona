@@ -4,7 +4,8 @@ import { IAudioPlayer, AudioTracks, IResourcesProvider } from '../lib';
 export class AudioPlayer implements IAudioPlayer {
   private sound = new Audio.Sound();
 
-  constructor(readonly resources: IResourcesProvider) { }
+  constructor(readonly resources: IResourcesProvider) {
+  }
 
   async play(track: AudioTracks): Promise<void> {
     try {
@@ -15,13 +16,15 @@ export class AudioPlayer implements IAudioPlayer {
       await this.sound.loadAsync(resource.url);
       await this.sound.playAsync();
     } catch (err) {
-      console.warn('ExpoAudioPlayer: audio play error:', err);
+      console.log('ExpoAudioPlayer: audio play error:');
+      console.error(err);
     }
   }
 
   async stop() {
     if (this.sound._loaded) {
       await this.sound.stopAsync();
+      await this.sound.unloadAsync();
     }
   }
 }

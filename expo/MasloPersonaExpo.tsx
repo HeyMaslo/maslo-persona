@@ -222,7 +222,6 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   step = () => {
     // avoid accidental multiple subscribtions
     cancelAnimationFrame(this._rafId);
-    logger.log('PERSONA STEP');
 
     try {
       if (!this._persona) {
