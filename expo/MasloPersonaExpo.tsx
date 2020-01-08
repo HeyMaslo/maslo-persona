@@ -29,9 +29,6 @@ const Device = function() {
     width, height, aspectRatio,
     pixelRatio: PixelRatio.get(),
     enableGL: Constants.isDevice,
-    isSmall() {
-      return (width <= 320) || aspectRatio < 1.6;
-    },
   };
 }();
 
@@ -90,10 +87,14 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   }
 
   async loadResources() {
-    const resources = await getExpoAssetsAsync();
-    // console.log('RESOURCES:', resources);
-    UseResources(resources);
-    this.setState({ resourcesLoaded: true });
+    try {
+      const resources = await getExpoAssetsAsync();
+      // console.log('RESOURCES:', resources);
+      UseResources(resources);
+      this.setState({ resourcesLoaded: true });
+    } catch (err) {
+      console.error('loadResources ERROR', err);
+    }
   }
 
   cleanup(disposePersona = false) {
@@ -221,8 +222,13 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   step = () => {
     // avoid accidental multiple subscribtions
     cancelAnimationFrame(this._rafId);
+    logger.log('PERSONA STEP');
 
     try {
+      if (!this._persona) {
+        throw new ReferenceError('persona is not initialized!');
+      }
+
       this._persona.step();
     } catch (err) {
       console.error(err);
@@ -284,6 +290,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
   render() {
     if (!this.state.resourcesLoaded) {
+      logger.log('Skipping render – waiting for resources');
       return null;
     }
 
