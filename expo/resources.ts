@@ -2,17 +2,25 @@ import { IResourcesProvider } from '../lib';
 import { getRequireResources } from '../lib/resources.require';
 import { Asset } from 'expo-asset';
 import ExpoTHREE from 'expo-three';
+import * as FileSystem from 'expo-file-system';
 import { isUrlResource } from '../lib/abstractions';
 
-async function loadShaderAsync(moduleId: number) {
-    const asset = Asset.fromModule(moduleId);
-    if (!asset.downloaded) {
-        await asset.downloadAsync();
-    }
+async function loadShaderAsync(moduleId: number, name: string) {
+    try {
+        const asset = Asset.fromModule(moduleId);
+        if (!asset.downloaded) {
+            await asset.downloadAsync();
+        }
 
-    const f = await fetch(asset.localUri);
-    const raw = await f.text();
-    return raw;
+        // const f = await fetch(asset.localUri);
+        // const raw = await f.text();
+
+        const raw = await FileSystem.readAsStringAsync(asset.localUri);
+        return raw;
+    } catch (err) {
+        console.error('Failed to load shader:', name, moduleId);
+        throw err;
+    }
 }
 
 export async function getExpoAssetsAsync(): Promise<IResourcesProvider> {
@@ -26,7 +34,7 @@ export async function getExpoAssetsAsync(): Promise<IResourcesProvider> {
         }));
 
     await Promise.all(shaders.map(async s => {
-        const raw = await loadShaderAsync(s.resource.raw);
+        const raw = await loadShaderAsync(s.resource.raw, s.key);
         s.resource.raw = raw;
     }));
 

@@ -89,11 +89,11 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   async loadResources() {
     try {
       const resources = await getExpoAssetsAsync();
-      // console.log('RESOURCES:', resources);
       UseResources(resources);
       this.setState({ resourcesLoaded: true });
     } catch (err) {
-      console.error('loadResources ERROR', err);
+      console.error('loadResources ERROR');
+      console.error(err);
     }
   }
 
