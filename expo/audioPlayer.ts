@@ -1,8 +1,9 @@
 import { Audio } from 'expo-av';
+import { PlaybackStatus } from 'expo-av/build/AV';
 import { IAudioPlayer, AudioTracks, IResourcesProvider } from '../lib';
 
 export class AudioPlayer implements IAudioPlayer {
-  private sound = new Audio.Sound();
+  private sound: Audio.Sound;
 
   constructor(readonly resources: IResourcesProvider) {
   }
@@ -13,6 +14,17 @@ export class AudioPlayer implements IAudioPlayer {
 
       const resource = this.resources.audio[track];
 
+      this.sound = new Audio.Sound();
+      const cb = async (status: PlaybackStatus) => {
+        if (status.isLoaded && status.didJustFinish)  {
+          const s = this.sound;
+          this.sound = null;
+          await AudioPlayer.disposeSound(s);
+        }
+      };
+
+      this.sound.setOnPlaybackStatusUpdate(cb);
+
       await this.sound.loadAsync(resource.url);
       await this.sound.playAsync();
     } catch (err) {
@@ -21,10 +33,17 @@ export class AudioPlayer implements IAudioPlayer {
     }
   }
 
-  async stop() {
-    if (this.sound._loaded) {
-      await this.sound.stopAsync();
-      await this.sound.unloadAsync();
+  private static async disposeSound(s: Audio.Sound) {
+    if (s && s._loaded) {
+      s.setOnPlaybackStatusUpdate(null);
+      await s.stopAsync();
+      await s.unloadAsync();
     }
+  }
+
+  async stop() {
+    const s = this.sound;
+    this.sound = null;
+    await AudioPlayer.disposeSound(s);
   }
 }
