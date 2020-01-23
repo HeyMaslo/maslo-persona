@@ -169,9 +169,9 @@ export class PersonaCore implements IPersonaCore {
     GSAP.to(this._view, { scale: Math.max(v.scale, 0.0001), duration, ease, delay });
     GSAP.to(this._view, { transparency: v.transparency || 0, duration, ease, delay });
 
-    GSAP.killTweensOf(this._view.achorPoint);
-    const ap = v.achorPoint || { x: 0, y: 0 };
-    GSAP.to(this._view.achorPoint, { x: ap.x, y: ap.y, duration, ease, delay });
+    GSAP.killTweensOf(this._view.anchorPoint);
+    const ap = v.anchorPoint || { x: 0, y: 0 };
+    GSAP.to(this._view.anchorPoint, { x: ap.x, y: ap.y, duration, ease, delay });
 
     GSAP.killTweensOf(this._view.position);
     const pos = v.position || { x: 0, y: 0 };
@@ -184,7 +184,7 @@ export class PersonaCore implements IPersonaCore {
       scale, rotation, timeInc, modifierTimestep,
     } = this._data;
 
-    const anchor = this._view.achorPoint;
+    const anchor = this._view.anchorPoint;
 
     // update position
     this._group.position.x = +this._view.position.x + anchor.x * radius;

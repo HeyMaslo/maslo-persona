@@ -5,7 +5,7 @@ export type PersonaViewState<TPosType = number> = {
     x: TPosType,
     y: TPosType,
   },
-  achorPoint: {
+  anchorPoint: {
     x: number,
     y: number,
   },
@@ -24,7 +24,7 @@ export type PersonaViewState<TPosType = number> = {
 
 export function createEmptyViewState(): PersonaViewState {
   return {
-    achorPoint: { x: 0, y: 0 },
+    anchorPoint: { x: 0, y: 0 },
     position: { x: 0, y: 0 },
     scale: 1,
     rotation: 0,
