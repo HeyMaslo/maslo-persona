@@ -61,7 +61,7 @@ export class PersonaCore implements IPersonaCore {
   private _disposeUpdateMoodReaction: () => void;
 
   private _analytics: AnalyticsManager;
-  private _continualResolve: () => void;
+  private _continualResolve: () => void = null;
 
   private colorHSL: Chroma.Color;
 
@@ -227,6 +227,7 @@ export class PersonaCore implements IPersonaCore {
     if (autoContinual && ContinualStates.includes(state as ContinualStatesTypes)) {
       this.beginContinualState(state as ContinualStatesTypes);
     } else {
+      this.endContinualState();
       this._setState(state);
     }
   }
@@ -235,8 +236,6 @@ export class PersonaCore implements IPersonaCore {
     if (!force && this._state === state) {
       return;
     }
-
-    this.endContinualState();
 
     // find next state runner
     const nextState = this._states[state];
@@ -278,6 +277,8 @@ export class PersonaCore implements IPersonaCore {
 
     this.endContinualState();
 
+    logger.log('beginning continual state:', state);
+
     const continualPromise = new Promise((resolve) => {
       this._continualResolve = resolve;
     });
@@ -297,6 +298,8 @@ export class PersonaCore implements IPersonaCore {
 
   endContinualState() {
     if (this._continualResolve) {
+      logger.log('ending continual state:', this._state);
+
       this._continualResolve();
       this._continualResolve = null;
     }
