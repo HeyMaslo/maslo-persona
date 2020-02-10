@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
   stub: {
     position: 'absolute',
     left: 0,
-    top: '50%',
+    top: '10%',
     backgroundColor: '#0099FFAA',
     alignContent: 'center',
     width: '100%',
