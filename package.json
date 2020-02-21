@@ -18,25 +18,25 @@
         "lint": "eslint ./"
     },
     "dependencies": {
-        "@babel/polyfill": "^7.7.0",
+        "@babel/polyfill": "^7.8.3",
         "chroma-js": "^2.1.0",
-        "gsap": "^3.0.4",
-        "mobx": "^5.15.1",
+        "gsap": "^3.1.1",
+        "mobx": "^5.15.4",
         "simplex-noise": "^2.4.0",
-        "three": "^0.108.0"
+        "three": "^0.113.2"
     },
     "devDependencies": {
-        "@types/chroma-js": "^1.4.3",
-        "@types/node": "^12.12.19",
-        "@types/react": "^16.9.16",
+        "@types/chroma-js": "^2.0.0",
+        "@types/node": "^13.7.4",
+        "@types/react": "^16.9.21",
         "babel-eslint": "^10.0.3",
-        "eslint": "^6.7.2",
+        "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "^14.0.0",
-        "eslint-plugin-import": "^2.19.1",
+        "eslint-plugin-import": "^2.20.1",
         "ts-nameof": "^4.2.2",
-        "ts-node": "^8.5.4",
-        "tslint": "^5.20.1",
-        "typescript": "^3.7.3"
+        "ts-node": "^8.6.2",
+        "tslint": "^6.0.0",
+        "typescript": "^3.8.2"
     },
     "peerDependencies": {}
 }

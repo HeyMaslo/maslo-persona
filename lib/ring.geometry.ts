@@ -17,7 +17,7 @@ export class RingGeometry {
       positions.push(0, 0, this.data.id * 10);
     }
 
-    this.geoData.addAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+    this.geoData.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
 
     // indices
     const indices = [];
@@ -61,7 +61,7 @@ export class RingGeometry {
       colors.push(this.data.shadowColor, this.data.shadowColor, this.data.shadowColor, 0);
     }
 
-    this.geoData.addAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 4));
+    this.geoData.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 4));
 
     // uvs
     const uv = [];
@@ -69,7 +69,7 @@ export class RingGeometry {
       uv.push(0, 0);
     }
 
-    this.geoData.addAttribute('uv', new THREE.BufferAttribute(new Float32Array(uv), 2));
+    this.geoData.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uv), 2));
 
     // matID
     const matId = [];
@@ -80,7 +80,7 @@ export class RingGeometry {
     for (let i = ringRes + 1; i < ringRes * 3 + 1; i++) {
       matId.push(1);
     }
-    this.geoData.addAttribute('mat', new THREE.BufferAttribute(new Float32Array(matId), 1));
+    this.geoData.setAttribute('mat', new THREE.BufferAttribute(new Float32Array(matId), 1));
 
     this.setGauss();
   }
