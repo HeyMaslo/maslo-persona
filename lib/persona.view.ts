@@ -20,6 +20,8 @@ export type PersonaViewState<TPosType = number> = {
     /** 0 by default */
     duration?: number,
   },
+
+  debugName?: string,
 };
 
 export function createEmptyViewState(): PersonaViewState {

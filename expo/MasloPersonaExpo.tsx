@@ -276,7 +276,9 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       vv.position.y = convertPercent(v.position.y || 0, height / 100);
     }
 
-    // console.log('_updatePersonViewState ====>', width, height);
+    if (v.debugName) {
+      logger.log('updatePersonViewState ', v.debugName, ' : ', width, height, vv.position?.x, vv.position?.y);
+    }
 
     this._persona.setViewState(vv);
   }
