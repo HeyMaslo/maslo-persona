@@ -6,6 +6,7 @@ import {
   PersonaSettings,
   IResourcesProvider,
   AnalyticsConfig,
+  getRequireResources,
 } from '../lib';
 import { AnalyticsManagerGA } from './analytics.ga';
 
@@ -43,7 +44,7 @@ export default class MasloPersonaWebRenderer {
     this._camera = new THREE.OrthographicCamera(-width / 2, width / 2, height / 2, -height / 2, -1, 1000);
     this._camera.position.z = 100;
 
-    UseMasloResources(options.resources);
+    UseMasloResources(options.resources || getRequireResources());
 
     this._persona = new PersonaCore(this._scene, options.persona);
     this._element.appendChild(this._renderer.domElement);
