@@ -52,12 +52,11 @@ export default class MasloPersonaWebRenderer {
     this._persona.setAnalytics(new AnalyticsManagerGA(options.analytics));
     this._persona.analytics.init();
 
-    this._init();
+    // this._init();
   }
 
-  _init() {
+  // _init() {
 
-    this._persona.setState(States.Init);
 
     // an example how to begin/end listening
     // let isListening = false;
@@ -83,7 +82,7 @@ export default class MasloPersonaWebRenderer {
     //         this._persona.mood.joy = 0;
     //     }, 2000);
     // }, 5000);
-  }
+  // }
 
   get core() { return this._persona; }
   get scene() { return this._scene; }
@@ -91,6 +90,7 @@ export default class MasloPersonaWebRenderer {
 
   /** Starts Persona update via `window.requestAnimationFrame` */
   run() {
+    this._persona.setState(States.Init);
     this._autoStep();
   }
 
