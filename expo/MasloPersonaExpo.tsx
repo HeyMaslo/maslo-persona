@@ -2,7 +2,7 @@ import React from 'react';
 import ExpoTHREE from 'expo-three';
 import suppressExpoWarnings from 'expo-three/build/suppressWarnings';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
-import { StyleSheet, Dimensions, View, PixelRatio, Text, LayoutChangeEvent } from 'react-native';
+import { StyleSheet, Dimensions, View, PixelRatio, Text, LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
 import { reaction, toJS } from 'mobx';
 import {
@@ -17,6 +17,7 @@ import { AudioPlayer } from './audioPlayer';
 import { getExpoAssetsAsync } from './resources';
 import { createLogger } from '../lib/utils/logger';
 import { IPersonaContext } from './context';
+import { createEmptyViewState } from '../lib/persona.view';
 
 const logger = createLogger('[MasloPersonaExpo]');
 
@@ -41,6 +42,7 @@ export type Props = {
 type CompState = {
   resourcesLoaded: boolean,
   personStateStub: string,
+  viewStub: PersonaViewState,
 };
 
 export class MasloPersonaExpo extends React.Component<Props, CompState> {
@@ -48,6 +50,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   state = {
     resourcesLoaded: false,
     personStateStub: '<no persona>',
+    viewStub: null as PersonaViewState,
   };
 
   private _gl: ExpoWebGLRenderingContext = null;
@@ -277,16 +280,46 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     }
 
     if (v.debugName) {
-      logger.log('updatePersonViewState ', v.debugName, ' : ', width, height, vv.position?.x, vv.position?.y);
+      logger.log('updatePersonViewState ', v.debugName, ' : ', width, height, vv.position?.x, vv.position?.y, vv.anchorPoint?.x, vv.anchorPoint?.y);
     }
 
     this._persona.setViewState(vv);
+    if (!Device.enableGL) {
+      this.setState({ viewStub: vv });
+    }
   }
 
   private _updatePersonaTextState() {
     this.setState({
       personStateStub: this._persona ? this._persona.state : '<no persona>',
     });
+  }
+
+  private getStubStyle(): StyleProp<ViewStyle> {
+    const view = this.state.viewStub || createEmptyViewState();
+
+    const w = Device.width, h = Device.height;
+    let { radius } = this.calcPersonaSize(w, h);
+
+    radius *= view.scale;
+
+    const xx = (view.position?.x || 0) / Device.pixelRatio,
+      yy = (view.position?.y || 0) / Device.pixelRatio;
+
+    const ax = (view.anchorPoint?.x || 0) - 1,
+      ay = (view.anchorPoint?.y || 0) + 1;
+
+    const x = w / 2 + xx + ax * radius;
+    const y = h / 2 - yy - ay * radius;
+
+    return {
+      opacity: (1 - (view.transparency || 0)),
+      left: x,
+      top: y,
+      width: radius * 2,
+      height: radius * 2,
+      borderRadius: radius,
+    };
   }
 
   render() {
@@ -304,7 +337,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
             onContextCreate={this.onGLContextCreate}
           />
         ) : (
-          <View style={styles.stub}>
+          <View style={[styles.stub, this.getStubStyle()]}>
             <Text style={styles.stubTitle}>Persona State:</Text>
             <Text style={styles.stubText}>
               {this.state.personStateStub}
@@ -326,16 +359,16 @@ const styles = StyleSheet.create({
   },
   stub: {
     position: 'absolute',
-    left: 0,
-    top: '10%',
-    backgroundColor: '#0099FFAA',
+    backgroundColor: 'rgba(0, 0, 200, 0.5)',
     alignContent: 'center',
-    width: '100%',
+    paddingTop: '40%',
   },
   stubTitle: {
+    // top: '40%',
     textAlign: 'center',
   },
   stubText: {
+    // top: '50%',
     fontSize: 20,
     textAlign: 'center',
     color: 'brown',
