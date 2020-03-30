@@ -359,7 +359,6 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
           />
         ) : (
           <View style={[styles.stub, this.getStubStyle()]}>
-            <Text style={styles.stubTitle}>Persona State:</Text>
             <Text style={styles.stubText}>
               {this.state.personStateStub}
             </Text>
@@ -382,14 +381,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'rgba(0, 0, 200, 0.5)',
     alignContent: 'center',
-    paddingTop: '40%',
-  },
-  stubTitle: {
-    // top: '40%',
-    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   stubText: {
-    // top: '50%',
     fontSize: 20,
     textAlign: 'center',
     color: 'brown',
