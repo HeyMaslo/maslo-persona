@@ -16,10 +16,12 @@ import {
 import { AudioPlayer } from './audioPlayer';
 import { getExpoAssetsAsync } from './resources';
 import { createLogger } from '../lib/utils/logger';
-import { IPersonaContext } from './context';
+import { IPersonaContext, CurrentPersonaSettings } from './context';
 import { createEmptyViewState } from '../lib/persona.view';
 
 const logger = createLogger('[MasloPersonaExpo]');
+
+const PersonaBaseScale = 1;
 
 export const convertPercent = (s: string | number, multiplier = 1 / 100) => typeof s === 'string' ? (+s.replace('%', '') * multiplier) : s;
 
@@ -37,6 +39,7 @@ export type Props = {
   context: IPersonaContext,
   disabled?: boolean,
   personaSettings?: Partial<PersonaSettings>,
+  staticScale: number,
 };
 
 type CompState = {
@@ -64,6 +67,18 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
   private _contextObserverDispose: () => void = null;
 
+  private readonly _currentSettings: CurrentPersonaSettings;
+
+  constructor(props: any, ctx: any) {
+    super(props, ctx);
+
+    const self = this;
+    this._currentSettings = {
+      get radius() { return self._persona?.settings.radius; },
+      get resultScale() { return self._persona?.scale.x; },
+    };
+  }
+
   componentDidMount() {
     suppressExpoWarnings(true);
     console.ignoredYellowBox = [
@@ -73,11 +88,14 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     this.loadResources()
       .then(() => {
         if (!Device.enableGL) {
+          const { radius, ringRes } = this.calcPersonaSize(Device.width, Device.height);
           this._persona = new PersonaCore(new THREE.Scene(), {
-            ringRes: 16, radius: 100,
+            ringRes, radius,
             audio: new AudioPlayer(ResourceManager.Current),
             ...this.props.personaSettings,
           });
+
+          this.props.context.currentSettings = this._currentSettings;
 
           this.setupContextObserver();
           this.step();
@@ -144,7 +162,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   }
 
   private calcPersonaSize(pixelWidth: number, pixelHeight: number) {
-    let radius = 0.96 * Math.min(pixelWidth, pixelHeight) / 2;
+    let radius = (this.props.staticScale || 1) * PersonaBaseScale * Math.min(pixelWidth, pixelHeight) / 2;
     radius = Math.max(radius, 10);
 
     let ringRes = Math.round(2 * radius / 9);
@@ -183,8 +201,9 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       ...this.props.personaSettings,
     });
 
-    this.setupContextObserver();
+    this.props.context.currentSettings = this._currentSettings;
 
+    this.setupContextObserver();
     this.step();
   }
 
@@ -298,7 +317,9 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   private getStubStyle(): StyleProp<ViewStyle> {
     const view = this.state.viewStub || createEmptyViewState();
 
-    const w = Device.width, h = Device.height;
+    const w = Device.width,
+      h = Device.height;
+
     let { radius } = this.calcPersonaSize(w, h);
 
     radius *= view.scale;

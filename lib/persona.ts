@@ -118,6 +118,8 @@ export class PersonaCore implements IPersonaCore {
     });
   }
 
+  public get settings(): Readonly<PersonaSettings> { return this._settings; }
+
   public get audio(): IAudioPlayer { return this._settings.audio; }
   public get animationData(): PersonCoreAnimationData { return this._data; }
 
