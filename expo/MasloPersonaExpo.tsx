@@ -88,9 +88,10 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     this.loadResources()
       .then(() => {
         if (!Device.enableGL) {
-          const { radius, ringRes } = this.calcPersonaSize(Device.width, Device.height);
+          const { radius } = this.calcPersonaSize(Device.width * Device.pixelRatio, Device.height * Device.pixelRatio);
           this._persona = new PersonaCore(new THREE.Scene(), {
-            ringRes, radius,
+            ringRes: 2,
+            radius,
             audio: new AudioPlayer(ResourceManager.Current),
             ...this.props.personaSettings,
           });
