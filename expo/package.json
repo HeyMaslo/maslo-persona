@@ -7,14 +7,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "expo-asset": "^8.0.0",
-    "expo-gl": "^8.0.0",
+    "expo-asset": "^8.1.4",
+    "expo-gl": "^8.1.0",
     "expo-three": "^5.4.0"
   },
   "peerDependencies": {
-    "expo-av": "^8.0.0",
+    "expo-av": "~8.1.0",
     "expo-constants": "^8.0.0",
-    "expo-file-system": "^8.0.0",
+    "expo-file-system": "^8.1.0",
     "react": "^16.9.0",
     "react-native": "^0.61"
   },

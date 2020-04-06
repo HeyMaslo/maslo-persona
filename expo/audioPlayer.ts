@@ -1,5 +1,4 @@
-import { Audio } from 'expo-av';
-import { PlaybackStatus } from 'expo-av/build/AV';
+import { Audio, AVPlaybackStatus } from 'expo-av';
 import { IAudioPlayer, AudioTracks, IResourcesProvider } from '../lib';
 
 export class AudioPlayer implements IAudioPlayer {
@@ -15,7 +14,7 @@ export class AudioPlayer implements IAudioPlayer {
       const resource = this.resources.audio[track];
 
       this.sound = new Audio.Sound();
-      const cb = async (status: PlaybackStatus) => {
+      const cb = async (status: AVPlaybackStatus) => {
         if (status.isLoaded && status.didJustFinish)  {
           const s = this.sound;
           this.sound = null;
