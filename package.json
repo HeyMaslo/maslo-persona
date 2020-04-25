@@ -10,7 +10,7 @@
     "author": "lct",
     "license": "MIT",
     "engines": {
-        "node": "^8.9 || ^10.7",
+        "node": "^8.9 || ^10.7 || ^12.6",
         "yarn": "^1.13"
     },
     "scripts": {

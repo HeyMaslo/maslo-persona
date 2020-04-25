@@ -22,7 +22,8 @@ The types of reactions described below:
 
 ## Install & Run
 
-1. Install Node.js & NPM ( * If not installed )
+0. Install Node.js & NPM & Choco ( * If not installed )
+1. Install Yarn (* If not installed and if on windows, you'll need to run powershell as admin)
 2. Run in project root:
 
     ```bash
