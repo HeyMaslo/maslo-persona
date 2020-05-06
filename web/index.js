@@ -1,7 +1,8 @@
 import MasloPersonaWebRenderer from './MasloPersonaWeb';
-import { States } from '../lib';
+import { States,AllStates } from '../lib';
 
 export {
   MasloPersonaWebRenderer as Persona,
   States,
+  AllStates,
 };

@@ -18,13 +18,13 @@ module.exports = (env) => {
   const fullMinify = !!env.fullminify;
   const isProd = process.env.NODE_ENV === 'production';
 
-  const publicPath = env.public_path_override || '/';
+  const publicPath = env.public_path_override || '';
   const outputPath = pathResolve('./dist');
 
   console.log('Webpack config options:', {
     publicPath,
     outputPath,
-    noClear,
+   // noClear,
     fullMinify,
     isProd,
   });
@@ -33,7 +33,8 @@ module.exports = (env) => {
 
   return {
     entry: {
-      app: './index.js',
+      //app: './companion.js',
+      app: './index.js'
     },
     output: {
       publicPath,
@@ -182,7 +183,7 @@ module.exports = (env) => {
         },
       }),
 
-      htmlBuilder.createHtmlPlugin('index.html', './views/main.pug', { inject: true }),
+      htmlBuilder.createHtmlPlugin('index.html', './views/companion.pug', { inject: true }),
       htmlBuilder.createHtmlPugPlugin(),
 
       new MiniCssExtractPlugin({

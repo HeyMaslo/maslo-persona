@@ -8,13 +8,15 @@
 
 Meet Maslo... an animated expressive empathetic entity to add a personified computing layer to a project.
 
+https://storage.googleapis.com/maslomemory/m2/index.html?color=30
+
 ## Persona Module
 
 Think of the persona as the companion's ‘face’. This is a mathematically expressed amorphous shape. This shape consists of multiple properties (ie: size, speed, brightness, complexity, color, etc) that change based on user inputs and interaction. Every user can have a unique persona and their persona will evolve over time.
 
 ## Persona Reactions
 
-Each persona will react to the user inputs through animations that include visual changes, sound, color, and haptic feedback. 
+Each persona will react to the user inputs through animations that include visual changes, sound, color, and haptic feedback.
 The types of reactions described below:
 
 * State Reaction: A reaction is a particular audiovisual response from the persona.
@@ -32,6 +34,24 @@ The types of reactions described below:
     ```
 
 3. Browse to http://localhost:8080
+
+
+## Build and Distribute
+
+This is a webpack browser app.  that is it runs without a WEBSERVER.  for dev purposes you can fire up the webserver, per the instructions above and the yarn dev command.  but when you do a build it spits out a straight HTML/js app that you can host locally or else where.
+
+to do this.. just go to the /webdemo folder and run:
+
+    ```bash
+    yarn build
+    ```
+
+this will create a /dist folder.   take all that and move it to whereever you want to serve it from.  (google storage works great)
+
+### note about face tracking models etc
+you will want to read the face-api js docs below.
+
+make sure you have the models in a folder at the root of your directory (where the index.html file sits).  you may have to do this manually if you don't script it into your yarn build command, etc.
 
 ## Structure
 
@@ -107,6 +127,21 @@ All functions' parameters are documented via JSDoc, including available states a
 States = "joy" | "surprise" | "listen" | "init" | "idle" | "upset" | "yes" | "no" | "hey" | "shake" | "tap" | "question";
 Moods = "joy" | "love" | "surprise" | "terror" | "anger" | "sadness" | "sleepy" | "calm";
 ```
+
+## Fun Options
+
+### Colors
+you can easily set your own default color with ?color=[0-1000] in the querystring
+
+### Facial Detection and Expressions
+https://github.com/justadudewhohacks/face-api.js
+https://itnext.io/realtime-javascript-face-tracking-and-face-recognition-using-face-api-js-mtcnn-face-detector-d924dd8b5740
+
+
+maslo persona also has a browser only version of facial recognition.
+
+[TODO: create a toggle for this.  it's CPU expensive]
+
 
 ### Resources
 

@@ -15,7 +15,9 @@
         "postinstall": "cd ../web && yarn"
     },
     "dependencies": {
-        "@babel/polyfill": "^7.2.5"
+        "@babel/polyfill": "^7.2.5",
+        "annyang": "^2.6.1",
+        "face-api.js": "^0.22.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.2.3",
