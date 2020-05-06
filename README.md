@@ -142,6 +142,17 @@ maslo persona also has a browser only version of facial recognition.
 
 [TODO: create a toggle for this.  it's CPU expensive]
 
+### Audio detection
+
+As of May 5th, 2020 there's very simple audio parsing that buffers the audio and does some root mean square measuring.
+It is possible to do Browserbased speech recognition with the WebSpeech API.  Implementing this allows for voice commands and chat conversations etc.
+
+see here for an example
+https://github.com/HeyMaslo/empathetic-sketches/tree/master/conversational
+
+this needs to be converted to the new webpack experience.
+
+
 
 ### Resources
 
