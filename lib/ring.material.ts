@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import Resources from './resources';
-import { isRawResource } from './abstractions';
+import { IResourcesProvider } from './abstractions';
 
 export function RingMaterial(id: any, skipTexture = false) {
   const res = Resources.Current.textures.noise;
 
   let texture: THREE.Texture;
   if (!skipTexture) {
-    if (isRawResource(res)) {
+    if (IResourcesProvider.isRawResource(res)) {
       texture = res.raw;
     } else {
       texture = new THREE.TextureLoader().load(res.url);

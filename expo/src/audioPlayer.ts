@@ -1,5 +1,5 @@
 import { Audio, AVPlaybackStatus } from 'expo-av';
-import { IAudioPlayer, AudioTracks, IResourcesProvider } from '../lib';
+import { IAudioPlayer, AudioTracks, IResourcesProvider } from '@persona-core';
 
 export class AudioPlayer implements IAudioPlayer {
   private sound: Audio.Sound;

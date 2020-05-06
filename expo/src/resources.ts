@@ -1,9 +1,7 @@
-import { IResourcesProvider } from '../lib';
-import { getRequireResources } from '../lib/resources.require';
 import { Asset } from 'expo-asset';
 import ExpoTHREE from 'expo-three';
 import * as FileSystem from 'expo-file-system';
-import { isUrlResource } from '../lib/abstractions';
+import { IResourcesProvider, getRequireResources } from '@persona-core';
 
 async function loadShaderAsync(moduleId: number, name: string) {
     try {
@@ -38,7 +36,7 @@ export async function getExpoAssetsAsync(): Promise<IResourcesProvider> {
         s.resource.raw = raw;
     }));
 
-    if (isUrlResource(baseResources.textures.noise)) {
+    if (IResourcesProvider.isUrlResource(baseResources.textures.noise)) {
         baseResources.textures.noise = {
             raw: await ExpoTHREE.loadTextureAsync({ asset: baseResources.textures.noise.url }),
         };

@@ -24,12 +24,14 @@ export type PersonaViewState<TPosType = number> = {
   debugName?: string,
 };
 
-export function createEmptyViewState(): PersonaViewState {
-  return {
-    anchorPoint: { x: 0, y: 0 },
-    position: { x: 0, y: 0 },
-    scale: 1,
-    rotation: 0,
-    transparency: 0,
-  };
+export namespace PersonaViewState {
+  export function createEmptyViewState(): PersonaViewState {
+    return {
+      anchorPoint: { x: 0, y: 0 },
+      position: { x: 0, y: 0 },
+      scale: 1,
+      rotation: 0,
+      transparency: 0,
+    };
+  }
 }

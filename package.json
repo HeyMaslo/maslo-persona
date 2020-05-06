@@ -5,23 +5,23 @@
         "type": "git"
     },
     "description": "Data viz for Maslo-1a",
-    "main": "lib/index.js",
+    "main": "lib/index.ts",
     "keywords": [],
     "author": "lct",
     "license": "MIT",
     "engines": {
-        "node": "^10.17 || ^12.13",
+        "node": "^10 || ^12",
         "yarn": "^1.21.1"
     },
     "scripts": {
         "dev": "yarn && cd webdemo && yarn && yarn dev",
         "lint": "eslint ./"
     },
+    "files": [
+        "lib/**"
+    ],
     "dependencies": {
-        "@babel/polyfill": "^7.8.3",
         "chroma-js": "^2.1.0",
-        "gsap": "^3.1.1",
-        "mobx": "^5.15.4",
         "simplex-noise": "^2.4.0",
         "three": "^0.113.2"
     },
@@ -38,5 +38,8 @@
         "tslint": "^6.0.0",
         "typescript": "^3.8.2"
     },
-    "peerDependencies": {}
+    "peerDependencies": {
+        "gsap": "^3",
+        "mobx": "^5"
+    }
 }

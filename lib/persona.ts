@@ -10,7 +10,7 @@ import { PersonaRing } from './ring';
 import { DefaultInternalSettings, DefaultSettings, PersonaSettings, PersonaInternalSettings } from './persona.settings';
 import { createStates, States, PersonaListeningState, StateRunners, StateRunnerArgs, ContinualStates, ContinualStatesTypes } from './persona.states';
 import { getRingMoodModifiers, getMoodModifiers, MoodIntensityMap } from './persona.mood';
-import { PersonaViewState, createEmptyViewState } from './persona.view';
+import { PersonaViewState } from './persona.view';
 
 import { AnalyticsManager, LoggerAnalyticsManager } from './analytics';
 import { IAudioPlayer, PersonCoreAnimationData, IPersonaCore, IPersonaRing } from './abstractions';
@@ -49,7 +49,7 @@ export class PersonaCore implements IPersonaCore {
     simplex: null as SimplexNoise,
   };
 
-  private readonly _view: PersonaViewState = createEmptyViewState();
+  private readonly _view: PersonaViewState = PersonaViewState.createEmptyViewState();
 
   private readonly _globalContainer = new THREE.Object3D();
   private readonly _group = new THREE.Object3D();
@@ -160,7 +160,7 @@ export class PersonaCore implements IPersonaCore {
   }
 
   setViewState(view: PersonaViewState) {
-    const v = view || createEmptyViewState();
+    const v = view || PersonaViewState.createEmptyViewState();
     const transition = v.transition || { };
     const ease = transition.ease || 'power4.inOut';
     const duration = transition.duration != null ? transition.duration : 1;

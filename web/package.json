@@ -2,5 +2,12 @@
     "name": "@heymaslo/persona-web",
     "private": true,
     "version": "1.0.0",
-    "main": "index.ts"
+    "main": "./src/index.ts",
+    "files": [
+        "src/**"
+    ],
+    "dependencies": {},
+    "peerDependencies": {
+        "@heymaslo/persona": "^1"
+    }
 }

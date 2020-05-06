@@ -12,12 +12,11 @@ import {
   ResourceManager,
   PersonaSettings,
   PersonaViewState,
-} from '../lib';
+} from '@persona-core';
 import { AudioPlayer } from './audioPlayer';
 import { getExpoAssetsAsync } from './resources';
-import { createLogger } from '../lib/utils/logger';
+import { createLogger } from '../../lib/utils/logger';
 import { IPersonaContext, CurrentPersonaSettings } from './context';
-import { createEmptyViewState } from '../lib/persona.view';
 
 const logger = createLogger('[MasloPersonaExpo]');
 
@@ -316,7 +315,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   }
 
   private getStubStyle(): StyleProp<ViewStyle> {
-    const view = this.state.viewStub || createEmptyViewState();
+    const view = this.state.viewStub || PersonaViewState.createEmptyViewState();
 
     const w = Device.width,
       h = Device.height;

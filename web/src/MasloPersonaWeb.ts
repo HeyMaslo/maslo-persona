@@ -7,7 +7,7 @@ import {
   IResourcesProvider,
   AnalyticsConfig,
   getRequireResources,
-} from '../lib';
+} from '@persona-core';
 import { AnalyticsManagerGA } from './analytics.ga';
 
 export type PersonaWebOptions = {
@@ -56,8 +56,6 @@ export default class MasloPersonaWebRenderer {
   }
 
   // _init() {
-
-
     // an example how to begin/end listening
     // let isListening = false;
     // const toggleListening = () => {

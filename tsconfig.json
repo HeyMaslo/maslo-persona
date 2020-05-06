@@ -15,7 +15,6 @@
     "plugins": [{ "transform": "ts-nameof", "type": "raw" }]
   },
   "exclude": [
-    "node_modules",
-    "mobile/node_modules"
+    "node_modules"
   ]
 }
