@@ -226,6 +226,8 @@ mtcnnForwardParams = {
   minFaceSize: 200
 }
 
+
+//neeed to remove this it does nothing
 onPlay(videoEl) {
   // run face detection & recognition
   // ...
@@ -243,6 +245,7 @@ async captureFaces(){
  //faceapi.draw.drawFaceLandmarks('overlay', mtcnnResults.map(res => res.faceLandmarks), { lineWidth: 4, color: 'red' });
 
 //const options = new faceapi.MtcnnOptions(this.mtcnnForwardParams);
+
 const input = document.getElementById('inputVideo');
 
 const displaySize = { width: input.width, height: input.height }
@@ -257,7 +260,7 @@ const detectionsWithExpressions =  await faceapi
   .detectSingleFace(input)
   //.withFaceLandmarks();
   //.detectAllFaces(input)
-  .withFaceLandmarks()
+  .withFaceLandmarks(true)
  .withFaceExpressions();
 
   //console.log(detectionsWithExpressions);
@@ -272,27 +275,35 @@ const minProbability = 0.05
 //await faceapi.draw.drawFaceExpressions(canvas, detectionsWithExpressions, minProbability)
 //const box = await detectionsWithExpressions.detection.box;
  //console.log(detectionsWithExpressions.expressions);
-//const drawBox = new faceapi.draw.DrawBox(box, { label: "test" });
+//const drawBox = new faceapi.draw.DrawBox(box, { label: Math.random() });
   //drawBox.draw(canvas);
 
   //set the mood  Moods = "joy" | "love" | "surprise" | "terror" | "anger" | "sadness" | "sleepy" | "calm";
   //Math.round(val * 10000) / 10000
   const weightingFactor = 1.1;
+  const dampingFactor = 2;
   try {
-    this.moodBoost.joyBoost = Math.log2(1+detectionsWithExpressions.expressions.happy*weightingFactor + this.moodBoost.joyBoost)/10;
-    this.moodBoost.sadnessBoost = Math.log2(1+detectionsWithExpressions.expressions.sad*weightingFactor + this.moodBoost.sadnessBoost)/10;
-    this.moodBoost.terrorBoost = Math.log2(1+detectionsWithExpressions.expressions.fearful*weightingFactor + this.moodBoost.terrorBoost)/10;
-    this.moodBoost.angerBoost = Math.log2(1+detectionsWithExpressions.expressions.angry*weightingFactor + this.moodBoost.angerBoost)/10;
-    this.moodBoost.sleepyBoost = Math.log2(1+detectionsWithExpressions.expressions.disgusted*weightingFactor + this.moodBoost.sleepyBoost)/10;
-    this.moodBoost.calmBoost = Math.log2(1+detectionsWithExpressions.expressions.neutral*weightingFactor + this.moodBoost.calmBoost)/10;
-    this.moodBoost.surpriseBoost = Math.log2(1+detectionsWithExpressions.expressions.surprised*weightingFactor + this.moodBoost.surpriseBoost)/10;
-    this.moodBoost.loveBoost = Math.log2(1+detectionsWithExpressions.expressions.happy*weightingFactor + this.moodBoost.joyBoost)/5;
-   // console.log(this.moodBoost)
+
+    this.moodBoost.joyBoost = Math.log2(1+detectionsWithExpressions.expressions.happy*weightingFactor + this.moodBoost.joyBoost)/dampingFactor;
+    this.moodBoost.sadnessBoost = Math.log2(1+detectionsWithExpressions.expressions.sad*weightingFactor + this.moodBoost.sadnessBoost)/dampingFactor;
+    this.moodBoost.terrorBoost = Math.log2(1+detectionsWithExpressions.expressions.fearful*weightingFactor + this.moodBoost.terrorBoost)/dampingFactor;
+    this.moodBoost.angerBoost = Math.log2(1+detectionsWithExpressions.expressions.angry*weightingFactor + this.moodBoost.angerBoost)/dampingFactor;
+    this.moodBoost.sleepyBoost = Math.log2(1+detectionsWithExpressions.expressions.disgusted*weightingFactor + this.moodBoost.sleepyBoost)/dampingFactor;
+    this.moodBoost.calmBoost = Math.log2(1+detectionsWithExpressions.expressions.neutral*weightingFactor + this.moodBoost.calmBoost)/dampingFactor;
+    this.moodBoost.surpriseBoost = Math.log2(1+detectionsWithExpressions.expressions.surprised*weightingFactor + this.moodBoost.surpriseBoost)/dampingFactor;
+    this.moodBoost.loveBoost = Math.log2(1+detectionsWithExpressions.expressions.happy*weightingFactor + this.moodBoost.joyBoost)/dampingFactor;
+
+    document.getElementById('inputVideo').style.opacity=detectionsWithExpressions.expressions.happy.toString();
+    // console.log(this.moodBoost)
   } catch (error) {
     //console.log("dang no face")
   }
 
+  if(this.rAudio=="joy")
+  {
+    //document.getElementById('inputVideo').style.opacity=".1";
 
+  }
 
 /*
  this._persona.core.mood["joy"] = detectionsWithExpressions.expressions.happy - this.moodBoost.joyBoost;
@@ -380,7 +391,7 @@ surprised: 0.003323477692902088
 
 }
 
-//get the camera and microphone
+//get the camera and microphone in active mode
  async captureCamera(){
 
             // load the models
@@ -389,6 +400,7 @@ surprised: 0.003323477692902088
        await faceapi.nets.faceRecognitionNet.loadFromUri('models')
         await faceapi.nets.faceLandmark68Net.loadFromUri('models')
        await faceapi.loadSsdMobilenetv1Model('models')
+       await faceapi.nets.faceLandmark68TinyNet.loadFromUri('models')
 
         // try to access users webcam and stream the images
         // to the video element
@@ -575,7 +587,7 @@ surprised: 0.003323477692902088
     });
 
 
-    //here we just capture facial info
+    //here we trigger facial recognition functions
     //if (this.rafId % 10==0){
       this.captureFaces();
     //}
