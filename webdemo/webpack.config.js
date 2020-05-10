@@ -42,6 +42,9 @@ module.exports = (env) => {
       filename: isProd ? '[hash:6].js' : '[name].js',
       chunkFilename: isProd ? '[chunkhash:6].[id].js' : '[name].[id].js',
     },
+    node: {
+      fs: "empty"
+    },
     resolve: {
       modules: [pathResolve('../lib'), pathResolve('../web'), 'node_modules'],
       alias: {

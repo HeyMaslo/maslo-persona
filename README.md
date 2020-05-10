@@ -152,6 +152,29 @@ https://github.com/HeyMaslo/empathetic-sketches/tree/master/conversational
 
 this needs to be converted to the new webpack experience.
 
+### Speech Recognition
+Uses built in chrome and firefox HTML5 APIs for Speech Rec
+
+https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition/grammars
+https://hacks.mozilla.org/2016/01/firefox-and-the-web-speech-api/
+
+### Natual Language Processing
+if we want to get buy in the browser:
+https://github.com/spencermountain/compromise (this is truly amazing)
+https://dev.to/charlesdlandau/natural-language-processing-in-the-browser-52hj
+
+if we use a node server life can be easier for NLP :)
+https://blog.logrocket.com/natural-language-processing-for-node-js/
+https://www.npmjs.com/package/natural
+
+Add this for additional variety in responses
+https://www.npmjs.com/package/elizabot
+
+#### Mood and Sentiment Analysis
+https://github.com/soops/sentimood
+
+
+
 
 
 ### Resources

@@ -20,10 +20,17 @@
     "dependencies": {
         "@babel/polyfill": "^7.4.3",
         "chroma-js": "^2.0.3",
+        "compromise": "^13.2.0",
+        "compromise-adjectives": "0.0.5",
+        "compromise-dates": "0.0.5",
+        "compromise-numbers": "^1.0.0",
+        "compromise-paragraphs": "0.0.4",
+        "compromise-sentences": "0.0.5",
         "googleapis": "^39.2.0",
         "gsap": "^2.1.2",
         "mobx": "^5.9.0",
         "simplex-noise": "^2.4.0",
+        "sylvester": "0.0.21",
         "three": "^0.102.1"
     },
     "devDependencies": {

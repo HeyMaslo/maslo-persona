@@ -5,6 +5,17 @@ import { LineController } from './lineController';
 import { CircleController } from './circleController';
 import * as Chroma from 'chroma-js';
 import * as faceapi from 'face-api.js';
+import { VoiceChat } from './voice';
+import nlp from 'compromise';
+//import * as nlpadj from 'compromise-adjectives';
+//import * as nlpdates from 'compromise-dates';
+//import * as nlpnumbers from 'compromise-numbers';
+nlp.extend(require("compromise-numbers").default);
+nlp.extend(require("compromise-dates").default);
+nlp.extend(require("compromise-adjectives").default);
+nlp.extend(require("compromise-sentences").default);
+nlp.extend(require("compromise-paragraphs").default);
+import { Sentimood } from './sentimood.js';
 
 
 export class Companion {
@@ -15,6 +26,7 @@ export class Companion {
     this.debugEl = document.getElementById('debug');
     this.listeningBut = document.getElementById('listeningBut');
     this.controls = document.getElementsByClassName('controlBut');
+    this.docs = [];
 
     this.mouseIsDown = false;
     this.startAngle = 0;
@@ -24,6 +36,7 @@ export class Companion {
 
     this.circleController = new CircleController();
     this.lineController = new LineController();
+
 
 
 
@@ -49,6 +62,10 @@ export class Companion {
       },
     });
 
+    //kick off the speech recognition
+    this.voiceChatter = new VoiceChat();
+
+
     autorun(() => {
       const { state } = this._persona.core;
       for (let i = 0; i < this.controls.length; i++) {
@@ -59,6 +76,8 @@ export class Companion {
         }
       }
     });
+
+
 
     this._subscribe();
 
@@ -387,7 +406,7 @@ surprised: 0.003323477692902088
           // this.setStateFromAudio(rAudio);
         }
 
-
+       // console.log(this.voiceChatter.chatBuffer[0]);
 
 }
 
@@ -408,12 +427,16 @@ surprised: 0.003323477692902088
         const videoEl = document.getElementById('inputVideo');
         var frameCount =0;
 
+        //turn speach recognition on
+        this.voiceChatter.recorder.start();
+
         const handleSuccess = (stream)=> {
           if (window.URL) {
             videoEl.srcObject = stream;
           } else {
             videoEl.src = stream;
           }
+
 
 
           // just process the root mean square of the audio and randomly sample it.
@@ -453,7 +476,10 @@ surprised: 0.003323477692902088
 
          //console.log(processor.onaudioprocess.)
 
+
+
         };
+
 
         navigator.mediaDevices.getUserMedia(
           { audio: true, video: true }).then(handleSuccess).catch ((e) => {
@@ -586,6 +612,13 @@ surprised: 0.003323477692902088
 
     });
 
+   // console.log(this.voiceChatter.chatBuffer);
+        //here we trigger facial recognition functions
+    if (this.rafId % 10==0){
+      //this.voiceChatter.chatBuffer[].toString
+      this.chatterResponse(this.voiceChatter.chatBuffer[this.voiceChatter.chatBuffer.length - 1]);
+      //this.voiceChatter.chatBuffer.forEach(element => console.log(element));
+    }
 
     //here we trigger facial recognition functions
     //if (this.rafId % 10==0){
@@ -595,6 +628,170 @@ surprised: 0.003323477692902088
    // console.log(this.rafId);
     this._persona.step();
   }
+
+  //NLP parsing for general use
+  chatterResponse(reaction){
+    this.docs = this.voiceChatter.chatBuffer;
+    this.mergedDocs = nlp(
+        this.docs.map(obj => obj).join()
+    )
+   //console.log(this.docs[this.docs.length-1]);
+   //console.log(this.mergedDocs.sentences().text())
+        // States = "joy" | "surprise" | "listen" | "init" | "idle" | "upset" | "yes" | "no" | "hey" | "shake" | "tap" | "question";
+
+        var voiceOut = "I feel you.";
+
+
+        //this is our decision tree for responses. pretty simple right now.
+
+        //TODO: extend with intelligence...
+
+                //
+                var sentiment = new Sentimood();
+
+                //console.log(sentiment.analyze(reaction));
+
+
+        if (reaction.includes('hey')) {
+          voiceOut = "Hey there! How are you?";
+          this.voiceChatter.masloResponseBuffer.push(voiceOut);
+          this.voiceChatter.botVoice(voiceOut);
+          this._persona.core.setState("hey");
+        }
+
+        else if (reaction.includes('happy') || sentiment.analyze(reaction).score>3) {
+          voiceOut = "let's do the happy dance!";
+          this.voiceChatter.masloResponseBuffer.push(voiceOut);
+          this.voiceChatter.botVoice(voiceOut);
+          this._persona.core.setState("joy");
+        }
+
+        else if (reaction.includes('wow')  || sentiment.analyze(reaction).score>5) {
+          voiceOut = "crazy eh?";
+          this.voiceChatter.masloResponseBuffer.push(voiceOut);
+          this.voiceChatter.botVoice(voiceOut);
+          this._persona.core.setState("surprise");
+        }
+        else if (sentiment.analyze(reaction).score<-6) {
+          voiceOut = "oh no!";
+          this.voiceChatter.masloResponseBuffer.push(voiceOut);
+          this.voiceChatter.botVoice(voiceOut);
+          this._persona.core.setState("upset");
+        }
+        else if (sentiment.analyze(reaction).score<-6 && sentiment.analyze(reaction).score>-8) {
+          voiceOut = "argh!";
+          this.voiceChatter.masloResponseBuffer.push(voiceOut);
+          this.voiceChatter.botVoice(voiceOut);
+          this._persona.core.setState("surprise");
+        }
+        else if (reaction.includes('bord')) {
+          voiceOut = "tell me something fun!";
+          this.voiceChatter.masloResponseBuffer.push(voiceOut);
+          this.voiceChatter.botVoice(voiceOut);
+          this._persona.core.setState("surprise");
+        }
+        else{
+
+          //this.randomState();
+        }
+
+
+        //this adds a non response to the chat buffer
+        this.voiceChatter.chatBuffer.push(" ");
+        this.voiceChatter.masloResponseBuffer.push(" ");
+
+  }
+
+  tf(d, occ){
+    // Takes a document and N occurrences of a term
+    // Returns the term frequency (tf)
+    // tf = (occurrences of search term/N terms)
+    return (occ/nlp(d).terms().out('array').length)
+  }
+
+  idf(t){
+    // Takes a term
+    // Returns the inverse document frequency (idf)
+    // idf = log_e(N documents/N documents containing
+    // the search term)
+
+    var nDocs = this.docs.length
+    var nMatches = this.docs.filter(
+      doc=>{
+        var matched = doc.match(t)
+        if(matched){
+          return true}
+        else{
+          return false}
+        }
+    ).length
+
+    var result = nDocs / nMatches
+    if (!isFinite(result)){
+      return 0
+    }else{
+    return Math.log(result)
+    }
+  }
+
+  tfIdf(doc){
+    // Takes a document from this.docs
+    // Returns a sorted array of objects in the form:
+    // {term:<String>, weight:<Float>}
+    // This is a vector of terms and Tf-Idf weights
+
+
+
+    var tfIdfVector = nlp(doc).terms().out('freq').map((d)=>{
+      var t = d['normal']
+
+
+      var tf = this.tf(doc, d['count'])
+
+      var idf = this.idf(t)
+
+      return {term: t, weight:tf*idf}
+      }
+    )
+
+    var sortedTfIdfVector = tfIdfVector.sort((obj0, obj1)=>{
+      var w0 = obj0.weight
+      var w1 = obj1.weight
+      if (w0 < w1){
+        return 1
+      }
+      if (w0 > w1){
+        return -1
+      }
+      return 0
+    })
+
+    return sortedTfIdfVector
+
+  }
+
+	randomTfIdf(){
+		// see: https://stackoverflow.com/questions/4550505/
+		// /getting-a-random-value-from-a-javascript-array
+		var rand = this.docs[Math.floor(Math.random() * this.docs.length)];
+
+		return this.tfIdf(rand)
+	}
+
+	getDocs(){
+		return this.docs
+	}
+
+	mergedTokensDoc(opts){
+		// TODO: filter opt to only get texts e.g. for a given set of user
+
+		// Pass an opt to the nlp.out method, else 'text'
+		try{return this.mergedDocs.out(`${opts.out}`)}catch(error){
+			return this.mergedDocs.out('text')
+		}
+	}
+
+
 
     /** Sets random state of Persona */
   randomState() {

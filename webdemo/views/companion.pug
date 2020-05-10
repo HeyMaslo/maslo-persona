@@ -8,6 +8,8 @@ html
     title Maslo Companion
     //- link(rel='stylesheet', id='mainStylesheet' href='css/main.css')
   body(class=midi)
+    #voiceControl
+    a#voiceControlBut(class='voice' href='javascript:void(0)') I'd Like to talk with you
     #debug
         #b1
         #b2
@@ -44,3 +46,8 @@ html
     #videocam
       video#inputVideo(onplay='' autoplay muted height="100%" width="100%" style="opacity:0.8")
       canvas#overlay(height=400 width=400)
+    #container
+      div(class='chat=container')
+        p(class='voice2text')
+      div(class='chat=container darker')
+        p(class='voice2text')
