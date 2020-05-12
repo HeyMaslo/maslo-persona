@@ -80,7 +80,7 @@ export class VoiceChat {
         element.appendChild(this.addHumanText(transcript));
 
         //console.log(transcript);
-        this.chatBuffer.push(transcript);
+        this.chatBuffer.push(transcript.trim());
         //this.botVoice(transcript);
       };
 

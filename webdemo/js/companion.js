@@ -16,6 +16,7 @@ nlp.extend(require("compromise-adjectives").default);
 nlp.extend(require("compromise-sentences").default);
 nlp.extend(require("compromise-paragraphs").default);
 import { Sentimood } from './sentimood.js';
+import chitChat from './chitchat.json';
 
 
 export class Companion {
@@ -27,6 +28,7 @@ export class Companion {
     this.listeningBut = document.getElementById('listeningBut');
     this.controls = document.getElementsByClassName('controlBut');
     this.docs = [];
+    this.chitChat = chitChat;
 
     this.mouseIsDown = false;
     this.startAngle = 0;
@@ -616,6 +618,7 @@ surprised: 0.003323477692902088
         //here we trigger facial recognition functions
     if (this.rafId % 10==0){
       //this.voiceChatter.chatBuffer[].toString
+      //console.log(this.voiceChatter.chatBuffer[this.voiceChatter.chatBuffer.length - 1]);
       this.chatterResponse(this.voiceChatter.chatBuffer[this.voiceChatter.chatBuffer.length - 1]);
       //this.voiceChatter.chatBuffer.forEach(element => console.log(element));
     }
@@ -629,12 +632,172 @@ surprised: 0.003323477692902088
     this._persona.step();
   }
 
+  //create a command json object, will later put in a standalone file that can be picked up
+  chitChatLocal ={
+    version:1.1,
+    commands:{
+              "hey": {
+                    tag:"hey",
+                    outchatter:"hey there!",
+                    animation:"hey",
+                    mood:"love"
+                },
+                "go":
+                {
+                  tag:"go",
+                  outchatter:"go there!",
+                  animation:"yes",
+                  mood:"love"
+              }
+         }
+      }
+
+//dummy object for russ reference
+  myObj = {
+    "name":"John",
+    "age":30,
+    "cars": {
+      "car1":"Ford",
+      "car2":"BMW",
+      "car3":"Fiat"
+    }
+   }
+
+getChatterResponse(reaction){
+
+  //console.log(this.chitChat.commands)
+    //we may want to do some "search" at some point but for now we're just going to do exact matches
+    //here the reaction string becomes the name of a command... if it's nmot found then what?
+    try{
+
+      //wanna get the voice/command decision tree loaded and then access the right command.
+      //you can effectively decide if you want to look things up straight by command or if you want to parse things into something simpler.
+      var cmd="";
+      var trycommand = nlp(reaction).toLowerCase().text();
+
+              //you get a higher level decision try first to normalize / condition anything
+              //here we use sentiment and presence of words to give us commands so we don't have to do exact look ups...
+              // this can be advanced in all sorts of ways
+              //but also is meant to give us a lot of flexibility
+              var sentiment = new Sentimood();
+
+              //console.log(sentiment.analyze(reaction));
+
+
+              if (trycommand.includes('hey')) {
+                cmd=this.chitChat.commands["hey"];
+              }
+
+              else if (reaction.includes('happy') || sentiment.analyze(reaction).score>3) {
+                cmd=this.chitChat.commands["go"];
+              }
+
+              else if (reaction.includes('wow')  || sentiment.analyze(reaction).score>5) {
+                cmd=this.chitChat.commands["hey"];
+              }
+              else if (sentiment.analyze(reaction).score<-6) {
+                cmd=this.chitChat.commands["upset"];
+              }
+              else if (sentiment.analyze(reaction).score<-6 && sentiment.analyze(reaction).score>-8) {
+                cmd=this.chitChat.commands["hey"];
+              }
+              else if (reaction.includes('bored')) {
+                cmd=this.chitChat.commands["good bye friend!"];
+              }
+              else{
+                cmd=this.chitChat.commands["sdafasdf!"];
+                //this.randomState();
+              }
+
+
+
+      console.log(trycommand)
+
+
+      if (cmd===undefined){
+        console.log("didn't find a voice command")
+      }
+      else{
+        //console.log(cmd.outchatter);
+
+        //this sets the animation from the chat file
+
+
+        if(cmd.animation===undefined){
+
+        }
+        else{
+          this._persona.core.setState(cmd.animation);
+        }
+
+
+        this.voiceChatter.botVoice(cmd.outchatter);
+        //you have to keep track of the template/div tags and stuff.  it's kind of messy and should probably be cleaned up.  but it's a single page app so not too bad
+        var element = document.getElementById("container");
+         element.appendChild(this.voiceChatter.addBotText(cmd.actionURL.toString()));
+
+      // finally push an end state into the buffer so we don't get hung up in a loop
+      this.voiceChatter.chatBuffer.push(" ");
+      this.voiceChatter.masloResponseBuffer.push(" ");
+        //console.log(cmd);
+      }
+
+
+    }
+    catch (e){
+              //this adds a non response to the chat buffer
+              //console.log(this.voiceChatter.chatBuffer);
+              this.voiceChatter.chatBuffer.push(" ");
+              this.voiceChatter.masloResponseBuffer.push(" ");
+      //console.log(e);
+
+    }
+
+
+
+    // having fun figuring out dumb js search speed: https://stackoverflow.com/questions/19253753/javascript-find-json-value
+
+
+      /*
+    // extremely compact
+    var data=[this.chitChat.commands["hey"]];
+
+
+    let cmd = data.find(el => el.commands === reactionString);
+    // => {name: "Albania", code: "AL"}
+    console.log(data);
+
+    */
+
+    /* brute force look up
+    var obj = this.chitChat;
+
+    // the code you're looking for
+    var needle = 'hey';
+    needle = reactionString;
+
+    // iterate over each element in the array  (this will get slow for very large jsons but may not be better way... shard the json in some way)
+    for (var i = 0; i < obj.length; i++){
+      // look for the entry with a matching `code` value
+      if (obj[i].commands == needle){
+         // we found it
+        // obj[i].name is the matched result
+
+
+
+      }
+    }
+
+    */
+
+   }
+
   //NLP parsing for general use
   chatterResponse(reaction){
-    this.docs = this.voiceChatter.chatBuffer;
-    this.mergedDocs = nlp(
-        this.docs.map(obj => obj).join()
-    )
+
+      this.getChatterResponse(reaction);
+
+
    //console.log(this.docs[this.docs.length-1]);
    //console.log(this.mergedDocs.sentences().text())
         // States = "joy" | "surprise" | "listen" | "init" | "idle" | "upset" | "yes" | "no" | "hey" | "shake" | "tap" | "question";
@@ -647,58 +810,7 @@ surprised: 0.003323477692902088
         //TODO: extend with intelligence...
 
                 //
-                var sentiment = new Sentimood();
 
-                //console.log(sentiment.analyze(reaction));
-
-
-        if (reaction.includes('hey')) {
-          voiceOut = "Hey there! How are you?";
-          this.voiceChatter.masloResponseBuffer.push(voiceOut);
-          this.voiceChatter.botVoice(voiceOut);
-          this._persona.core.setState("hey");
-        }
-
-        else if (reaction.includes('happy') || sentiment.analyze(reaction).score>3) {
-          voiceOut = "let's do the happy dance!";
-          this.voiceChatter.masloResponseBuffer.push(voiceOut);
-          this.voiceChatter.botVoice(voiceOut);
-          this._persona.core.setState("joy");
-        }
-
-        else if (reaction.includes('wow')  || sentiment.analyze(reaction).score>5) {
-          voiceOut = "crazy eh?";
-          this.voiceChatter.masloResponseBuffer.push(voiceOut);
-          this.voiceChatter.botVoice(voiceOut);
-          this._persona.core.setState("surprise");
-        }
-        else if (sentiment.analyze(reaction).score<-6) {
-          voiceOut = "oh no!";
-          this.voiceChatter.masloResponseBuffer.push(voiceOut);
-          this.voiceChatter.botVoice(voiceOut);
-          this._persona.core.setState("upset");
-        }
-        else if (sentiment.analyze(reaction).score<-6 && sentiment.analyze(reaction).score>-8) {
-          voiceOut = "argh!";
-          this.voiceChatter.masloResponseBuffer.push(voiceOut);
-          this.voiceChatter.botVoice(voiceOut);
-          this._persona.core.setState("surprise");
-        }
-        else if (reaction.includes('bord')) {
-          voiceOut = "tell me something fun!";
-          this.voiceChatter.masloResponseBuffer.push(voiceOut);
-          this.voiceChatter.botVoice(voiceOut);
-          this._persona.core.setState("surprise");
-        }
-        else{
-
-          //this.randomState();
-        }
-
-
-        //this adds a non response to the chat buffer
-        this.voiceChatter.chatBuffer.push(" ");
-        this.voiceChatter.masloResponseBuffer.push(" ");
 
   }
 
@@ -779,6 +891,11 @@ surprised: 0.003323477692902088
 	}
 
 	getDocs(){
+    this.docs = this.voiceChatter.chatBuffer;
+    this.mergedDocs = nlp(
+        this.docs.map(obj => obj).join()
+    )
+
 		return this.docs
 	}
 

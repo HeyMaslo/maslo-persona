@@ -6,23 +6,86 @@
 <blockquote class="twitter-tweet" data-conversation="none"><p lang="en" dir="ltr">All static computing ideas need to die. Only evolving, growing, non-terminating processes going forward.</p>&mdash; un1crom (@un1crom) <a href="https://twitter.com/un1crom/status/1133878969667792896?ref_src=twsrc%5Etfw">May 29, 2019</a></blockquote>
 
 
-Meet Maslo... an animated expressive empathetic entity to add a personified computing layer to a project.
+Meet Maslo... an expressive empathetic entity to add a personified computing layer to a project.
 
 https://storage.googleapis.com/maslomemory/m2/index.html?color=30
 
-## Persona Module
+## Persona Module/Computational Being
 
-Think of the persona as the companion's ‘face’. This is a mathematically expressed amorphous shape. This shape consists of multiple properties (ie: size, speed, brightness, complexity, color, etc) that change based on user inputs and interaction. Every user can have a unique persona and their persona will evolve over time.
+Think of the persona as the companion's ‘face’. T
 
-## Persona Reactions
+This persona consists of multiple properties (ie: size, speed, brightness, complexity, color, etc) that change based on user inputs and interaction. Every user can have a unique persona and their persona will evolve over time.
 
-Each persona will react to the user inputs through animations that include visual changes, sound, color, and haptic feedback.
-The types of reactions described below:
+this computational being has the following facets of expression:
 
-* State Reaction: A reaction is a particular audiovisual response from the persona.
+### basic physicality
+color scheme (full of emotional adjustment akin to blushing/etc as well as overall character)
+overall size as well as growth rate
+default/at rest breathing rate and default resting state/coloration/shape
+
+### perception:
+full vision/camera access
+facial recognition, object recognition
+facial expression detection
+name/person recognition (ability to learn it all over time)
+full audio spectrum / microphone (with ability to do voice, other sound recognition)
+meta data awareness (full browser/device meta data including location, user agent, os, cookie info etc)
+
+### temperament and mood:
+* default mood
 * Dynamic Idle: An anthropomorphised animation based on average of computed sentiment.
+* mood progression/sequencing
+* learnable triggers
+* fixed action patterns/habits/physical reactions:
+* animation reactions
+* sonification reactions
+* animation patterns
 
-## Install & Run
+### language/linguistics/semantics:
+* voice commands/triggers
+* name recognition
+* entity detection/full grammar detection
+* sentiment analysis
+* Speech synthesis
+* Ability to hear music/whistling/songification and respond in voice or music
+
+### Memory and Learning:
+* currently learning/memory in the perception/visual object detection and language layers
+* there's a personalization / user interaction buffer that is Medium term
+* Ability to hook up / add fixed actions/commands for always present/always there reactions/behaviors
+
+### Expressive Responses:
+* Realtime mirroring in audio and video (facial mirroring and voice
+* Animation sequences
+* Full sound design/vocabulary
+* Full chatbot capability
+* Changing in color, size, movement, etc
+
+There are literally an infinite number of responsiveness and no session will ever be the same.
+By using the user interaction buffers the experience can be personalized over time.
+
+
+### Technical Requirements:
+* Chrome browser or Firefox (with permission adjustments).
+* To adjust code need webpack and yarn, see docs
+* Can be ported to react native fairly easily
+
+### Extensions include:
+* bring your own server for additional Machine Learning and even more memory/learning
+* Add integrations to express even more:
+* Spotify API / Sound cloud api for music play back
+* Greg's "The knob" and Orage
+* Shazam API for song fingerprinting
+* Inclusion of RunwayML/ATTGan for automated journal/story visualization
+etc etc.
+
+### Porting to Apps, Robot platforms is straight forward:
+Mostly just swapping out the GUI, the core of the processing would work on any platform that can process javascript/run chromium/chrome browser (aka make a chromebook with maslo as default experience to navigate apps etc)
+Robots can just feed off the underlying buffer logs for event handling to trigger motion/reactions etc
+This is the widest expression of the real time Maslo persona.
+
+
+## Install & Run (for development)
 
 0. Install Node.js & NPM & Choco ( * If not installed )
 1. Install Yarn (* If not installed and if on windows, you'll need to run powershell as admin)

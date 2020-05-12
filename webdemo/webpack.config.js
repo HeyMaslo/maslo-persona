@@ -123,13 +123,13 @@ module.exports = (env) => {
           }],
         },
         {
-          test: /\.json$/,
+          test: /locale\/.+\.json$/,
           type: 'javascript/auto',
           use: [{
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'assets/bodymovin',
+              //outputPath: 'assets/bodymovin',
             },
           }],
         },
