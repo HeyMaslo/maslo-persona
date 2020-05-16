@@ -9,6 +9,14 @@
                   "animation":"joy",
                   "mood":"love"
               },
+              "wild": {
+                "tag":"hey",
+                "outchatter":"it is so wild isn't it?",
+                "action":"externalURL",
+                "actionURL":"https://maslo.ai",
+                "animation":"hey",
+                "mood":"love"
+            },
             "hey": {
                   "tag":"hey",
                   "outchatter":"hey there!",
