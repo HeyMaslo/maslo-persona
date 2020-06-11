@@ -4,7 +4,7 @@
 
 # maslo persona <small>1a</small>
 
-> A magical documentation site generator.
+> An AI Persona for Empathetic Computers
 
 - Simple and lightweight
 - Multi-Modal Machine Learning Signal Processing
