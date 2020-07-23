@@ -24,8 +24,10 @@ export class AudioPlayer implements IAudioPlayer {
 
       this.sound.setOnPlaybackStatusUpdate(cb);
 
-      await this.sound.loadAsync(resource.url);
-      await this.sound.playAsync();
+      const loadStatus = await this.sound.loadAsync(resource.url);
+      if (loadStatus.isLoaded === true) {
+        await this.sound.playAsync();
+      }
     } catch (err) {
       console.log('ExpoAudioPlayer: audio play error:');
       console.error(err);
@@ -43,6 +45,8 @@ export class AudioPlayer implements IAudioPlayer {
   async stop() {
     const s = this.sound;
     this.sound = null;
-    await AudioPlayer.disposeSound(s);
+    if (s && s._loaded) {
+      await AudioPlayer.disposeSound(s);
+    }
   }
 }
