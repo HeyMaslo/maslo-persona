@@ -1,3 +1,4 @@
+# A door opens from touchdesigner to here
 # @heymaslo/persona
 
 ![](https://cdn-images-1.medium.com/max/1600/1*Gm7A7w4vJZeNXKHJQxhq7Q.gif)
@@ -12,7 +13,7 @@ https://storage.googleapis.com/maslomemory/m2/index.html?color=30
 
 ## Persona Module/Computational Being
 
-Think of the persona as the companion's ‘face’.
+Think of the persona as the companion's â€˜faceâ€™.
 
 This persona consists of multiple properties (ie: size, speed, brightness, complexity, color, etc) that change based on user inputs and interaction. Every user can have a unique persona and their persona will evolve over time.
 
@@ -113,10 +114,10 @@ You will want to read the face-api js docs below. Make sure you have the models 
 
 ## Structure
 
-1. `lib` – here lives ES6 classes with meaningful JSDoc comments for Maslo Persona core code. Not ready for rendering, requires further integration to a rendering scene, but all core logic is placed here including usage of Three.js, gsap, mobx.
-2. `web` – a HTML/WebGL renderer for Maslo Persona that is ready to be placed right in HTML project with minimal additional configuration.
-3. `webdemo` – Basically the only runnable (and main for now) one here, single page site based on webpack dev server that uses `web` package for Persona rendering.
-4. [TODO]  `react-native` – renderer for RN. Please make a request if you want this sooner and we will prioritize.
+1. `lib` â€“ here lives ES6 classes with meaningful JSDoc comments for Maslo Persona core code. Not ready for rendering, requires further integration to a rendering scene, but all core logic is placed here including usage of Three.js, gsap, mobx.
+2. `web` â€“ a HTML/WebGL renderer for Maslo Persona that is ready to be placed right in HTML project with minimal additional configuration.
+3. `webdemo` â€“ Basically the only runnable (and main for now) one here, single page site based on webpack dev server that uses `web` package for Persona rendering.
+4. [TODO]  `react-native` â€“ renderer for RN. Please make a request if you want this sooner and we will prioritize.
 
 ## How To Use
 
@@ -163,7 +164,7 @@ persona.stop();
 // or manually update it every frame
 persona.step();
 
-// resize – react to screen dimensions changes (not really required by now, but may be so in future)
+// resize â€“ react to screen dimensions changes (not really required by now, but may be so in future)
 persona.resize();
 
 // Working with Persona itself:
