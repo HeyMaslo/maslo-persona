@@ -1,4 +1,4 @@
-MorpheePsychomatron
+#Morphee
 # @heymaslo/persona
 
 ![](https://cdn-images-1.medium.com/max/1600/1*Gm7A7w4vJZeNXKHJQxhq7Q.gif)
@@ -213,7 +213,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 ```shell
 Name - Morphee
-Birthdate - 4/9/2020	23:45
+Birthdate - 4/9/2020	23:54
 Birthplace - Venice, CA
 Parent - [Maslo](https://maslo.ai/)
 Nursery - [Maslo](https://maslo.ai/)`
