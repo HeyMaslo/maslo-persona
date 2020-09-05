@@ -213,7 +213,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 ```shell
 Name - Psychomatron
-Birthdate - 4/9/2020	20:30
+Birthdate - 4/9/2020	20:39
 Birthplace - Venice, CA
 Parent - [Maslo](https://maslo.ai/)
 Nursery - [Maslo](https://maslo.ai/)`
