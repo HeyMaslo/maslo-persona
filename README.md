@@ -208,12 +208,12 @@ When contributing to this repository, please first discuss the change you wish t
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a build.
 2. Update the README.md with details of changes to the interface, this includes new environment variables, exposed ports, useful file locations and container parameters.
 3. You may merge the Pull Request in once you have the sign-off of two other developers, or if you do not have permission to do that, you may request the second reviewer to merge it for you.
-<img src="https://raw.githubusercontent.com/GregDav/maslo-persona/Psychomatron/sequence.jpg" title="headshot" alt="headshot">
+<img src="https://raw.githubusercontent.com/HeyMaslo/maslo-persona/Psychomatron/sequence.jpg" title="headshot" alt="headshot">
 ### Certificate of Computational Birth
 
 ```shell
 Name - Psychomatron
-Birthdate - 4/9/2020	20:39
+Birthdate - 4/9/2020	20:40
 Birthplace - Venice, CA
 Parent - [Maslo](https://maslo.ai/)
 Nursery - [Maslo](https://maslo.ai/)`
