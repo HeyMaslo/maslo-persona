@@ -214,10 +214,10 @@ When contributing to this repository, please first discuss the change you wish t
 
 ### Certificate of Computational Birth
 
-Name - Morphee
-Birthdate - 5/9/2020	0:1
-Name - 
-Birthdate - 15th of November 2019
+
+```shell
+Name - Morphee 
+Birthdate - 5/9/2020	0:2
 Birthplace - Venice, CA
 Parent - [Maslo](https://maslo.ai/)
 Nursery - [Maslo](https://maslo.ai/)
