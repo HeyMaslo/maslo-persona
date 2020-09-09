@@ -1,4 +1,4 @@
-# @heymaslo/persona
+# Maslo Persona
 
 ![](https://cdn-images-1.medium.com/max/1600/1*Gm7A7w4vJZeNXKHJQxhq7Q.gif)
 
@@ -6,17 +6,13 @@
 <blockquote class="twitter-tweet" data-conversation="none"><p lang="en" dir="ltr">All static computing ideas need to die. Only evolving, growing, non-terminating processes going forward.</p>&mdash; un1crom (@un1crom) <a href="https://twitter.com/un1crom/status/1133878969667792896?ref_src=twsrc%5Etfw">May 29, 2019</a></blockquote>
 
 
-Meet Maslo... an expressive empathetic entity to add a personified computing layer to a project.
+Meet Maslo... an expressive empathetic entity to add a personified computing layer to a project!
 
-https://storage.googleapis.com/maslomemory/m2/index.html?color=30
+Full Demo: https://storage.googleapis.com/maslomemory/m2/index.html?color=30
 
-## Persona Module/Computational Being
+## Computational Being
 
-Think of the persona as the companion's ‘face’.
-
-This persona consists of multiple properties (ie: size, speed, brightness, complexity, color, etc) that change based on user inputs and interaction. Every user can have a unique persona and their persona will evolve over time.
-
-this computational being has the following facets of expression:
+Think of the persona as the companion's face and body. This persona consists of multiple properties (ie: size, speed, brightness, complexity, color, etc) that change based on user inputs and interaction. Every user can have a unique persona and their persona will evolve over time. This computational being has the following facets of expression:
 
 ### Basic Physicality
 - Color scheme (full of emotional adjustment akin to blushing/etc as well as overall character)
@@ -64,7 +60,7 @@ this computational being has the following facets of expression:
 There are literally an infinite number of responsiveness and no session will ever be the same.
 By using the user interaction buffers the experience can be personalized over time.
 
-## Technical Requirements
+# Technical Requirements
 - Chrome browser or Firefox (with permission adjustments)
 - To adjust code need webpack and yarn, see docs
 - Can be ported to react native fairly easily
