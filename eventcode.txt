@@ -1,3 +1,59 @@
+Uploadresult : HTTP/1.1 100 Continue
+
+HTTP/1.1 201 Created
+Date: Thu, 10 Sep 2020 00:34:57 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 2003
+Server: GitHub.com
+Status: 201 Created
+Cache-Control: private, max-age=60, s-maxage=60
+Vary: Accept, Authorization, Cookie, X-GitHub-OTP
+ETag: "d5f3876d58cea656fb57d3ae0c573ba6"
+X-OAuth-Scopes: admin:gpg_key, gist, notifications, read:packages, repo, user, workflow, write:discussion, write:packages
+X-Accepted-OAuth-Scopes: 
+X-GitHub-Media-Type: github.v3; format=json
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4987
+X-RateLimit-Reset: 1599701341
+X-RateLimit-Used: 13
+Access-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
+X-Frame-Options: deny
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin
+Content-Security-Policy: default-src 'none'
+Vary: Accept-Encoding, Accept, X-Requested-With
+Vary: Accept-Encoding
+X-GitHub-Request-Id: E35D:2036:1BE221B:22A127C:5F5974AF
+
+{"content":{"name":"eventcode.txt","path":"eventcode.txt","sha":"ecd818ecc3f2a3c87ab2b349852945b598bfc0f7","size":116236,"url":"https://api.github.com/repos/HeyMaslo/maslo-persona/contents/eventcode.txt?ref=Akhenaton","html_url":"https://github.com/HeyMaslo/maslo-persona/blob/Akhenaton/eventcode.txt","git_url":"https://api.github.com/repos/HeyMaslo/maslo-persona/git/blobs/ecd818ecc3f2a3c87ab2b349852945b598bfc0f7","download_url":"https://raw.githubusercontent.com/HeyMaslo/maslo-persona/Akhenaton/eventcode.txt","type":"file","_links":{"self":"https://api.github.com/repos/HeyMaslo/maslo-persona/contents/eventcode.txt?ref=Akhenaton","git":"https://api.github.com/repos/HeyMaslo/maslo-persona/git/blobs/ecd818ecc3f2a3c87ab2b349852945b598bfc0f7","html":"https://github.com/HeyMaslo/maslo-persona/blob/Akhenaton/eventcode.txt"}},"commit":{"sha":"22ee97d7d3a68e3e23932c8965da18252db29b74","node_id":"MDY6Q29tbWl0MTc0MjQ1MDYyOjIyZWU5N2Q3ZDNhNjhlM2UyMzkzMmM4OTY1ZGExODI1MmRiMjliNzQ=","url":"https://api.github.com/repos/HeyMaslo/maslo-persona/git/commits/22ee97d7d3a68e3e23932c8965da18252db29b74","html_url":"https://github.com/HeyMaslo/maslo-persona/commit/22ee97d7d3a68e3e23932c8965da18252db29b74","author":{"name":"alivemachine","email":"42188925+GregDav@users.noreply.github.com","date":"2020-09-10T00:34:56Z"},"committer":{"name":"alivemachine","email":"42188925+GregDav@users.noreply.github.com","date":"2020-09-10T00:34:56Z"},"tree":{"sha":"334c1d606cf86664e21188995ca8e856d1239b1f","url":"https://api.github.com/repos/HeyMaslo/maslo-persona/git/trees/334c1d606cf86664e21188995ca8e856d1239b1f"},"message":"this is updated frfom TD","parents":[{"sha":"aeb82f2823e5a50c8691e7dc85c8624918b9ecc3","url":"https://api.github.com/repos/HeyMaslo/maslo-persona/git/commits/aeb82f2823e5a50c8691e7dc85c8624918b9ecc3","html_url":"https://github.com/HeyMaslo/maslo-persona/commit/aeb82f2823e5a50c8691e7dc85c8624918b9ecc3"}],"verification":{"verified":false,"reason":"unsigned","signature":null,"payload":null}}}
+Importresult : HTTP/1.1 404 Not Found
+Date: Thu, 10 Sep 2020 00:34:55 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 113
+Server: GitHub.com
+Status: 404 Not Found
+X-OAuth-Scopes: admin:gpg_key, gist, notifications, read:packages, repo, user, workflow, write:discussion, write:packages
+X-Accepted-OAuth-Scopes: 
+X-GitHub-Media-Type: github.v3; format=json
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4988
+X-RateLimit-Reset: 1599701341
+X-RateLimit-Used: 12
+Access-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
+X-Frame-Options: deny
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin
+Content-Security-Policy: default-src 'none'
+Vary: Accept-Encoding, Accept, X-Requested-With
+X-GitHub-Request-Id: E35C:78F3:EB1A96:12182EB:5F5974AF
+
+{"message":"Not Found","documentation_url":"https://docs.github.com/rest/reference/repos#get-repository-content"}
 Content : eventcode.txt
 Uploadresult : HTTP/1.1 100 Continue
 
