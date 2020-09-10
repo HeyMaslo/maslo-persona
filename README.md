@@ -217,7 +217,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 ```shell
 Name - Kenobi 
-Birthdate - 9/9/2020	17:43
+Birthdate - 9/9/2020	17:44
 Birthplace - Venice, CA
 Parent - [Maslo](https://maslo.ai/)
 Nursery - [Maslo](https://maslo.ai/)
