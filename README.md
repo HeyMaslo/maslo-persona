@@ -217,7 +217,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 ```shell
 Name - ILOVE2020 
-Birthdate - 11/9/2020	7:23
+Birthdate - 11/9/2020	8:5
 Birthplace - Venice, CA
 Parent - [Maslo](https://maslo.ai/)
 Nursery - [Maslo](https://maslo.ai/)
