@@ -111,13 +111,6 @@ export default class MasloPersonaWebRenderer {
     // this._camera.updateProjectionMatrix();
   }
 
-  /** @private */
-  _autoStep = () => {
-    this._rafId = window.requestAnimationFrame(this._autoStep);
-
-    this.step();
-  }
-
   /** Manually updates Persona */
   step = () => {
 
@@ -143,4 +136,10 @@ export default class MasloPersonaWebRenderer {
     this._element.removeChild(this._renderer.domElement);
     this._renderer.dispose();
   }
+
+    /** @private */
+    _autoStep = () => {
+      this._rafId = window.requestAnimationFrame(this._autoStep);
+      this.step();
+    }
 }
