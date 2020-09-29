@@ -2,12 +2,12 @@ import '@babel/polyfill';
 import './favicon.ico';
 import './styles/main.styl';
 
+// demo
 import { Companion } from './js/companion';
 
 new Companion().run();
 
-/*
-import { Main } from './js/main';
+// basic implementation
+// import { Basic } from './js/basic';
 
-new Main().run();
-*/
+// new Basic().run();

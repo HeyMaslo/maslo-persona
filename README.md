@@ -112,6 +112,8 @@ You will want to read the face-api js docs below. Make sure you have the models 
 1. `lib` – here lives ES6 classes with meaningful JSDoc comments for Maslo Persona core code. Not ready for rendering, requires further integration to a rendering scene, but all core logic is placed here including usage of Three.js, gsap, mobx.
 2. `web` – a HTML/WebGL renderer for Maslo Persona that is ready to be placed right in HTML project with minimal additional configuration.
 3. `webdemo` – Basically the only runnable (and main for now) one here, single page site based on webpack dev server that uses `web` package for Persona rendering.
+    * `webdemo/js/companion.js` full implementation with voice recognition and face detection.
+    * `webdemo/js/basic.js` a basic implementation of the Maslo Persona..
 4. [TODO]  `react-native` – renderer for RN. Please make a request if you want this sooner and we will prioritize.
 
 ## How To Use

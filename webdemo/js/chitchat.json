@@ -1,38 +1,37 @@
 {
   "version":"1.1",
   "commands":{
-            "good bye friend!": {
-                  "tag":"bye bey friend",
-                  "outchatter":"good bye friend!",
-                  "action":"externalURL",
-                  "actionURL":"https://maslo.ai",
-                  "animation":"joy",
-                  "mood":"love"
-              },
-              "wild": {
-                "tag":"hey",
-                "outchatter":"it is so wild isn't it?",
-                "action":"externalURL",
-                "actionURL":"https://maslo.ai",
-                "animation":"hey",
-                "mood":"love"
-            },
-            "hey": {
-                  "tag":"hey",
-                  "outchatter":"hey there!",
-                  "action":"externalURL",
-                  "actionURL":"https://maslo.ai",
-                  "animation":"hey",
-                  "mood":"love"
-              },
-              "go":
-              {
-                "tag":"go",
-                "outchatter":"go there!",
-                "action":"externalURL",
-                "actionURL":"https://maslo.ai",
-                "animation":"yes",
-                "mood":"love"
-            }
-       }
+    "good bye friend!": {
+      "tag":"bye bey friend",
+      "outchatter":"good bye friend!",
+      "action":"externalURL",
+      "actionURL":"https://maslo.ai",
+      "animation":"joy",
+      "mood":"love"
+    },
+    "wild": {
+      "tag":"hey",
+      "outchatter":"it is so wild isn't it?",
+      "action":"externalURL",
+      "actionURL":"https://maslo.ai",
+      "animation":"hey",
+      "mood":"love"
+    },
+    "hey": {
+      "tag":"hey",
+      "outchatter":"hey there!",
+      "action":"externalURL",
+      "actionURL":"https://maslo.ai",
+      "animation":"hey",
+      "mood":"love"
+    },
+    "go": {
+      "tag":"go",
+      "outchatter":"go there!",
+      "action":"externalURL",
+      "actionURL":"https://maslo.ai",
+      "animation":"yes",
+      "mood":"love"
+    }
+  }
 }

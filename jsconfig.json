@@ -4,6 +4,7 @@
       "checkJs": true,
       "experimentalDecorators": true,
       "target": "ES6",
+      "resolveJsonModule": true,
       "baseUrl": ".",
     },
     "exclude": [

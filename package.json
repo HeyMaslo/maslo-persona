@@ -26,6 +26,7 @@
         "compromise-numbers": "^1.0.0",
         "compromise-paragraphs": "0.0.4",
         "compromise-sentences": "0.0.5",
+        "face-api.js": "^0.22.2",
         "googleapis": "^39.2.0",
         "gsap": "^2.1.2",
         "mobx": "^5.9.0",
