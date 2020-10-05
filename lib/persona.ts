@@ -72,6 +72,10 @@ export class PersonaCore implements IPersonaCore {
       ...DefaultInternalSettings,
     };
 
+    if (settings.disableSound) {
+      delete this._settings.audio;
+    }
+
     const { skipTextures, ringsCount, radius } = this._settings;
 
     logger.log('Initilalizing with settings:', { ...this._settings, audio: '<...>', simplex: '<...>' });

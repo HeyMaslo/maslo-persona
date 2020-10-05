@@ -39,6 +39,7 @@ export type Props = {
   disabled?: boolean,
   personaSettings?: Partial<PersonaSettings>,
   staticScale: number,
+  shouldPlaySound?: boolean,
 };
 
 type CompState = {
@@ -88,11 +89,15 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       .then(() => {
         if (!Device.enableGL) {
           const { radius } = this.calcPersonaSize(Device.width * Device.pixelRatio, Device.height * Device.pixelRatio);
+
+          const disableSound = !this.props.shouldPlaySound;
+
           this._persona = new PersonaCore(new THREE.Scene(), {
             ringRes: 2,
             radius,
             audio: new AudioPlayer(ResourceManager.Current),
             ...this.props.personaSettings,
+            disableSound,
           });
 
           this.props.context.currentSettings = this._currentSettings;
@@ -193,12 +198,15 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     this._renderer = new ExpoTHREE.Renderer({ gl: this._gl as WebGLRenderingContext });
     this._renderer.setSize(width, height);
 
+    const disableSound = !this.props.shouldPlaySound;
+
     // position persona on screen
     this._persona = new PersonaCore(this._scene, {
       ...this.calcPersonaSize(width, height),
       skipTextures: 'background',
       audio: new AudioPlayer(ResourceManager.Current),
       ...this.props.personaSettings,
+      disableSound,
     });
 
     this.props.context.currentSettings = this._currentSettings;

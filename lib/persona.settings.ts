@@ -8,6 +8,7 @@ export type PersonaSettings = {
   audio?: IAudioPlayer,
   glow?: boolean,
   skipTextures: false | 'all' | 'background',
+  disableSound: boolean,
 };
 
 export const DefaultSettings: PersonaSettings = {
@@ -28,6 +29,7 @@ export const DefaultSettings: PersonaSettings = {
   } as IAudioPlayer,
   glow: false,
   skipTextures: false,
+  disableSound: false,
 };
 
 export const DefaultInternalSettings = {
