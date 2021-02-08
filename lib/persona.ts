@@ -14,6 +14,7 @@ import { PersonaViewState } from './persona.view';
 
 import { AnalyticsManager, LoggerAnalyticsManager } from './analytics';
 import { IAudioPlayer, PersonCoreAnimationData, IPersonaCore, IPersonaRing } from './abstractions';
+import { RandomStates } from './randomStates';
 
 const logger = createLogger('[MasloPersona]');
 
@@ -148,6 +149,10 @@ export class PersonaCore implements IPersonaCore {
   get radius() { return this._settings.radius; }
   set radius(r: number) {
     this._settings.radius = r;
+  }
+
+  get randonStatesArray() {
+    return RandomStates;
   }
 
   @observable
@@ -352,11 +357,11 @@ export class PersonaCore implements IPersonaCore {
   }
 
   _generateRandonState(time: any) {
-    const statesIndex = this.state.length - 1;
-    console.log(`got ${this.state.length} states`);
+    const statesIndex = this.randonStatesArray.length - 1;
+    console.log(`got ${this.randonStatesArray.length} states`);
 
     const random = Math.floor(Math.random() * (statesIndex - 0 + 1) + 0);
-    const state = this.state[random];
+    const state = this.randonStatesArray[random];
 
     console.log(`got ${state} from random function ${time} seconds`);
 
