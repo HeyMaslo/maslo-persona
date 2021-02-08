@@ -120,6 +120,8 @@ export class PersonaCore implements IPersonaCore {
       }
       this._moodDirty = true;
     });
+
+    this._startRandonStates();
   }
 
   public get settings(): Readonly<PersonaSettings> { return this._settings; }
@@ -146,6 +148,16 @@ export class PersonaCore implements IPersonaCore {
   get radius() { return this._settings.radius; }
   set radius(r: number) {
     this._settings.radius = r;
+  }
+
+  @observable
+  private _randonStates = true;
+
+  get randonStates() {
+    return this._randonStates;
+  }
+  set randonStates(value) {
+    this._randonStates = value;
   }
 
   get analytics() {
@@ -285,7 +297,7 @@ export class PersonaCore implements IPersonaCore {
 
     logger.log('beginning continual state:', state);
 
-    const continualPromise = new Promise((resolve) => {
+    const continualPromise = new Promise((resolve: any) => {
       this._continualResolve = resolve;
     });
 
@@ -336,6 +348,37 @@ export class PersonaCore implements IPersonaCore {
       this.rings[0].data.shadowColor = 1;
       this.rings[0].data.shadowSpread = 0.1;
       this.rings[0].data.shadowIntensity = 0.3;
+    }
+  }
+
+  _generateRandonState(time: any) {
+    const statesIndex = this.state.length - 1;
+    console.log(`got ${this.state.length} states`);
+
+    const random = Math.floor(Math.random() * (statesIndex - 0 + 1) + 0);
+    const state = this.state[random];
+
+    console.log(`got ${state} from random function ${time} seconds`);
+
+    return state;
+  }
+
+  _startRandonStates() {
+    if (this._randonStates) {
+      console.log('starting randon States... ');
+
+      setInterval(() => {
+        setTimeout(() => {
+          const state = this._generateRandonState(10);
+          // @ts-ignore
+          this.setState(state);
+        }, 10000);
+        setTimeout(() => {
+          const state = this._generateRandonState(20);
+          // @ts-ignore
+          this.setState(state);
+        }, 20000);
+      }, 30000);
     }
   }
 
