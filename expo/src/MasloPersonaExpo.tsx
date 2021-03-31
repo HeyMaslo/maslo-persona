@@ -12,7 +12,7 @@ import {
   ResourceManager,
   PersonaSettings,
   PersonaViewState,
-} from '@persona-core';
+} from '../../lib/index';
 import { AudioPlayer } from './audioPlayer';
 import { getExpoAssetsAsync } from './resources';
 import { createLogger } from '../../lib/utils/logger';

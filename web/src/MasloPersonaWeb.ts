@@ -7,7 +7,7 @@ import {
   IResourcesProvider,
   AnalyticsConfig,
   getRequireResources,
-} from '@persona-core';
+} from '../../lib/index';
 import { AnalyticsManagerGA } from './analytics.ga';
 
 export type PersonaWebOptions = {

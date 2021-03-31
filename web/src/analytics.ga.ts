@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { AnalyticsManager } from '@persona-core';
+import { AnalyticsManager } from '../../lib/index';
 
 const TRACKING_ID = 'UA-106568684-2';
 

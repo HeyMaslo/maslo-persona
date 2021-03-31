@@ -1,4 +1,4 @@
-import { States } from '@persona-core';
+import { States } from '../../lib/index';
 import MasloPersonaWebRenderer from './MasloPersonaWeb';
 
 export {

@@ -2,7 +2,7 @@ import {
   States,
   PersonaViewState as PersonaViewStateInternal,
   PersonaSettings,
-} from '@persona-core';
+} from '../../lib/index';
 
 export type PersonaViewState = PersonaViewStateInternal<string | number>;
 

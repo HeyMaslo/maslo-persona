@@ -1,7 +1,7 @@
 import { Asset } from 'expo-asset';
 import ExpoTHREE from 'expo-three';
 import * as FileSystem from 'expo-file-system';
-import { IResourcesProvider, getRequireResources } from '@persona-core';
+import { IResourcesProvider, getRequireResources } from '../../lib/index';
 
 async function loadShaderAsync(moduleId: number, name: string) {
     try {
