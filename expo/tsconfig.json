@@ -2,9 +2,6 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "baseUrl": ".",
-        "paths": {
-            "@persona-core": ["../lib/index.ts"]
-        },
         "lib": ["DOM"]
     }
 }
