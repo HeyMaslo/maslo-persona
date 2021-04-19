@@ -40,6 +40,7 @@ export type Props = {
   personaSettings?: Partial<PersonaSettings>,
   staticScale: number,
   shouldPlaySound?: boolean,
+  randonStates?: boolean;
 };
 
 type CompState = {
@@ -91,6 +92,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
           const { radius } = this.calcPersonaSize(Device.width * Device.pixelRatio, Device.height * Device.pixelRatio);
 
           const disableSound = !this.props.shouldPlaySound;
+          const randonStates = this.props?.randonStates;
 
           this._persona = new PersonaCore(new THREE.Scene(), {
             ringRes: 2,
@@ -98,6 +100,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
             audio: new AudioPlayer(ResourceManager.Current),
             ...this.props.personaSettings,
             disableSound,
+            randonStates,
           });
 
           this.props.context.currentSettings = this._currentSettings;
@@ -199,6 +202,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     this._renderer.setSize(width, height);
 
     const disableSound = !this.props.shouldPlaySound;
+    const randonStates = this.props?.randonStates;
 
     // position persona on screen
     this._persona = new PersonaCore(this._scene, {
@@ -207,6 +211,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       audio: new AudioPlayer(ResourceManager.Current),
       ...this.props.personaSettings,
       disableSound,
+      randonStates
     });
 
     this.props.context.currentSettings = this._currentSettings;

@@ -9,6 +9,8 @@ export type PersonaSettings = {
   glow?: boolean,
   skipTextures: false | 'all' | 'background',
   disableSound: boolean,
+  randonStates: boolean,
+  
 };
 
 export const DefaultSettings: PersonaSettings = {
@@ -30,6 +32,7 @@ export const DefaultSettings: PersonaSettings = {
   glow: false,
   skipTextures: false,
   disableSound: false,
+  randonStates: false,
 };
 
 export const DefaultInternalSettings = {

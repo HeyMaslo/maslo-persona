@@ -122,7 +122,9 @@ export class PersonaCore implements IPersonaCore {
       this._moodDirty = true;
     });
 
-    this._startRandonStates();
+    if (settings.randonStates) {
+      this._startRandonStates();
+    }
   }
 
   public get settings(): Readonly<PersonaSettings> { return this._settings; }
