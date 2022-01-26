@@ -18,6 +18,8 @@ import { getExpoAssetsAsync } from './resources';
 import { createLogger } from '../../lib/utils/logger';
 import { IPersonaContext, CurrentPersonaSettings } from './context';
 
+import SigbeeAnimated from '../../persona-animated/components/sigbeeAnimation';
+
 const logger = createLogger('[MasloPersonaExpo]');
 
 const PersonaBaseScale = 1;
@@ -364,7 +366,8 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
     return (
       <View style={styles.wrapper}>
-        {Device.enableGL ? (
+        <SigbeeAnimated />
+        {/* {Device.enableGL ? (
           <GLView
             onLayout={this.onGLResize}
             style={styles.container}
@@ -376,7 +379,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
               {this.state.personStateStub}
             </Text>
           </View>
-        )}
+        )} */}
       </View>
     );
   }

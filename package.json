@@ -23,6 +23,7 @@
     "dependencies": {
         "chroma-js": "^2.1.0",
         "simplex-noise": "^2.4.0",
+        "lottie-react-native": "^4.0.3",
         "three": "^0.125.0"
     },
     "devDependencies": {
