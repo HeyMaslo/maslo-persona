@@ -4,7 +4,7 @@ import suppressExpoWarnings from 'expo-three/build/suppressWarnings';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { StyleSheet, Dimensions, View, PixelRatio, Text, LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
-import { reaction, toJS } from 'mobx';
+import { computed, observable, reaction, toJS } from 'mobx';
 import {
   PersonaCore,
   THREE,
@@ -12,11 +12,15 @@ import {
   ResourceManager,
   PersonaSettings,
   PersonaViewState,
+  States,
 } from '@persona-core';
 import { AudioPlayer } from './audioPlayer';
 import { getExpoAssetsAsync } from './resources';
 import { createLogger } from '../../lib/utils/logger';
 import { IPersonaContext, CurrentPersonaSettings } from './context';
+
+import { AnimationType, BeeAnimation } from './BeeAnimation';
+import { BeeAnimationPositioner } from './BeeAnimationPositioner';
 
 const logger = createLogger('[MasloPersonaExpo]');
 
@@ -70,8 +74,25 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
   private readonly _currentSettings: CurrentPersonaSettings;
 
+  private USE_ORB = false;
+
   constructor(props: any, ctx: any) {
     super(props, ctx);
+
+    reaction(_ => this.props.context.view, v => {
+      this._updatePersonViewState(v);
+    });
+    reaction(_ => this.props.context.state, s => {
+      this._persona?.setState(s, true);
+      this._updatePersonaTextState();
+      this.beeAnimation = this.determineBeeAnimation(s);
+
+      console.log("*****************************************************");
+      console.log(`Switching to ${s}!`);
+      console.log("*****************************************************");
+
+      this.forceUpdate();
+    });
 
     const self = this;
     this._currentSettings = {
@@ -146,22 +167,26 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
   private setupContextObserver() {
     this.cleanupContextObserver();
 
+    reaction(_ => this.props.context.view, v => {
+      this._updatePersonViewState(v);
+    });
+
     if (this.props.context && this._persona) {
       this._persona.setState(this.props.context.state, true);
       this._updatePersonaTextState();
       this._updatePersonViewState(this.props.context.view, 0);
       const disposers = [
         reaction(_ => this.props.context.state, s => {
-          this._persona.setState(s, true);
+          this._persona?.setState(s, true);
           this._updatePersonaTextState();
         }),
         reaction(_ => this._persona.state, s => {
           this.props.context.state = s;
           this._updatePersonaTextState();
         }),
-        reaction(_ => this.props.context.view, v => {
+        /*reaction(_ => this.props.context.view, v => {
           this._updatePersonViewState(v);
-        }),
+        })*/
       ];
       this._contextObserverDispose = () => {
         disposers.forEach(d => d());
@@ -220,6 +245,26 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
     this.step();
   }
 
+  @observable
+  private beeAnimationPosition = {x: 0, y: 0};
+
+  private beeAnimation = AnimationType.Intro;
+
+  private determineBeeAnimation = function(state: States): AnimationType {
+    switch(state) {
+      case States.Init: return AnimationType.Intro;
+      case States.Listen: return AnimationType.Pulse;
+      case States.Joy: return AnimationType.Celebrate;
+      case States.Question: return AnimationType.Thinking;
+      default:
+        console.log("*****************************************************");
+        console.log(`Nothing to return for ${state}!`);
+        console.log("*****************************************************");
+
+        return AnimationType.Static;
+    }
+  }
+
   private onGLResize = (e: LayoutChangeEvent) => {
     if (!e || !e.nativeEvent || !e.nativeEvent.layout) {
       return;
@@ -264,6 +309,7 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       }
 
       this._persona.step();
+      
     } catch (err) {
       console.error(err);
       return;
@@ -315,7 +361,11 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
       logger.log('updatePersonViewState ', v.debugName, ' : ', width, height, vv.position?.x, vv.position?.y, vv.anchorPoint?.x, vv.anchorPoint?.y);
     }
 
-    this._persona.setViewState(vv);
+    this._persona?.setViewState(vv);
+    this.beeAnimationPosition = vv.position;
+    console.log("GOOOOO!");
+    this.forceUpdate();
+
     if (!Device.enableGL) {
       this.setState({ viewStub: vv });
     }
@@ -364,10 +414,17 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
 
     return (
       <View style={styles.wrapper}>
-        {Device.enableGL ? (
+        { !this.USE_ORB && 
+          <BeeAnimationPositioner
+            nextPosition={this.beeAnimationPosition}
+            >
+            <BeeAnimation animation={this.beeAnimation} />
+          </BeeAnimationPositioner>
+        }
+        { this.USE_ORB && (Device.enableGL ? (
           <GLView
             onLayout={this.onGLResize}
-            style={styles.container}
+            style={[styles.container]}
             onContextCreate={this.onGLContextCreate}
           />
         ) : (
@@ -376,7 +433,8 @@ export class MasloPersonaExpo extends React.Component<Props, CompState> {
               {this.state.personStateStub}
             </Text>
           </View>
-        )}
+        ))
+        }
       </View>
     );
   }
@@ -388,7 +446,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'transparent',
   },
   container: {
-      flex: 1,
+      flex: 1
   },
   stub: {
     position: 'absolute',

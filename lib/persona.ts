@@ -143,7 +143,9 @@ export class PersonaCore implements IPersonaCore {
   set rotation(value) { this._data.rotation = value; }
 
   get position() { return this._data.position; }
-  set position(value) { this._data.position = value; }
+  set position(value) { 
+    this._data.position = value; 
+  }
 
   get scale() { return this._data.scale; }
   set scale(value) { this._data.scale = value; }
@@ -183,6 +185,8 @@ export class PersonaCore implements IPersonaCore {
   }
 
   setViewState(view: PersonaViewState) {
+    console.log("SVST ************************************************");
+
     const v = view || PersonaViewState.createEmptyViewState();
     const transition = v.transition || { };
     const ease = transition.ease || 'power4.inOut';
@@ -200,7 +204,7 @@ export class PersonaCore implements IPersonaCore {
 
     GSAP.killTweensOf(this._view.position);
     const pos = v.position || { x: 0, y: 0 };
-    GSAP.to(this._view.position, { x: pos.x, y: pos.y, duration, ease, delay });
+    GSAP.to(this._view.position, { x: pos.x, y: pos.y, duration, ease, delay });    
   }
 
   step() {
