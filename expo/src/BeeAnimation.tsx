@@ -20,10 +20,10 @@ const cachedAnimations = {
     [AnimationType.Pulse]: require(`${root}/sigbee-pulse-yellow-lj.json`),
     [AnimationType.Thinking]: require(`${root}/sigbee-thinking-yellow-lj.json`),
     [AnimationType.Celebrate]: require(`${root}/sigbee-celebrate-yellow-lj.json`),
-    [AnimationType.Static]: require(`${root}/sigbee-static-yellow-lj.json`),
+    [AnimationType.Static]: require(`${root}/sigbee-breathe-extended-yellow-lj.json`),
 };
 
-const loopingAnimations = [AnimationType.Pulse];
+const loopingAnimations = [AnimationType.Pulse, AnimationType.Static];
 
 export interface Props {
     animation: AnimationType,
@@ -45,7 +45,8 @@ export function BeeAnimation(props: Props) {
             // let an animation end (in all cases so far, all animations end on
             // the keyframe that 'Static' shows anyway).
 
-            // setSource(AnimationType.Static);
+            setShouldLoop(true);
+            setSource(AnimationType.Static);
             return;
         }
 
