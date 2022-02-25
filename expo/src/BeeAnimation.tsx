@@ -40,10 +40,7 @@ export function BeeAnimation(props: Props) {
     const advanceState = function() {
         if (loopingAnimations.indexOf(source) == -1) {
             // TODO: There's a bug in the Lottie framework that causes a brief
-            // flash of white whenever 'source' is changed.  To minimize the 
-            // odds of a flash, instead of transitioning to 'Static', we simply
-            // let an animation end (in all cases so far, all animations end on
-            // the keyframe that 'Static' shows anyway).
+            // flash of white whenever 'source' is changed.  
 
             setShouldLoop(true);
             setSource(AnimationType.Static);
@@ -59,7 +56,7 @@ export function BeeAnimation(props: Props) {
         <LottieView
             ref={ref}
             enableMergePathsAndroidForKitKatAndAbove={true}
-            source={cachedAnimations[props.animation]}            
+            source={cachedAnimations[source]}            
             onAnimationFinish={advanceState}
             autoPlay
             loop={shouldLoop}
