@@ -1,5 +1,5 @@
 import { PersonaViewState } from '@persona-core';
-import React, { Children, ReactNode, useRef, useState } from 'react';
+import React, { Children, ReactNode, useEffect, useRef, useState } from 'react';
 import { Animated, Dimensions, PixelRatio, View } from 'react-native';
 import { isContext } from 'vm';
 import { AnimationType, BeeAnimation } from './BeeAnimation';
@@ -21,13 +21,13 @@ const BeeAnimationPositioner = observer(function(props: Props) {
 
     const prevX = useRef(props.nextPosition.x);
     const prevY = useRef(-props.nextPosition.y);
-    const anim = useRef(new Animated.Value(0)).current;
+    const anim = useRef(new Animated.Value(1)).current;
+    const animValue = useRef(1);
+    const timeOut = useRef(null);
 
     const { width: screenWidth, height: screenHeight } = computeWindowDimens();
 
-    console.log("BEE SHOULD MOVE!");
-
-    anim.setValue(0);
+    anim.setValue(1 - animValue.current);
 
     const timing = Animated.timing(anim, {
         toValue: 1,
@@ -35,10 +35,28 @@ const BeeAnimationPositioner = observer(function(props: Props) {
         useNativeDriver: true,
       });
 
-      setTimeout(() => {
+    useEffect(() => {
+        anim.removeAllListeners();
+        anim.addListener(({value}) => animValue.current = value);
+        timeOut.current = setTimeout(() => {
+            timing.reset();
+            timing.start();            
+        }, 250);
+
+        return () => {
+            timing.stop();
+            anim.removeAllListeners();
+            if (timeOut.current) {
+                clearTimeout(timeOut.current);
+                timeOut.current = null;
+            }
+        }
+    });
+
+    /*setTimeout(() => {
         timing.reset();
         timing.start();            
-    }, 250);
+    }, 250);*/
 
     const xVal = anim.interpolate({
         inputRange: [0, 1],
