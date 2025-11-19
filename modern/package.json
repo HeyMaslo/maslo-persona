@@ -1,0 +1,41 @@
+{
+  "name": "maslo-persona-2025",
+  "version": "2.0.0",
+  "description": "Modern, modular, pure HTML/JS implementation of Maslo Persona - an expressive AI companion",
+  "type": "module",
+  "scripts": {
+    "serve": "npx http-server -p 8000 -c-1",
+    "dev": "npx http-server -p 8000 -c-1 -o"
+  },
+  "keywords": [
+    "ai",
+    "persona",
+    "visualization",
+    "three.js",
+    "webgl",
+    "emotion",
+    "chatbot",
+    "voice",
+    "anthropic",
+    "openai",
+    "ollama"
+  ],
+  "author": "Maslo Team",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "not dead"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HeyMaslo/maslo-persona"
+  }
+}

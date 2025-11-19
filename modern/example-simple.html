@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maslo Persona - Simple Example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #container {
+            text-align: center;
+        }
+
+        #persona-canvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .controls {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background: #6366f1;
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #8b5cf6;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Maslo Persona - Simple Example</h1>
+        <p>Pure HTML/JS - No build tools required!</p>
+
+        <canvas id="persona-canvas"></canvas>
+
+        <div class="controls">
+            <button onclick="app.persona.setState('joy')">Joy 😊</button>
+            <button onclick="app.persona.setState('surprise')">Surprise 😮</button>
+            <button onclick="app.persona.setState('hey')">Hey 👋</button>
+            <button onclick="app.persona.setState('yes')">Yes ✓</button>
+            <button onclick="app.persona.setState('no')">No ✗</button>
+            <button onclick="app.persona.setState('shake')">Shake</button>
+            <button onclick="app.persona.setMood('love', 1)">Love ❤️</button>
+            <button onclick="app.persona.setMood('calm', 1)">Calm 😌</button>
+        </div>
+
+        <div class="controls">
+            <button onclick="app.persona.setColor(0)">Red</button>
+            <button onclick="app.persona.setColor(60)">Yellow</button>
+            <button onclick="app.persona.setColor(120)">Green</button>
+            <button onclick="app.persona.setColor(180)">Cyan</button>
+            <button onclick="app.persona.setColor(240)">Blue</button>
+            <button onclick="app.persona.setColor(300)">Purple</button>
+        </div>
+    </div>
+
+    <!-- Load Three.js and GSAP from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Load Persona as ES Module -->
+    <script type="module">
+        import { MasloPersona } from './js/core/persona.js';
+
+        class SimpleApp {
+            constructor() {
+                const canvas = document.getElementById('persona-canvas');
+
+                this.persona = new MasloPersona(canvas, {
+                    radius: 250,
+                    baseHue: 30,
+                    audioEnabled: false, // Disable audio for simple example
+                });
+
+                // Handle resize
+                window.addEventListener('resize', () => this.resize());
+                this.resize();
+
+                // Start
+                this.persona.start();
+            }
+
+            resize() {
+                const width = Math.min(window.innerWidth * 0.9, 800);
+                const height = Math.min(window.innerHeight * 0.6, 600);
+
+                this.persona.canvas.width = width;
+                this.persona.canvas.height = height;
+                this.persona.handleResize();
+            }
+        }
+
+        // Create app instance
+        window.app = new SimpleApp();
+    </script>
+</body>
+</html>

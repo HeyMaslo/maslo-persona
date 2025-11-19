@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Maslo Persona - An expressive, empathetic AI companion">
+    <title>Maslo Persona 2025</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Main Container -->
+    <div id="app">
+        <!-- Canvas for Persona -->
+        <div id="persona-container">
+            <canvas id="persona-canvas"></canvas>
+        </div>
+
+        <!-- UI Controls -->
+        <div id="controls">
+            <button id="mic-btn" class="control-btn" title="Voice Interaction">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                    <path fill="currentColor" d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+            </button>
+
+            <button id="settings-btn" class="control-btn" title="Settings">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Chat Interface -->
+        <div id="chat-interface" class="hidden">
+            <div id="chat-messages"></div>
+            <div id="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Type a message..." />
+                <button id="send-btn">Send</button>
+            </div>
+        </div>
+
+        <!-- Status Display -->
+        <div id="status">
+            <span id="status-text">Ready</span>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button id="close-settings" class="close-btn">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- AI Provider Selection -->
+                <div class="setting-group">
+                    <label>AI Provider</label>
+                    <select id="ai-provider">
+                        <option value="none">None (Visual Only)</option>
+                        <option value="anthropic">Anthropic Claude</option>
+                        <option value="openai">OpenAI</option>
+                        <option value="ollama">Ollama (Local)</option>
+                    </select>
+                </div>
+
+                <!-- Anthropic Settings -->
+                <div id="anthropic-settings" class="provider-settings hidden">
+                    <div class="setting-group">
+                        <label>Anthropic API Key</label>
+                        <input type="password" id="anthropic-api-key" placeholder="sk-ant-...">
+                        <small>Get your API key from <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a></small>
+                    </div>
+                    <div class="setting-group">
+                        <label>Model</label>
+                        <select id="anthropic-model">
+                            <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
+                            <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku</option>
+                            <option value="claude-3-opus-20240229">Claude 3 Opus</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- OpenAI Settings -->
+                <div id="openai-settings" class="provider-settings hidden">
+                    <div class="setting-group">
+                        <label>OpenAI API Key</label>
+                        <input type="password" id="openai-api-key" placeholder="sk-...">
+                        <small>Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a></small>
+                    </div>
+                    <div class="setting-group">
+                        <label>Model</label>
+                        <select id="openai-model">
+                            <option value="gpt-4-turbo-preview">GPT-4 Turbo</option>
+                            <option value="gpt-4">GPT-4</option>
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Ollama Settings -->
+                <div id="ollama-settings" class="provider-settings hidden">
+                    <div class="setting-group">
+                        <label>Ollama Server URL</label>
+                        <input type="text" id="ollama-url" placeholder="http://localhost:11434" value="http://localhost:11434">
+                        <small>Make sure Ollama is running locally</small>
+                    </div>
+                    <div class="setting-group">
+                        <label>Model</label>
+                        <select id="ollama-model">
+                            <option value="llama2">Llama 2</option>
+                            <option value="mistral">Mistral</option>
+                            <option value="codellama">Code Llama</option>
+                            <option value="llama3">Llama 3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Visual Settings -->
+                <div class="setting-group">
+                    <label>Persona Color (Hue)</label>
+                    <input type="range" id="color-hue" min="0" max="360" value="30">
+                    <span id="hue-value">30°</span>
+                </div>
+
+                <!-- Voice Settings -->
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="enable-voice">
+                        Enable Voice Interaction
+                    </label>
+                </div>
+
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="enable-chat">
+                        Enable Chat Interface
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="save-settings" class="btn-primary">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Three.js and GSAP from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Load App as ES Module -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
